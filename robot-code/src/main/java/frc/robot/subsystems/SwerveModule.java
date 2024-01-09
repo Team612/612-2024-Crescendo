@@ -136,6 +136,7 @@ public class SwerveModule {
   }
 
   private void setAngle(SwerveModuleState desiredState) {
+
     // Prevent rotating module if speed is less then 1%. Prevents jittering.
     Rotation2d angle =
         (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxSpeed * 0.01))
