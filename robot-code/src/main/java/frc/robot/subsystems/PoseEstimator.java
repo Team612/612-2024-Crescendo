@@ -54,9 +54,10 @@ public class PoseEstimator extends SubsystemBase {
     m_field = new Field2d();
     SmartDashboard.putData("Field", m_field);
 
+
     m_DrivePoseEstimator = new SwerveDrivePoseEstimator(
-      Constants.Swerve.swerveKinematics,
-      Rotation2d.fromDegrees(0), //TEMP VALUE, CHANGE TO m_drivetrain.getNavxAngle() ONCE IT IS READY
+      Constants.Swerve.swerveKinematics, 
+      m_drivetrain.getNavxAngle(), 
       m_drivetrain.getPositions(), 
       new Pose2d(),
       stateStdDevs,
@@ -77,6 +78,8 @@ public class PoseEstimator extends SubsystemBase {
 
   @Override
   public void periodic() {
+
+    m_DrivePoseEstimator.update(m_drivetrain.getNavxAngle(), m_drivetrain.getPositions());
     if(m_PhotonPoseEstimator != null){
       m_PhotonPoseEstimator.update().ifPresent(estimatedRobotPose -> {
       var estimatedPose = estimatedRobotPose.estimatedPose;
@@ -119,7 +122,7 @@ public class PoseEstimator extends SubsystemBase {
   }
 
   public void setCurrentPose(Pose2d newPose) {
-    m_DrivePoseEstimator.resetPosition(Rotation2d.fromDegrees(0), m_drivetrain.getPositions(), newPose);
+    m_DrivePoseEstimator.resetPosition(m_drivetrain.getNavxAngle(), m_drivetrain.getPositions(), newPose);
   }
 
 }

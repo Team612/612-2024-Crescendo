@@ -71,6 +71,11 @@ public final class Constants {
     public static final double driveKV = 2.44;
     public static final double driveKA = 0.27;
 
+     //have to tune manually
+     public static final double kPXController = 5; // ~ 1cm error
+     public static final double kPYController = 1;
+     public static final double kPThetaController = 4.5; 
+
     /* Drive Motor Conversion Factors */
     public static final double driveConversionPositionFactor =
         (wheelDiameter * Math.PI) / driveGearRatio;
@@ -80,6 +85,7 @@ public final class Constants {
     /* Swerve Profiling Values */
     public static final double maxSpeed = 4.5; // meters per second
     public static final double maxAngularVelocity = 11.5;
+    public static final double maxAcceleration = 1;
 
     /* Neutral Modes */
     public static final IdleMode angleNeutralMode = IdleMode.kBrake;

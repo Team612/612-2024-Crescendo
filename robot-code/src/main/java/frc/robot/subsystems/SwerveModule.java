@@ -171,4 +171,9 @@ public class SwerveModule {
   public SwerveModuleState getState() {
     return new SwerveModuleState(driveEncoder.getVelocity(), getAngle());
   }
+
+  /** Returns the drive velocity in radians/sec. */
+  public double getCharacterizationVelocity() {
+    return (2 * Math.PI) / 60 * driveEncoder.getVelocity();
+  }
 }

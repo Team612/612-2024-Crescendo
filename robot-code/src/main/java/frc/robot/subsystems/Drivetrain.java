@@ -1,7 +1,13 @@
 package frc.robot.subsystems;
 
-import com.kauailabs.navx.frc.AHRS;
+import java.util.function.Consumer;
 
+import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPMecanumControllerCommand;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -12,6 +18,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.I2C;
 import frc.robot.Constants;
@@ -21,10 +28,13 @@ public class Drivetrain extends SubsystemBase {
 
   private SwerveModule[] mSwerveMods;
 
-//   private static AHRS navx;
-//   private Rotation2d navxAngleOffset;
+  private static AHRS navx;
+  private Rotation2d navxAngleOffset;
 
   private Field2d field;
+
+  private boolean isCharacterizing = false;
+  private double characterizationVolts = 0.0;
 
   public Drivetrain() {
     mSwerveMods =
@@ -35,10 +45,10 @@ public class Drivetrain extends SubsystemBase {
           new SwerveModule(3, Constants.Swerve.Mod3.constants)
         };
     
-//     navx = new AHRS(I2C.Port.kMXP); 
-//     navxAngleOffset = new Rotation2d();
-//     navx.reset();
-//     navx.calibrate();
+    navx = new AHRS(I2C.Port.kMXP); 
+    navxAngleOffset = new Rotation2d();
+    navx.reset();
+    navx.calibrate();
 
     field = new Field2d();
     SmartDashboard.putData("Field", field);
@@ -53,14 +63,11 @@ public class Drivetrain extends SubsystemBase {
 
   public void drive(
       Translation2d translation, double rotation, boolean isOpenLoop) {
-//     SwerveModuleState[] swerveModuleStates =
-//         Constants.Swerve.swerveKinematics.toSwerveModuleStates(
-//             fieldRelative
-//                 ? ChassisSpeeds.fromFieldRelativeSpeeds(
-//                     translation.getX(), translation.getY(), rotation, getYaw())
-//                 : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
+    SwerveModuleState[] swerveModuleStates =
+        Constants.Swerve.swerveKinematics.toSwerveModuleStates(
+          ChassisSpeeds.fromFieldRelativeSpeeds(
+                    translation.getX(), translation.getY(), rotation, getNavxAngle()));
     
-    SwerveModuleState[] swerveModuleStates = Constants.Swerve.swerveKinematics.toSwerveModuleStates(new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
 
     for (SwerveModule mod : mSwerveMods) {
@@ -93,25 +100,55 @@ public class Drivetrain extends SubsystemBase {
     return positions;
   }
 
-//   public void zeroGyro() {
-//     navx.zeroYaw();
-//   }
+  public void zeroGyro() {
+    navx.zeroYaw();
+  }
 
-//   public Rotation2d getNavxAngle(){
-//     return Rotation2d.fromDegrees(-navx.getAngle());
-//   }
+  public Rotation2d getNavxAngle(){
+    return Rotation2d.fromDegrees(navx.getAngle());
+  }
     
-//   // setter for setting the navxAngleOffset
-//   public void setNavxAngleOffset(Rotation2d angle){
-//     navxAngleOffset = angle;
-//   }
+  // setter for setting the navxAngleOffset
+  public void setNavxAngleOffset(Rotation2d angle){
+    navxAngleOffset = angle;
+  }
 
-//   public Rotation2d getYaw(){
-//     return Rotation2d.fromDegrees(navx.getYaw());
-//   }
-//   public Rotation2d getPitch(){
-//     return Rotation2d.fromDegrees(navx.getPitch());
-//   }
+  public Rotation2d getYaw(){
+    return Rotation2d.fromDegrees(navx.getYaw());
+  }
+  public Rotation2d getPitch(){
+    return Rotation2d.fromDegrees(navx.getPitch());
+  }
+
+  public void runCharacterizationVolts(double volts) {
+    isCharacterizing = true;
+    characterizationVolts = volts;
+  }
+
+  /** Returns the average drive velocity in radians/sec. */
+  public double getCharacterizationVelocity() {
+    double driveVelocityAverage = 0.0;
+    for (var module : mSwerveMods) {
+      driveVelocityAverage += module.getCharacterizationVelocity();
+    }
+    return driveVelocityAverage / 4.0;
+  }
+
+  public static CommandBase followTrajectory(Drivetrain driveSystem, PoseEstimator poseEstimatorSystem, PathPlannerTrajectory path){
+    Consumer<SwerveModuleState[]> moduleStateSetter = (SwerveModuleState[] states) -> {
+      driveSystem.setModuleStates(states);
+    };
+
+    return new PPSwerveControllerCommand(
+        path,
+        poseEstimatorSystem::getCurrentPose,
+        Constants.Swerve.swerveKinematics,
+        new PIDController(Constants.Swerve.kPXController, 0, 0),
+        new PIDController(Constants.Swerve.kPYController, 0, 0),
+        new PIDController(Constants.Swerve.kPThetaController, 0, 0),
+        moduleStateSetter,
+        poseEstimatorSystem);
+  }
 
   @Override
   public void periodic() {
