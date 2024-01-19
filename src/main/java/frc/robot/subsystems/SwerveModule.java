@@ -66,6 +66,7 @@ public class SwerveModule {
     lastAngle = getState().angle;
   }
 
+  /* Desired state for each swerve module. takes in speed and angle. If its openLoop, that means it is in teleop */
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
     // Custom optimize command, since default WPILib optimize assumes continuous controller which
     // REV and CTRE are not
@@ -75,19 +76,22 @@ public class SwerveModule {
     setSpeed(desiredState, isOpenLoop);
   }
 
+  /* Reset wheel orientation to forward */
   private void resetToAbsolute() {
-    integratedAngleEncoder.setPosition(0);
+    //integratedAngleEncoder.setPosition(0);
     System.out.println(moduleNumber);
-    System.out.println(integratedAngleEncoder.getPosition());
     double absolutePosition = desiredAngle.getDegrees() - getCanCoder().getDegrees();
-    integratedAngleEncoder.setPosition(absolutePosition);
+    integratedAngleEncoder.setPosition(integratedAngleEncoder.getPosition() - absolutePosition);
+    System.out.println(integratedAngleEncoder.getPosition() - absolutePosition);
   }
 
+  /* Settings for Angle Encoder */
   private void configAngleEncoder() {
     angleEncoder.getConfigurator().apply(new CANcoderConfiguration());
     angleEncoder.getConfigurator().apply(Robot.ctreConfigs.swerveCanCoderConfig);
   }
 
+  /* Settings for Angle Motor */
   private void configAngleMotor() {
     angleMotor.restoreFactoryDefaults();
     CANSparkMaxUtil.setCANSparkMaxBusUsage(angleMotor, Usage.kPositionOnly);
@@ -104,6 +108,7 @@ public class SwerveModule {
     resetToAbsolute();
   }
 
+  /* Settings for Drive Motor */
   private void configDriveMotor() {
     driveMotor.restoreFactoryDefaults();
     CANSparkMaxUtil.setCANSparkMaxBusUsage(driveMotor, Usage.kAll);
@@ -121,10 +126,12 @@ public class SwerveModule {
     driveEncoder.setPosition(0.0);
   }
 
+  /* Gets the current position of the swerve module. This is an estimate */
   public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(driveMotor.getEncoder().getPosition(), getAngle());
   }
 
+  /* Sets the speed of the swerve module. If it's openLoop, then it takes in a percentage, otherwise, it calculates and runs a PID */
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
     if (isOpenLoop) {
       double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed;
@@ -138,6 +145,7 @@ public class SwerveModule {
     }
   }
 
+  /* Sets the angle of the swerve module. */
   private void setAngle(SwerveModuleState desiredState) {
     // Prevent rotating module if speed is less then 1%. Prevents jittering.
     Rotation2d angle =
@@ -161,6 +169,7 @@ public class SwerveModule {
     // angleMotor.set(pidOut);
   }
 
+  
   private Rotation2d getAngle() {
     return Rotation2d.fromDegrees(integratedAngleEncoder.getPosition());
   }
