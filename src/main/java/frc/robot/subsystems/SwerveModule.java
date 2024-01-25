@@ -43,6 +43,9 @@ public class SwerveModule {
     new SimpleMotorFeedforward(
           Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
 
+  private final PIDController turnFeedback =
+    new PIDController(0.1, 0.0, 0.0, 0.02);
+
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;
     this.desiredAngle = moduleConstants.desiredAngle;
@@ -64,6 +67,8 @@ public class SwerveModule {
     configDriveMotor();
 
     lastAngle = getState().angle;
+
+    turnFeedback.enableContinuousInput(-Math.PI, Math.PI);
   }
 
   /* Desired state for each swerve module. takes in speed and angle. If its openLoop, that means it is in teleop */
@@ -77,23 +82,24 @@ public class SwerveModule {
   }
 
   /* Reset wheel orientation to forward */
-  private void resetToAbsolute() {
-    //integratedAngleEncoder.setPosition(0);
+  public void resetToAbsolute() {
     System.out.println(moduleNumber);
-    double absolutePosition = desiredAngle.getDegrees() - getCanCoder().getDegrees();
-    integratedAngleEncoder.setPosition(integratedAngleEncoder.getPosition() - absolutePosition);
-    System.out.println(integratedAngleEncoder.getPosition() - absolutePosition);
+    System.out.println(getAngle());
+    double absolutePosition = getCanCoder().getDegrees() - desiredAngle.getDegrees();
+    //integratedAngleEncoder.setPosition(integratedAngleEncoder.getPosition() - absolutePosition);
+    integratedAngleEncoder.setPosition(absolutePosition);
+    System.out.println(absolutePosition);
   }
 
   /* Settings for Angle Encoder */
   private void configAngleEncoder() {
-    angleEncoder.getConfigurator().apply(new CANcoderConfiguration());
-    angleEncoder.getConfigurator().apply(Robot.ctreConfigs.swerveCanCoderConfig);
+    angleEncoder.getConfigurator().apply(Robot.ctreConfigs.swerveCanCoderConfig, 0.1);
   }
 
   /* Settings for Angle Motor */
   private void configAngleMotor() {
     angleMotor.restoreFactoryDefaults();
+    angleMotor.setCANTimeout(5000);
     CANSparkMaxUtil.setCANSparkMaxBusUsage(angleMotor, Usage.kPositionOnly);
     angleMotor.setSmartCurrentLimit(Constants.Swerve.angleContinuousCurrentLimit);
     angleMotor.setInverted(Constants.Swerve.angleInvert);
@@ -111,6 +117,7 @@ public class SwerveModule {
   /* Settings for Drive Motor */
   private void configDriveMotor() {
     driveMotor.restoreFactoryDefaults();
+    driveMotor.setCANTimeout(5000);
     CANSparkMaxUtil.setCANSparkMaxBusUsage(driveMotor, Usage.kAll);
     driveMotor.setSmartCurrentLimit(Constants.Swerve.driveContinuousCurrentLimit);
     driveMotor.setInverted(Constants.Swerve.driveInvert);
@@ -185,5 +192,18 @@ public class SwerveModule {
   /** Returns the drive velocity in radians/sec. */
   public double getCharacterizationVelocity() {
     return (2 * Math.PI) / 60 * driveEncoder.getVelocity();
+  }
+
+  public void runCharacterization(double volts) {
+    setTurnVoltage(turnFeedback.calculate(getAngle().getRadians(), 0.0));
+    setDriveVoltage(volts);
+  }
+
+  public void setDriveVoltage(double volts) {
+    driveMotor.setVoltage(volts);
+  }
+
+  public void setTurnVoltage(double volts) {
+    angleMotor.setVoltage(volts);
   }
 }

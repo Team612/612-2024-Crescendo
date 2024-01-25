@@ -111,7 +111,7 @@ public final class Constants {
       public static final int driveMotorID = 2;
       public static final int angleMotorID = 3;
       public static final int canCoderID = 0;
-      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(43); //50
+      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(223); //43
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, desiredAngle);
     }
@@ -121,7 +121,7 @@ public final class Constants {
       public static final int driveMotorID = 8;
       public static final int angleMotorID = 1;
       public static final int canCoderID = 1;
-      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(344);
+      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(344); //344
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, desiredAngle);
     }
@@ -131,7 +131,7 @@ public final class Constants {
       public static final int driveMotorID = 4;
       public static final int angleMotorID = 5;
       public static final int canCoderID = 2;
-      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(87); //102
+      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(87);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, desiredAngle);
     }
@@ -141,7 +141,7 @@ public final class Constants {
       public static final int driveMotorID = 6;
       public static final int angleMotorID = 7;
       public static final int canCoderID = 3;
-      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(73.5); //71
+      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(73.5);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, desiredAngle);
     }

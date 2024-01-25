@@ -60,14 +60,14 @@ public class Drivetrain extends SubsystemBase {
 
   public void drive(
       Translation2d translation, double rotation, boolean isOpenLoop) {
-    SwerveModuleState[] swerveModuleStates =
-        Constants.Swerve.swerveKinematics.toSwerveModuleStates(
-          ChassisSpeeds.fromFieldRelativeSpeeds(
-                    translation.getX(), translation.getY(), rotation, getNavxAngle()));
-    
-    // SwerveModuleState[] swerveModuleStates = 
+    // SwerveModuleState[] swerveModuleStates =
     //     Constants.Swerve.swerveKinematics.toSwerveModuleStates(
-    //       new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
+    //       ChassisSpeeds.fromFieldRelativeSpeeds(
+    //                 translation.getX(), translation.getY(), rotation, getNavxAngle()));
+    
+    SwerveModuleState[] swerveModuleStates = 
+        Constants.Swerve.swerveKinematics.toSwerveModuleStates(
+          new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
     
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
 
@@ -135,6 +135,12 @@ public class Drivetrain extends SubsystemBase {
     return driveVelocityAverage / 4.0;
   }
 
+  public void resetAlignment() {
+    for(SwerveModule mod : mSwerveMods) {
+      mod.resetToAbsolute();
+    }
+  }
+
   @Override
   public void periodic() {
     for (SwerveModule mod : mSwerveMods) {
@@ -144,6 +150,12 @@ public class Drivetrain extends SubsystemBase {
           "Mod " + mod.moduleNumber + " Integrated", mod.getState().angle.getDegrees());
       SmartDashboard.putNumber(
           "Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+    }
+    if (isCharacterizing) {
+      // Run in characterization mode
+      for (SwerveModule mod : mSwerveMods) {
+        mod.runCharacterization(characterizationVolts);
+      }
     }
   }
 }

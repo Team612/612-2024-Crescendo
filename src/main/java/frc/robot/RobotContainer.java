@@ -22,6 +22,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DefaultDrive;
+import frc.robot.commands.Characterization.FeedForwardCharacterization;
+import frc.robot.commands.Characterization.FeedForwardCharacterization.FeedForwardCharacterizationData;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -34,7 +36,7 @@ import frc.robot.subsystems.Drivetrain;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drivetrain m_drivetrain = Drivetrain.getInstance();
-
+              
   private final Joystick driver = new Joystick(0);
 
   /* Drive Controls */
@@ -43,7 +45,7 @@ public class RobotContainer {
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
   /* Driver Buttons */
-  private final JoystickButton zeroGyro =
+  private final JoystickButton align =
       new JoystickButton(driver, XboxController.Button.kY.value);
   // private final JoystickButton robotCentric =
   //     new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
@@ -86,13 +88,19 @@ public class RobotContainer {
     // m_chooser.addOption("Blue Top Leave And Dock", new ProxyCommand(() -> m_BlueTopLeaveAndDock));
     // m_chooser.addOption("Red Bottom Leave And Dock", new ProxyCommand(() -> m_RedBottomLeaveAndDock));
     // m_chooser.addOption("Blue Bottom Leave and Dock", new ProxyCommand(() -> m_BlueBottomLeaveAndDock));
+    m_chooser.addOption("Swerve Characterization", new FeedForwardCharacterization(
+              m_drivetrain,
+              true,
+              new FeedForwardCharacterizationData("drive"),
+              m_drivetrain::runCharacterizationVolts,
+              m_drivetrain::getCharacterizationVelocity));
   
     SmartDashboard.putData(m_chooser);
     // SmartDashboard.putData("Slowmo (Toggle)", new SlowmoDrive(m_drivetrain));
   }
 
   private void configureButtonBindings() {
-    //zeroGyro.whenPressed(new InstantCommand(() -> m_drivetrain.zeroGyro()));
+    align.onTrue(new InstantCommand(() -> m_drivetrain.resetAlignment()));
   }
 
 
