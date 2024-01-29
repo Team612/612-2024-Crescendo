@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -19,6 +21,17 @@ public class Robot extends TimedRobot {
   public static CTREConfigs ctreConfigs;
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
+
+  public static Alliance initAllianceColor = Alliance.Blue;
+
+  private void checkDSUpdate() {
+    Alliance currentAlliance = DriverStation.getAlliance().get();
+    // If we have data, and have a new alliance from last time
+    if (DriverStation.isDSAttached() && currentAlliance != Alliance.Blue) {
+      initAllianceColor = currentAlliance;
+      
+    }
+  }
 
   /**
    * This function is run when the robot is first started up and should be used for any

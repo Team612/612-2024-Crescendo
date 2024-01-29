@@ -83,12 +83,9 @@ public class SwerveModule {
 
   /* Reset wheel orientation to forward */
   public void resetToAbsolute() {
-    System.out.println(moduleNumber);
-    System.out.println(getAngle());
     double absolutePosition = getCanCoder().getDegrees() - desiredAngle.getDegrees();
     //integratedAngleEncoder.setPosition(integratedAngleEncoder.getPosition() - absolutePosition);
     integratedAngleEncoder.setPosition(absolutePosition);
-    System.out.println(absolutePosition);
   }
 
   /* Settings for Angle Encoder */

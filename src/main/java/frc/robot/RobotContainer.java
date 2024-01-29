@@ -22,8 +22,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DefaultDrive;
-import frc.robot.commands.Characterization.FeedForwardCharacterization;
-import frc.robot.commands.Characterization.FeedForwardCharacterization.FeedForwardCharacterizationData;
+import frc.robot.commands.RunOnTheFly;
+import frc.robot.commands.TrajectoryCreation;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -32,10 +32,17 @@ import edu.wpi.first.wpilibj2.command.ProxyCommand;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.PoseEstimator;
+import frc.robot.subsystems.Vision;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drivetrain m_drivetrain = Drivetrain.getInstance();
+  private final PoseEstimator m_poseEstimator = PoseEstimator.getPoseEstimatorInstance();
+  private final Vision m_vision = Vision.getVisionInstance();
+
+  private final TrajectoryCreation m_traj = new TrajectoryCreation();
+  private final RunOnTheFly m_runOnTheFly = new RunOnTheFly(m_drivetrain, m_poseEstimator, m_traj, m_vision, 0);
               
   private final Joystick driver = new Joystick(0);
 
@@ -47,8 +54,8 @@ public class RobotContainer {
   /* Driver Buttons */
   private final JoystickButton align =
       new JoystickButton(driver, XboxController.Button.kY.value);
-  // private final JoystickButton robotCentric =
-  //     new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+  private final JoystickButton fieldCentric =
+      new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
   //Drive subsystems declarations 
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -88,19 +95,15 @@ public class RobotContainer {
     // m_chooser.addOption("Blue Top Leave And Dock", new ProxyCommand(() -> m_BlueTopLeaveAndDock));
     // m_chooser.addOption("Red Bottom Leave And Dock", new ProxyCommand(() -> m_RedBottomLeaveAndDock));
     // m_chooser.addOption("Blue Bottom Leave and Dock", new ProxyCommand(() -> m_BlueBottomLeaveAndDock));
-    m_chooser.addOption("Swerve Characterization", new FeedForwardCharacterization(
-              m_drivetrain,
-              true,
-              new FeedForwardCharacterizationData("drive"),
-              m_drivetrain::runCharacterizationVolts,
-              m_drivetrain::getCharacterizationVelocity));
-  
+    m_chooser.addOption("Test to Red", m_runOnTheFly);
+    //m_chooser.addOption("Test Path", m_drivetrain.followPathCommand("First Path"));
     SmartDashboard.putData(m_chooser);
     // SmartDashboard.putData("Slowmo (Toggle)", new SlowmoDrive(m_drivetrain));
   }
 
   private void configureButtonBindings() {
     align.onTrue(new InstantCommand(() -> m_drivetrain.resetAlignment()));
+    fieldCentric.onTrue(new InstantCommand(() -> m_drivetrain.zeroGyro()));
   }
 
 

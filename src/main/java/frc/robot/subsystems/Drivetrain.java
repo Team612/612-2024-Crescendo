@@ -3,6 +3,12 @@ package frc.robot.subsystems;
 import java.util.function.Consumer;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.FollowPathHolonomic;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -15,8 +21,10 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import frc.robot.Constants;
 
@@ -45,10 +53,10 @@ public class Drivetrain extends SubsystemBase {
     navx = new AHRS(I2C.Port.kMXP); 
     navxAngleOffset = new Rotation2d();
     navx.reset();
-    //navx.calibrate;
 
     field = new Field2d();
     SmartDashboard.putData("Field", field);
+
   }
 
   public static Drivetrain getInstance(){
@@ -60,11 +68,20 @@ public class Drivetrain extends SubsystemBase {
 
   public void drive(
       Translation2d translation, double rotation, boolean isOpenLoop) {
-    // SwerveModuleState[] swerveModuleStates =
-    //     Constants.Swerve.swerveKinematics.toSwerveModuleStates(
-    //       ChassisSpeeds.fromFieldRelativeSpeeds(
-    //                 translation.getX(), translation.getY(), rotation, getNavxAngle()));
+    SwerveModuleState[] swerveModuleStates =
+        Constants.Swerve.swerveKinematics.toSwerveModuleStates(
+          ChassisSpeeds.fromFieldRelativeSpeeds(
+                    translation.getX(), translation.getY(), rotation, getNavxAngle()));
     
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
+
+    for (SwerveModule mod : mSwerveMods) {
+      mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
+    }
+  }
+
+  public void driveRobotRelative(
+      Translation2d translation, double rotation, boolean isOpenLoop) {
     SwerveModuleState[] swerveModuleStates = 
         Constants.Swerve.swerveKinematics.toSwerveModuleStates(
           new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
@@ -73,6 +90,17 @@ public class Drivetrain extends SubsystemBase {
 
     for (SwerveModule mod : mSwerveMods) {
       mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
+    }
+  }
+
+  public void autoDrive(ChassisSpeeds speeds) {
+    SwerveModuleState[] swerveModuleStates =
+        Constants.Swerve.swerveKinematics.toSwerveModuleStates(speeds);
+    
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
+
+    for (SwerveModule mod : mSwerveMods) {
+      mod.setDesiredState(swerveModuleStates[mod.moduleNumber], false);
     }
   }
 
@@ -101,12 +129,17 @@ public class Drivetrain extends SubsystemBase {
     return positions;
   }
 
+  public ChassisSpeeds getChassisSpeeds() {
+    ChassisSpeeds result = Constants.Swerve.swerveKinematics.toChassisSpeeds(getStates());
+    return result;
+  }
+
   public void zeroGyro() {
     navx.zeroYaw();
   }
 
   public Rotation2d getNavxAngle(){
-    return Rotation2d.fromDegrees(navx.getAngle());
+    return Rotation2d.fromDegrees(-navx.getAngle());
   }
     
   // setter for setting the navxAngleOffset
@@ -119,20 +152,6 @@ public class Drivetrain extends SubsystemBase {
   }
   public Rotation2d getPitch(){
     return Rotation2d.fromDegrees(navx.getPitch());
-  }
-
-  public void runCharacterizationVolts(double volts) {
-    isCharacterizing = true;
-    characterizationVolts = volts;
-  }
-
-  /** Returns the average drive velocity in radians/sec. */
-  public double getCharacterizationVelocity() {
-    double driveVelocityAverage = 0.0;
-    for (var module : mSwerveMods) {
-      driveVelocityAverage += module.getCharacterizationVelocity();
-    }
-    return driveVelocityAverage / 4.0;
   }
 
   public void resetAlignment() {
@@ -151,11 +170,6 @@ public class Drivetrain extends SubsystemBase {
       SmartDashboard.putNumber(
           "Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
     }
-    if (isCharacterizing) {
-      // Run in characterization mode
-      for (SwerveModule mod : mSwerveMods) {
-        mod.runCharacterization(characterizationVolts);
-      }
-    }
+    SmartDashboard.putNumber("Current Angle", navx.getAngle());
   }
 }
