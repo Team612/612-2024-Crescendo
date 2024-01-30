@@ -77,11 +77,12 @@ public class PoseEstimator extends SubsystemBase {
   @Override
   public void periodic() {
     m_DrivePoseEstimator.update(m_drivetrain.getNavxAngle(), m_drivetrain.getPositions());
-    // System.out.println(m_PhotonPoseEstimator);
+
     if(m_PhotonPoseEstimator != null){
-      System.out.println("Tyler needs to leave");
+     
       m_PhotonPoseEstimator.update().ifPresent(estimatedRobotPose -> {
       var estimatedPose = estimatedRobotPose.estimatedPose;
+     
       // Make sure we have a new measurement, and that it's on the field
       if (
         // estimatedRobotPose.timestampSeconds != previousPipelineTimestamp && 
@@ -111,8 +112,12 @@ public class PoseEstimator extends SubsystemBase {
         }
       }
       });
+
+      
     }
-    m_field.setRobotPose(m_Vision.getRobotPose());
+    m_field.setRobotPose(getCurrentPose());
+    SmartDashboard.putNumber("PoseEstimator X", getCurrentPose().getX());
+    SmartDashboard.putNumber("PoseEstimator Y", getCurrentPose().getY());
   }
 
 

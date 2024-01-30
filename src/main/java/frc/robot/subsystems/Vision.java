@@ -167,7 +167,9 @@ public class Vision extends SubsystemBase {
     robotToCam = new Transform3d(new Translation3d(0.09, 0.0, 0.3), new Rotation3d(0,0,0)); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
     
     m_PoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, this.camera, robotToCam);
-    m_PoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+
+    //m_PoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+    
 
   }
 
@@ -227,10 +229,14 @@ public class Vision extends SubsystemBase {
   public PhotonPoseEstimator getVisionPose(){
     return m_PoseEstimator;
   }
+  
+  
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    // System.out.println(getRobotPose());
+    if (camera.getDistCoeffs().equals(Optional.empty())){
+      System.out.println("NO CALIBRATION");
+    }
+
   }
 }

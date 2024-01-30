@@ -2,6 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
+import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -97,6 +98,7 @@ public class ShuffleBoardButtons {
         telescopeEntry = m_encoderTab.add("Telescope Encoder", 0.0).getEntry();
         teleEncoderRateThresh = m_graphTab.add("TeleEncoderThresh", 0.0).getEntry();
         teleSpikeThresh = m_graphTab.add("TeleSpikeThresh", 0.0).getEntry();
+        
 
         pivotBLS = m_limitSwitchTab.add("pivotLimitSwitchState", false).getEntry();
 
