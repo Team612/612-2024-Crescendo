@@ -4,27 +4,19 @@
 
 package frc.robot;
 
-import java.lang.reflect.Proxy;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.RunOnTheFly;
 import frc.robot.commands.TrajectoryCreation;
-import edu.wpi.first.wpilibj2.command.ProxyCommand;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -33,12 +25,14 @@ import edu.wpi.first.wpilibj2.command.ProxyCommand;
  */
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.PoseEstimator;
+import frc.robot.subsystems.TrajectoryConfiguration;
 import frc.robot.subsystems.Vision;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drivetrain m_drivetrain = Drivetrain.getInstance();
   private final PoseEstimator m_poseEstimator = PoseEstimator.getPoseEstimatorInstance();
+  private final TrajectoryConfiguration m_trajectoryConfig = TrajectoryConfiguration.getInstance();
   private final Vision m_vision = Vision.getVisionInstance();
 
   private final TrajectoryCreation m_traj = new TrajectoryCreation();
@@ -95,8 +89,9 @@ public class RobotContainer {
     // m_chooser.addOption("Blue Top Leave And Dock", new ProxyCommand(() -> m_BlueTopLeaveAndDock));
     // m_chooser.addOption("Red Bottom Leave And Dock", new ProxyCommand(() -> m_RedBottomLeaveAndDock));
     // m_chooser.addOption("Blue Bottom Leave and Dock", new ProxyCommand(() -> m_BlueBottomLeaveAndDock));
-    m_chooser.addOption("Test to Red", m_runOnTheFly);
-    //m_chooser.addOption("Test Path", m_drivetrain.followPathCommand("First Path"));
+    m_chooser.addOption("Run on Fly", m_runOnTheFly);
+    m_chooser.addOption("Test Path", m_trajectoryConfig.followPathGui("First Path"));
+    m_chooser.addOption("Forward one", m_trajectoryConfig.followPathManual(m_traj.ForwardMeter(m_poseEstimator)));
     SmartDashboard.putData(m_chooser);
     // SmartDashboard.putData("Slowmo (Toggle)", new SlowmoDrive(m_drivetrain));
   }
@@ -116,9 +111,18 @@ public class RobotContainer {
             () -> -driver.getRawAxis(rotationAxis)));
   }
 
-  public void TeleopHeading(){
+  // public void TeleopHeading(){
+  //   Rotation2d finalHeading = new Rotation2d(Units.degreesToRadians(-180));
+  //   Rotation2d currentHeading = m_poseEstimator.getCurrentPose().getRotation();
+  //   Rotation2d deltaHeading = finalHeading.minus(currentHeading);
+  //   if(Robot.initAllianceColor == Alliance.Blue){
+  //     m_drivetrain.setNavxAngleOffset(deltaHeading.plus(new Rotation2d(Units.degreesToRadians(0))));
+  //   }
     
-  }
+  //   if(Robot.initAllianceColor == Alliance.Red){
+  //     m_drivetrain.setNavxAngleOffset(deltaHeading.plus(new Rotation2d(Units.degreesToRadians(180))));
+  //   }
+  // }
   
   public Command getAutonomousCommand() {
     return m_chooser.getSelected();

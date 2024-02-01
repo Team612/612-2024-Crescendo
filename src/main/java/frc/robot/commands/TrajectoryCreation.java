@@ -25,85 +25,102 @@ import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.Vision;
 
 public class TrajectoryCreation {
-
-    public TrajectoryConfig config = new TrajectoryConfig(Constants.Swerve.maxSpeed, Constants.Swerve.maxAcceleration)
-        .setKinematics(Constants.Swerve.swerveKinematics);
-
-    public TrajectoryConfig config_backwards = new TrajectoryConfig(Constants.Swerve.maxSpeed, Constants.Swerve.maxAcceleration)
-        .setKinematics(Constants.Swerve.swerveKinematics).setReversed(true);
     
-
-    public Trajectory testTrajectory = TrajectoryGenerator.generateTrajectory(
-        new Pose2d(0, 0, new Rotation2d(0)),
-        List.of(new Translation2d(2,0), new Translation2d(2,-2), new Translation2d(0, -2)),
-        new Pose2d(0,0, new Rotation2d(0)), 
-        config); 
-    
-    public Trajectory StrafeRightMeter(PoseEstimator estimation){ 
+    public PathPlannerPath StrafeRightMeter(PoseEstimator estimation){ 
         Pose2d estimatedPose = estimation.getCurrentPose();
+
         double x = estimatedPose.getX();
         double y = estimatedPose.getY();
-        double degrees = estimatedPose.getRotation().getRadians();
-        
-        return TrajectoryGenerator.generateTrajectory(
-            new Pose2d(x, y, new Rotation2d(degrees)),
-            List.of(new Translation2d(x,y-0.5)),
-            new Pose2d(x,y-1, new Rotation2d(Units.degreesToRadians(degrees))),
-            config_backwards
+        Rotation2d angle = estimatedPose.getRotation();
+
+        List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
+            new Pose2d(x, y, angle),
+            new Pose2d(x, y - 1, angle)
         );
+
+        // Create the path using the bezier points created above
+        PathPlannerPath path = new PathPlannerPath(
+            bezierPoints,
+            new PathConstraints(Constants.Swerve.maxSpeed, Constants.Swerve.maxAcceleration, Constants.Swerve.maxAngularVelocity, Constants.Swerve.maxAngularAcceleration), // The constraints for this path. If using a differential drivetrain, the angular constraints have no effect.
+            new GoalEndState(0.0, angle) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+        );
+
+        // Prevent the path from being flipped if the coordinates are already correct
+        path.preventFlipping = true;
+        return path;
     }
 
-    public Trajectory StrafeLeftMeter(PoseEstimator estimation){ 
+    public PathPlannerPath StrafeLeftMeter(PoseEstimator estimation){ 
         Pose2d estimatedPose = estimation.getCurrentPose();
+
         double x = estimatedPose.getX();
         double y = estimatedPose.getY();
-        double degrees = estimatedPose.getRotation().getRadians();
-        
-        return TrajectoryGenerator.generateTrajectory(
-            new Pose2d(x, y, new Rotation2d(degrees)),
-            List.of(new Translation2d(x,y+0.5)),
-            new Pose2d(x,y+1, new Rotation2d(Units.degreesToRadians(degrees))),
-            config
+        Rotation2d angle = estimatedPose.getRotation();
+
+        List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
+            new Pose2d(x, y, angle),
+            new Pose2d(x, y + 1, angle)
         );
+
+        // Create the path using the bezier points created above
+        PathPlannerPath path = new PathPlannerPath(
+            bezierPoints,
+            new PathConstraints(Constants.Swerve.maxSpeed, Constants.Swerve.maxAcceleration, Constants.Swerve.maxAngularVelocity, Constants.Swerve.maxAngularAcceleration), // The constraints for this path. If using a differential drivetrain, the angular constraints have no effect.
+            new GoalEndState(0.0, angle) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+        );
+
+        // Prevent the path from being flipped if the coordinates are already correct
+        path.preventFlipping = true;
+        return path;
     }
 
-    public Trajectory ForwardMeter(PoseEstimator estimation){
-
-        //figure out a way to find an initial position 
-
-        // System.out.println("*************************** PRINT **********************************");
-        // var currentPose = estimation.getCurrentPose();
-        // System.out.println(currentPose);
+    public PathPlannerPath ForwardMeter(PoseEstimator estimation){
         Pose2d estimatedPose = estimation.getCurrentPose();
+
         double x = estimatedPose.getX();
         double y = estimatedPose.getY();
-        double degrees = estimatedPose.getRotation().getRadians();
+        Rotation2d angle = estimatedPose.getRotation();
 
-        
-
-        // System.out.println("*************************** END PRINT **********************************");
-
-        return TrajectoryGenerator.generateTrajectory(
-            new Pose2d(x, y, new Rotation2d(degrees)),
-            List.of(new Translation2d(x + 0.5,y)),
-            new Pose2d(x + 1.0, y, new Rotation2d(degrees)),
-            config
+        List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
+            new Pose2d(x, y, angle),
+            new Pose2d(x + 0.5, y, angle),
+            new Pose2d(x + 1, y, angle)
         );
+
+        // Create the path using the bezier points created above
+        PathPlannerPath path = new PathPlannerPath(
+            bezierPoints,
+            new PathConstraints(Constants.Swerve.maxSpeed, Constants.Swerve.maxAcceleration, Constants.Swerve.maxAngularVelocity, Constants.Swerve.maxAngularAcceleration), // The constraints for this path. If using a differential drivetrain, the angular constraints have no effect.
+            new GoalEndState(0.0, angle) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+        );
+
+        // Prevent the path from being flipped if the coordinates are already correct
+        path.preventFlipping = true;
+        return path;
     }
 
-    public Trajectory BackwardMeter(PoseEstimator estimation){
+    public PathPlannerPath BackwardMeter(PoseEstimator estimation){
         Pose2d estimatedPose = estimation.getCurrentPose();
+
         double x = estimatedPose.getX();
         double y = estimatedPose.getY();
-        double degrees = estimatedPose.getRotation().getRadians();
+        Rotation2d angle = estimatedPose.getRotation();
 
-        return TrajectoryGenerator.generateTrajectory(
-            new Pose2d(x, y, new Rotation2d(degrees)),
-            List.of(new Translation2d(x-2.5,y)),
-            new Pose2d(x-4.75, y, new Rotation2d(degrees
-            )),
-            config_backwards
+        List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
+            new Pose2d(x, y, angle),
+            new Pose2d(x - 1, y, angle)
         );
+
+        // Create the path using the bezier points created above
+        PathPlannerPath path = new PathPlannerPath(
+            bezierPoints,
+            new PathConstraints(Constants.Swerve.maxSpeed, Constants.Swerve.maxAcceleration, Constants.Swerve.maxAngularVelocity, Constants.Swerve.maxAngularAcceleration), // The constraints for this path. If using a differential drivetrain, the angular constraints have no effect.
+            new GoalEndState(0.0, angle) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+        );
+
+        // Prevent the path from being flipped if the coordinates are already correct
+        path.preventFlipping = true;
+        return path;
     }
 
     public PathPlannerPath onthefly(PoseEstimator estimation, Vision vision, double y_translation){
@@ -134,7 +151,23 @@ public class TrajectoryCreation {
         System.out.println("current" + x + ' ' + y);
         System.out.println("tag" + tagX + ' ' + tagY);
         
-        //if(id == 3 || id == 4) {
+        if(id == 1 || id == 2 || id == 15) {
+            List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
+                new Pose2d(x, y, angle),
+                new Pose2d(tagX, tagY, Rotation2d.fromDegrees(300))
+            );
+
+            // Create the path using the bezier points created above
+            PathPlannerPath path = new PathPlannerPath(
+                bezierPoints,
+                new PathConstraints(Constants.Swerve.maxSpeed, Constants.Swerve.maxAcceleration, Constants.Swerve.maxAngularVelocity, Constants.Swerve.maxAngularAcceleration), // The constraints for this path. If using a differential drivetrain, the angular constraints have no effect.
+                new GoalEndState(0.0, Rotation2d.fromDegrees(300)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+            );
+
+            // Prevent the path from being flipped if the coordinates are already correct
+            path.preventFlipping = true;
+            return path;
+        } else if(id == 3 || id == 4 || id == 13) {
             List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
                 new Pose2d(x, y, angle),
                 new Pose2d(tagX, tagY, Rotation2d.fromDegrees(0))
@@ -142,14 +175,110 @@ public class TrajectoryCreation {
 
             // Create the path using the bezier points created above
             PathPlannerPath path = new PathPlannerPath(
-                    bezierPoints,
-                    new PathConstraints(Constants.Swerve.maxSpeed, Constants.Swerve.maxAcceleration, Constants.Swerve.maxAngularVelocity, Constants.Swerve.maxAngularAcceleration), // The constraints for this path. If using a differential drivetrain, the angular constraints have no effect.
-                    new GoalEndState(0.0, Rotation2d.fromDegrees(-90)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+                bezierPoints,
+                new PathConstraints(Constants.Swerve.maxSpeed, Constants.Swerve.maxAcceleration, Constants.Swerve.maxAngularVelocity, Constants.Swerve.maxAngularAcceleration), // The constraints for this path. If using a differential drivetrain, the angular constraints have no effect.
+                new GoalEndState(0.0, Rotation2d.fromDegrees(0)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
             );
 
             // Prevent the path from being flipped if the coordinates are already correct
             path.preventFlipping = true;
             return path;
-        //}
+        } else if(id == 5 || id == 6) {
+            List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
+                new Pose2d(x, y, angle),
+                new Pose2d(tagX, tagY, Rotation2d.fromDegrees(90))
+            );
+
+            // Create the path using the bezier points created above
+            PathPlannerPath path = new PathPlannerPath(
+                bezierPoints,
+                new PathConstraints(Constants.Swerve.maxSpeed, Constants.Swerve.maxAcceleration, Constants.Swerve.maxAngularVelocity, Constants.Swerve.maxAngularAcceleration), // The constraints for this path. If using a differential drivetrain, the angular constraints have no effect.
+                new GoalEndState(0.0, Rotation2d.fromDegrees(90)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+            );
+
+            // Prevent the path from being flipped if the coordinates are already correct
+            path.preventFlipping = true;
+            return path;
+        } else if(id == 7 || id == 8 || id == 14) {
+            List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
+                new Pose2d(x, y, angle),
+                new Pose2d(tagX, tagY, Rotation2d.fromDegrees(180))
+            );
+
+            // Create the path using the bezier points created above
+            PathPlannerPath path = new PathPlannerPath(
+                bezierPoints,
+                new PathConstraints(Constants.Swerve.maxSpeed, Constants.Swerve.maxAcceleration, Constants.Swerve.maxAngularVelocity, Constants.Swerve.maxAngularAcceleration), // The constraints for this path. If using a differential drivetrain, the angular constraints have no effect.
+                new GoalEndState(0.0, Rotation2d.fromDegrees(180)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+            );
+
+            // Prevent the path from being flipped if the coordinates are already correct
+            path.preventFlipping = true;
+            return path;
+        } else if(id == 9 || id == 10 || id == 12) {
+            List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
+                new Pose2d(x, y, angle),
+                new Pose2d(tagX, tagY, Rotation2d.fromDegrees(240))
+            );
+
+            // Create the path using the bezier points created above
+            PathPlannerPath path = new PathPlannerPath(
+                bezierPoints,
+                new PathConstraints(Constants.Swerve.maxSpeed, Constants.Swerve.maxAcceleration, Constants.Swerve.maxAngularVelocity, Constants.Swerve.maxAngularAcceleration), // The constraints for this path. If using a differential drivetrain, the angular constraints have no effect.
+                new GoalEndState(0.0, Rotation2d.fromDegrees(240)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+            );
+
+            // Prevent the path from being flipped if the coordinates are already correct
+            path.preventFlipping = true;
+            return path;
+        } else if(id == 11) {
+            List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
+                new Pose2d(x, y, angle),
+                new Pose2d(tagX, tagY, Rotation2d.fromDegrees(120))
+            );
+
+            // Create the path using the bezier points created above
+            PathPlannerPath path = new PathPlannerPath(
+                bezierPoints,
+                new PathConstraints(Constants.Swerve.maxSpeed, Constants.Swerve.maxAcceleration, Constants.Swerve.maxAngularVelocity, Constants.Swerve.maxAngularAcceleration), // The constraints for this path. If using a differential drivetrain, the angular constraints have no effect.
+                new GoalEndState(0.0, Rotation2d.fromDegrees(120)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+            );
+
+            // Prevent the path from being flipped if the coordinates are already correct
+            path.preventFlipping = true;
+            return path;
+        } else if(id == 16) {
+            List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
+                new Pose2d(x, y, angle),
+                new Pose2d(tagX, tagY, Rotation2d.fromDegrees(60))
+            );
+
+            // Create the path using the bezier points created above
+            PathPlannerPath path = new PathPlannerPath(
+                bezierPoints,
+                new PathConstraints(Constants.Swerve.maxSpeed, Constants.Swerve.maxAcceleration, Constants.Swerve.maxAngularVelocity, Constants.Swerve.maxAngularAcceleration), // The constraints for this path. If using a differential drivetrain, the angular constraints have no effect.
+                new GoalEndState(0.0, Rotation2d.fromDegrees(60)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+            );
+
+            // Prevent the path from being flipped if the coordinates are already correct
+            path.preventFlipping = true;
+            return path;
+        } else {
+            List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
+                new Pose2d(x, y, angle),
+                new Pose2d(tagX, tagY, angle)
+            );
+
+            // Create the path using the bezier points created above
+            PathPlannerPath path = new PathPlannerPath(
+                bezierPoints,
+                new PathConstraints(Constants.Swerve.maxSpeed, Constants.Swerve.maxAcceleration, Constants.Swerve.maxAngularVelocity, Constants.Swerve.maxAngularAcceleration), // The constraints for this path. If using a differential drivetrain, the angular constraints have no effect.
+                new GoalEndState(0.0, angle) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+            );
+
+            // Prevent the path from being flipped if the coordinates are already correct
+            path.preventFlipping = true;
+            return path;
+        }
     }
 }
