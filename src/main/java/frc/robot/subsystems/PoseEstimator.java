@@ -88,7 +88,6 @@ public class PoseEstimator extends SubsystemBase {
         // estimatedRobotPose.timestampSeconds != previousPipelineTimestamp && 
       estimatedPose.getX() >= 0.0 && estimatedPose.getX() <= FIELD_LENGTH_METERS
       && estimatedPose.getY() >= 0.0 && estimatedPose.getY() <= FIELD_WIDTH_METERS) {
-          System.out.println("run");
         if (estimatedRobotPose.targetsUsed.size() >= 1) {
         
           for (PhotonTrackedTarget target : estimatedRobotPose.targetsUsed) {

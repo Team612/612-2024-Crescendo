@@ -83,15 +83,14 @@ public class TrajectoryCreation {
 
         List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
             new Pose2d(x, y, angle),
-            new Pose2d(x + 0.5, y, angle),
-            new Pose2d(x + 1, y, angle)
+            new Pose2d(x + 1, y, new Rotation2d(angle.getDegrees() + 45))
         );
 
         // Create the path using the bezier points created above
         PathPlannerPath path = new PathPlannerPath(
             bezierPoints,
             new PathConstraints(Constants.Swerve.maxSpeed, Constants.Swerve.maxAcceleration, Constants.Swerve.maxAngularVelocity, Constants.Swerve.maxAngularAcceleration), // The constraints for this path. If using a differential drivetrain, the angular constraints have no effect.
-            new GoalEndState(0.0, angle) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+            new GoalEndState(0.0, new Rotation2d(angle.getDegrees() + 90)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
         );
 
         // Prevent the path from being flipped if the coordinates are already correct

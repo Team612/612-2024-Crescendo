@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DefaultDrive;
+import frc.robot.commands.FieldOrientedDrive;
+import frc.robot.commands.FollowTrajectory;
 import frc.robot.commands.RunOnTheFly;
 import frc.robot.commands.TrajectoryCreation;
 /**
@@ -37,6 +39,7 @@ public class RobotContainer {
 
   private final TrajectoryCreation m_traj = new TrajectoryCreation();
   private final RunOnTheFly m_runOnTheFly = new RunOnTheFly(m_drivetrain, m_poseEstimator, m_traj, m_vision, 0);
+  private final FollowTrajectory m_forward = new FollowTrajectory(m_drivetrain, m_poseEstimator, m_traj, 0);
               
   private final Joystick driver = new Joystick(0);
 
@@ -45,14 +48,23 @@ public class RobotContainer {
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
+  private final DefaultDrive m_defaultDrive = new DefaultDrive( m_drivetrain,
+            () -> -driver.getRawAxis(translationAxis),
+            () -> -driver.getRawAxis(strafeAxis),
+            () -> -driver.getRawAxis(rotationAxis));
+
   /* Driver Buttons */
   private final JoystickButton align =
       new JoystickButton(driver, XboxController.Button.kY.value);
   private final JoystickButton fieldCentric =
       new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+  private final JoystickButton robotToField =
+      new JoystickButton(driver, XboxController.Button.kB.value);
 
   //Drive subsystems declarations 
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
+
+  private boolean isFieldOriented = true;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
@@ -91,7 +103,7 @@ public class RobotContainer {
     // m_chooser.addOption("Blue Bottom Leave and Dock", new ProxyCommand(() -> m_BlueBottomLeaveAndDock));
     m_chooser.addOption("Run on Fly", m_runOnTheFly);
     m_chooser.addOption("Test Path", m_trajectoryConfig.followPathGui("First Path"));
-    m_chooser.addOption("Forward one", m_trajectoryConfig.followPathManual(m_traj.ForwardMeter(m_poseEstimator)));
+    m_chooser.addOption("Forward one", m_forward);
     SmartDashboard.putData(m_chooser);
     // SmartDashboard.putData("Slowmo (Toggle)", new SlowmoDrive(m_drivetrain));
   }
@@ -99,12 +111,13 @@ public class RobotContainer {
   private void configureButtonBindings() {
     align.onTrue(new InstantCommand(() -> m_drivetrain.resetAlignment()));
     fieldCentric.onTrue(new InstantCommand(() -> m_drivetrain.zeroGyro()));
+    robotToField.toggleOnTrue(m_defaultDrive);
   }
 
 
   private void configureDefaultCommands(){
     m_drivetrain.setDefaultCommand(
-        new DefaultDrive(
+        new FieldOrientedDrive(
             m_drivetrain,
             () -> -driver.getRawAxis(translationAxis),
             () -> -driver.getRawAxis(strafeAxis),

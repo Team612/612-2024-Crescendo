@@ -24,9 +24,11 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 // import frc.robot.Constants;
 import frc.robot.Constants;
+import frc.robot.ShuffleBoardButtons;
 public class Vision extends SubsystemBase {
   private static AprilTagFieldLayout aprilTagFieldLayout;
   private static Transform3d robotToCam;
@@ -237,6 +239,6 @@ public class Vision extends SubsystemBase {
     if (camera.getDistCoeffs().equals(Optional.empty())){
       System.out.println("NO CALIBRATION");
     }
-
+    SmartDashboard.putBoolean("Sees tag", camera.getLatestResult().hasTargets());
   }
 }
