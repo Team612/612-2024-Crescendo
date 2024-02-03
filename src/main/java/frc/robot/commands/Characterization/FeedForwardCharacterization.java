@@ -18,7 +18,7 @@ import java.util.function.Supplier;
 
 public class FeedForwardCharacterization extends Command {
   private static final double startDelaySecs = 2.0;
-  private static final double rampRateVoltsPerSec = 0.05;
+  private static final double rampRateVoltsPerSec = 0.2;
 
   private final boolean forwards;
   private final boolean isDrive;
@@ -88,7 +88,6 @@ public class FeedForwardCharacterization extends Command {
       }
     } else {
       double voltage = (timer.get() - startDelaySecs) * rampRateVoltsPerSec * (forwards ? 1 : -1);
-      System.out.println("voltage" + voltage);
       if (isDrive) {
         voltageConsumerDrive.accept(voltage, voltage);
       } else {

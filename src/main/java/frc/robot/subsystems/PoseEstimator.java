@@ -98,7 +98,7 @@ public class PoseEstimator extends SubsystemBase {
             double distance = Math.hypot(bestTarget.getX(), bestTarget.getY());
 
             //checking from the camera to the tag is less than 4
-            if (distance < 4 && target.getPoseAmbiguity() <= .2) {
+            if (target.getPoseAmbiguity() <= .2) {
               previousPipelineTimestamp = estimatedRobotPose.timestampSeconds;
               m_DrivePoseEstimator.addVisionMeasurement(camPose.toPose2d(), estimatedRobotPose.timestampSeconds);
             }

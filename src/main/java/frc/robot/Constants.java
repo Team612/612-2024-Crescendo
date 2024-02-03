@@ -63,9 +63,9 @@ public final class Constants {
     public static final double driveKFF = 0.0;
 
     /* Drive Motor Characterization Values */
-    public static final double driveKS = 0.667;
-    public static final double driveKV = 2.44;
-    public static final double driveKA = 0.27;
+    public static final double driveKS = 0.22005;
+    public static final double driveKV = 2.74490;
+    public static final double driveKA = 0;
 
      //have to tune manually
      public static final double kPXController = 5; // ~ 1cm error
