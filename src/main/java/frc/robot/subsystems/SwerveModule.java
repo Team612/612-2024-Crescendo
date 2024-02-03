@@ -186,21 +186,16 @@ public class SwerveModule {
     return new SwerveModuleState(driveEncoder.getVelocity(), getAngle());
   }
 
-  /** Returns the drive velocity in radians/sec. */
+  public double getVoltage() {
+    return driveMotor.getBusVoltage();
+  }
+
+  /** Returns the drive velocity in m/sec. */
   public double getCharacterizationVelocity() {
-    return (2 * Math.PI) / 60 * driveEncoder.getVelocity();
+    return driveEncoder.getVelocity();
   }
 
   public void runCharacterization(double volts) {
-    setTurnVoltage(turnFeedback.calculate(getAngle().getRadians(), 0.0));
-    setDriveVoltage(volts);
-  }
-
-  public void setDriveVoltage(double volts) {
     driveMotor.setVoltage(volts);
-  }
-
-  public void setTurnVoltage(double volts) {
-    angleMotor.setVoltage(volts);
   }
 }

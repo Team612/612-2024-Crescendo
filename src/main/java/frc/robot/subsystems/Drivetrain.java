@@ -160,17 +160,32 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
+  public void runCharacterizationVolts(double volts) {
+    isCharacterizing = true;
+    characterizationVolts = volts;
+  }
+
+  /** Returns the average drive velocity in radians/sec. */
+  public double getCharacterizationVelocity() {
+    double driveVelocityAverage = 0.0;
+    for (var module : mSwerveMods) {
+      driveVelocityAverage += module.getCharacterizationVelocity();
+    }
+    return driveVelocityAverage / 4.0;
+  }
+
   @Override
   public void periodic() {
-    // for (SwerveModule mod : mSwerveMods) {
-    //   SmartDashboard.putNumber(
-    //       "Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
-    //   SmartDashboard.putNumber(
-    //       "Mod " + mod.moduleNumber + " Integrated", mod.getState().angle.getDegrees());
-    //   SmartDashboard.putNumber(
-    //       "Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
-    // }
+    for (SwerveModule mod : mSwerveMods) {
+      SmartDashboard.putNumber(
+          "Mod " + mod.moduleNumber + " velocity", mod.getCharacterizationVelocity());
+    }
     SmartDashboard.putNumber("Current Angle", navx.getAngle());
-    
+    if (isCharacterizing) {
+      // Run in characterization mode
+      for (SwerveModule mod : mSwerveMods) {
+        mod.runCharacterization(characterizationVolts);
+      }
+    }
   }
 }

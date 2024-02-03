@@ -19,6 +19,8 @@ import frc.robot.commands.FieldOrientedDrive;
 import frc.robot.commands.FollowTrajectory;
 import frc.robot.commands.RunOnTheFly;
 import frc.robot.commands.TrajectoryCreation;
+import frc.robot.commands.Characterization.FeedForwardCharacterization;
+import frc.robot.commands.Characterization.FeedForwardCharacterization.FeedForwardCharacterizationData;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -104,6 +106,12 @@ public class RobotContainer {
     m_chooser.addOption("Run on Fly", m_runOnTheFly);
     m_chooser.addOption("Test Path", m_trajectoryConfig.followPathGui("First Path"));
     m_chooser.addOption("Forward one", m_forward);
+    m_chooser.addOption("Swerve Characterization", new FeedForwardCharacterization(
+              m_drivetrain,
+              true,
+              new FeedForwardCharacterizationData("drive"),
+              m_drivetrain::runCharacterizationVolts,
+              m_drivetrain::getCharacterizationVelocity));
     SmartDashboard.putData(m_chooser);
     // SmartDashboard.putData("Slowmo (Toggle)", new SlowmoDrive(m_drivetrain));
   }
