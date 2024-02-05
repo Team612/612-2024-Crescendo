@@ -6,9 +6,16 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.commands.IntakeIn;
+import frc.robot.commands.IntakeOut;
+import frc.robot.commands.ShooterOut;
+import frc.robot.commands.pivotArm;
+import frc.robot.commands.ShooterIn;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
+import frc.robot.controls.ControlMap;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Arm;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -18,10 +25,19 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final Intake m_IntakeSubsystem = new Intake();
+  private final Arm m_arm = new Arm();
+  private final Shooter m_Shooter = new Shooter();
 
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
-
+//commands 
+  private final IntakeIn m_IntakeIn = new IntakeIn(m_IntakeSubsystem, 2);
+  private final IntakeOut m_IntakeOut = new IntakeOut(m_IntakeSubsystem, 2);
+  private final ShooterOut m_ShooterOut = new ShooterOut(m_Shooter, 2, true);
+  private final ShooterIn m_ShooterIn= new ShooterIn(m_Shooter, 2, true);
+  private final ShooterOut m_ShooterOutHalf = new ShooterOut(m_Shooter, 2, false);
+  private final ShooterIn m_ShooterInHalf = new ShooterIn(m_Shooter, 2, false);
+  private final pivotArm m_PivotArmToShooter = new pivotArm(m_arm, true, -1);
+  private final pivotArm m_PivotArmToIntake = new pivotArm(m_arm, false, 1);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
@@ -34,7 +50,16 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    ControlMap.GUNNER_RB.whenPressed(m_ShooterIn);
+    ControlMap.GUNNER_LB.whenPressed(m_ShooterOut);
+    ControlMap.blue1.whenPressed(m_IntakeIn);
+    ControlMap.blue2.whenPressed(m_IntakeOut);
+    ControlMap.red4.whenPressed(m_PivotArmToShooter);
+    ControlMap.red5.whenPressed(m_PivotArmToIntake);
+    ControlMap.green1.whenPressed(m_ShooterInHalf);
+    ControlMap.green2.whenPressed(m_ShooterOutHalf);
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -43,6 +68,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return m_IntakeIn;
   }
 }
