@@ -15,6 +15,7 @@ import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.subsystems.SwerveLib.SwerveModuleConstants;
 
@@ -177,6 +178,9 @@ public final class Constants {
     public static final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(12);
     public static final double GOAL_RANGE_METERS = 1;
     
-    public static final Transform3d CAMERA_TO_Robot = new Transform3d();
-  }
+    public static int PCM_2 = 7;
+    public static int[] firstSolenoid = {1, 0};
+    public static int[] secondSolenoid = {3, 2};
+    public static PneumaticsModuleType solenoidType = PneumaticsModuleType.CTREPCM;
+}
 }

@@ -31,21 +31,42 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Controls.ControlMap;
 import frc.robot.commands.DefaultDrive;
+import frc.robot.commands.IntakeIn;
+import frc.robot.commands.IntakeOut;
 import frc.robot.commands.Characterization.FeedForwardCharacterization;
 import frc.robot.commands.Characterization.FeedForwardCharacterization.FeedForwardCharacterizationData;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import frc.robot.subsystems.Limelight;
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Shooter;
+import frc.robot.commands.ShooterOut;
+import frc.robot.commands.ShooterIn;
+import frc.robot.commands.PivotArm;
+ /* This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  private final Intake m_IntakeSubsystem = new Intake();
+  private final Arm m_arm = new Arm();
+  private final Shooter m_Shooter = new Shooter();
+
+//commands 
+  private final IntakeIn m_IntakeIn = new IntakeIn(m_IntakeSubsystem, 2);
+  private final IntakeOut m_IntakeOut = new IntakeOut(m_IntakeSubsystem, 2);
+  private final ShooterOut m_ShooterOut = new ShooterOut(m_Shooter, 2, true);
+  private final ShooterIn m_ShooterIn= new ShooterIn(m_Shooter, 2, true);
+  private final ShooterOut m_ShooterOutHalf = new ShooterOut(m_Shooter, 2, false);
+  private final ShooterIn m_ShooterInHalf = new ShooterIn(m_Shooter, 2, false);
+  private final PivotArm m_PivotArmToShooter = new PivotArm(m_arm, true, -1);
+  private final PivotArm m_PivotArmToIntake = new PivotArm(m_arm, false, 1);
   private final Drivetrain m_drivetrain = Drivetrain.getInstance();
   private final Limelight m_limelight = Limelight.getInstance();
               
@@ -113,6 +134,14 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     align.onTrue(new InstantCommand(() -> m_drivetrain.resetAlignment()));
+    ControlMap.GUNNER_RB.toggleOnTrue(m_ShooterIn);
+    ControlMap.GUNNER_LB.toggleOnTrue(m_ShooterOut);
+    ControlMap.blue1.toggleOnTrue(m_IntakeIn);
+    ControlMap.blue2.toggleOnTrue(m_IntakeOut);
+    ControlMap.red4.toggleOnTrue(m_PivotArmToShooter);
+    ControlMap.red5.toggleOnTrue(m_PivotArmToIntake);
+    ControlMap.green1.toggleOnTrue(m_ShooterInHalf);
+    ControlMap.green2.toggleOnTrue(m_ShooterOutHalf);
   }
 
 
