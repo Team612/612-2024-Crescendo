@@ -104,7 +104,14 @@ public class RobotContainer {
   private final SequentialCommandGroup m_AutoClimb = new SequentialCommandGroup(
     new RunOnTheFly(m_drivetrain, m_PoseEstimator, m_Trajectory, m_Vision, rotationAxis).andThen(new ClimbArm(m_Climb)).andThen(new RetractArm(m_Climb))
   );
+  
+  private final SequentialCommandGroup m_AutoTeleOpScoringRoutine = new SequentialCommandGroup(
+    new RunOnTheFly(m_drivetrain, m_PoseEstimator, m_Trajectory, m_Vision, rotationAxis).andThen(new ShooterOut(m_Shooter, 3, true))
+  );
 
+  private final SequentialCommandGroup m_AutoTeleOpIntakeRoutine = new SequentialCommandGroup(
+    new RunOnTheFly(m_drivetrain, m_PoseEstimator, m_Trajectory, m_Vision, rotationAxis).andThen(new ShooterIn(m_Shooter, 3, true))
+  );
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
@@ -253,5 +260,6 @@ public class RobotContainer {
         new Pose2d(1 + dist-Math.sin(3*tx-90)*Math.sin(tx)/dist, 1 + Math.cos(tx)/dist + Math.cos(3*tx-90)*Math.sin(tx)/dist, new Rotation2d(90)),
         // Pass config
         config);
+        
     return m_chooser.getSelected();
   }}
