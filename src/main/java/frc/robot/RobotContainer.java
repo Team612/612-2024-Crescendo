@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.FieldOrientedDrive;
-import frc.robot.commands.FollowTrajectory;
+import frc.robot.commands.FollowNote;
 import frc.robot.commands.RunOnTheFly;
 import frc.robot.commands.TrajectoryCreation;
 import frc.robot.commands.Characterization.FeedForwardCharacterization;
@@ -41,7 +41,7 @@ public class RobotContainer {
 
   private final TrajectoryCreation m_traj = new TrajectoryCreation();
   private final RunOnTheFly m_runOnTheFly = new RunOnTheFly(m_drivetrain, m_poseEstimator, m_traj, m_vision, 0);
-  private final FollowTrajectory m_forward = new FollowTrajectory(m_drivetrain, m_poseEstimator, m_traj, 0);
+  private final FollowNote m_moveToNote = new FollowNote(m_drivetrain, m_poseEstimator, m_traj, m_vision, 0);
               
   private final Joystick driver = new Joystick(0);
 
@@ -105,7 +105,7 @@ public class RobotContainer {
     // m_chooser.addOption("Blue Bottom Leave and Dock", new ProxyCommand(() -> m_BlueBottomLeaveAndDock));
     m_chooser.addOption("Run on Fly", m_runOnTheFly);
     m_chooser.addOption("Test Path", m_trajectoryConfig.followPathGui("Double Path"));
-    m_chooser.addOption("Forward one", m_forward);
+    m_chooser.addOption("Move to Note", m_moveToNote);
     m_chooser.addOption("Swerve Characterization", new FeedForwardCharacterization(
               m_drivetrain,
               true,

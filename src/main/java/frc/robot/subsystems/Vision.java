@@ -231,8 +231,6 @@ public class Vision extends SubsystemBase {
   public PhotonPoseEstimator getVisionPose(){
     return m_PoseEstimator;
   }
-  
-  
 
   @Override
   public void periodic() {
