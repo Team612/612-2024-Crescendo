@@ -149,6 +149,18 @@ public class Vision extends SubsystemBase {
     return new Pose2d();
   }
 
+ public double getY() {
+    PhotonPipelineResult result = camera.getLatestResult();
+    if (result.hasTargets()) {
+      PhotonTrackedTarget bestTarget = result.getBestTarget();
+
+      Transform3d tagSpace = bestTarget.getBestCameraToTarget();
+
+      return tagSpace.getY();
+    }
+    return 0;
+  }
+
   public double returnYaw() {
     PhotonPipelineResult result = camera.getLatestResult();
     if (result.hasTargets()) {

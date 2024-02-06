@@ -8,6 +8,9 @@ package frc.robot;
 import java.lang.reflect.Proxy;
 import java.util.List;
 
+import com.pathplanner.lib.path.PathPlannerPath;
+
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -40,10 +43,19 @@ import frc.robot.commands.Characterization.FeedForwardCharacterization.FeedForwa
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Shooter;
 import frc.robot.commands.ShooterOut;
 import frc.robot.commands.ShooterIn;
 import frc.robot.commands.PivotArm;
+import frc.robot.commands.RunOnTheFly;
+import frc.robot.subsystems.PoseEstimator;
+import frc.robot.commands.TrajectoryCreation;
+import frc.robot.subsystems.Vision;
+import frc.robot.commands.ClimbArm;
+import frc.robot.commands.RetractArm;
+
+
  /* This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
@@ -57,7 +69,10 @@ public class RobotContainer {
   private final Intake m_IntakeSubsystem = new Intake();
   private final Arm m_arm = new Arm();
   private final Shooter m_Shooter = new Shooter();
-
+  private final PoseEstimator m_PoseEstimator = new PoseEstimator();
+  private final Vision m_Vision = Vision.getVisionInstance();
+  private final Climb m_Climb = new Climb();
+  private final TrajectoryCreation m_Trajectory = new TrajectoryCreation();
 //commands 
   private final IntakeIn m_IntakeIn = new IntakeIn(m_IntakeSubsystem, 2);
   private final IntakeOut m_IntakeOut = new IntakeOut(m_IntakeSubsystem, 2);
@@ -85,6 +100,11 @@ public class RobotContainer {
 
   //Drive subsystems declarations 
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
+  
+  private final SequentialCommandGroup m_AutoClimb = new SequentialCommandGroup(
+    new RunOnTheFly(m_drivetrain, m_PoseEstimator, m_Trajectory, m_Vision, rotationAxis).andThen(new ClimbArm(m_Climb)).andThen(new RetractArm(m_Climb))
+  );
+
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
@@ -208,6 +228,20 @@ public class RobotContainer {
         config);
 
     Trajectory driveAroundObject =
+    TrajectoryGenerator.generateTrajectory(
+        // Start at the origin facing the +X direction
+        // STARTING POSITION AND STARTING X, WILL BE CALCULATED USING APRIL TAGS
+        new Pose2d(0, 0, new Rotation2d(0)),
+        // Pass through these two interior waypoints, making an 's' curve path
+        List.of(new Translation2d(1+dist, 1 + (Math.cos(tx))/dist)),
+        // End 3 meters straight ahead of where we started, facing forward
+        // ENDING POSITION AND ENDING X, POSITION OF NOTE
+        new Pose2d(1 + dist-Math.sin(3*tx-90)*Math.sin(tx)/dist, 1 + Math.cos(tx)/dist + Math.cos(3*tx-90)*Math.sin(tx)/dist, new Rotation2d(90)),
+        // Pass config
+        config);
+
+
+    Trajectory AprilTagAlignment =
     TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
         // STARTING POSITION AND STARTING X, WILL BE CALCULATED USING APRIL TAGS
