@@ -125,59 +125,59 @@ public class TrajectoryCreation {
         return path;
     }
 
-    public PathPlannerPath moveToNote(PoseEstimator estimation, Vision vision) {
-        Pose2d estimatedPose = estimation.getCurrentPose();
-        double x = estimatedPose.getX();
-        double y = estimatedPose.getY();
-        Rotation2d angle = estimatedPose.getRotation();
+    // public PathPlannerPath moveToNote(PoseEstimator estimation, Vision vision) {
+    //     Pose2d estimatedPose = estimation.getCurrentPose();
+    //     double x = estimatedPose.getX();
+    //     double y = estimatedPose.getY();
+    //     Rotation2d angle = estimatedPose.getRotation();
 
-        vision.getCamera().setPipelineIndex(1);
+    //     vision.getCamera().setPipelineIndex(1);
 
-        PhotonPipelineResult result = vision.getCamera().getLatestResult();
-        double CAMERA_HEIGHT_METERS = Units.inchesToMeters(18.5);
-        double TARGET_HEIGHT_METERS = 0;
-        double CAMERA_PITCH_RADIANS = Units.degreesToRadians(0);
-        double GOAL_RANGE_METERS = Units.feetToMeters(1);
-        if (result.hasTargets()) {
-                // First calculate range
-                double range = PhotonUtils.calculateDistanceToTargetMeters(
-                                CAMERA_HEIGHT_METERS,
-                                TARGET_HEIGHT_METERS,
-                                CAMERA_PITCH_RADIANS,
-                                Units.degreesToRadians(result.getBestTarget().getPitch()));
+    //     PhotonPipelineResult result = vision.getCamera().getLatestResult();
+    //     double CAMERA_HEIGHT_METERS = Units.inchesToMeters(18.5);
+    //     double TARGET_HEIGHT_METERS = 0;
+    //     double CAMERA_PITCH_RADIANS = Units.degreesToRadians(0);
+    //     double GOAL_RANGE_METERS = Units.feetToMeters(1);
+    //     if (result.hasTargets()) {
+    //             // First calculate range
+    //             double range = PhotonUtils.calculateDistanceToTargetMeters(
+    //                             CAMERA_HEIGHT_METERS,
+    //                             TARGET_HEIGHT_METERS,
+    //                             CAMERA_PITCH_RADIANS,
+    //                             Units.degreesToRadians(result.getBestTarget().getPitch()));
                                 
-                double absoluteYaw = angle.getDegrees() + result.getBestTarget().getYaw();
-                List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
-                    new Pose2d(x, y, angle),
-                    new Pose2d((range - GOAL_RANGE_METERS) * Math.cos(absoluteYaw), (range - GOAL_RANGE_METERS) * Math.sin(absoluteYaw), new Rotation2d(absoluteYaw))
-                );
+    //             double absoluteYaw = angle.getDegrees() + result.getBestTarget().getYaw();
+    //             List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
+    //                 new Pose2d(x, y, angle),
+    //                 new Pose2d((range - GOAL_RANGE_METERS) * Math.cos(absoluteYaw), (range - GOAL_RANGE_METERS) * Math.sin(absoluteYaw), new Rotation2d(absoluteYaw))
+    //             );
 
-                // Create the path using the bezier points created above
-                PathPlannerPath path = new PathPlannerPath(
-                    bezierPoints,
-                    new PathConstraints(Constants.Swerve.maxSpeed, Constants.Swerve.maxAcceleration, Constants.Swerve.maxAngularVelocity, Constants.Swerve.maxAngularAcceleration), // The constraints for this path. If using a differential drivetrain, the angular constraints have no effect.
-                    new GoalEndState(0.0, new Rotation2d(absoluteYaw)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
-                );
-                vision.getCamera().setPipelineIndex(0);
-                // Prevent the path from being flipped if the coordinates are already correct
-                path.preventFlipping = true;
-                return path;
-            }
-            List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
-                new Pose2d(x, y, angle)
-            );
-            vision.getCamera().setPipelineIndex(0);
-            // Create the path using the bezier points created above
-            PathPlannerPath path = new PathPlannerPath(
-                bezierPoints,
-                new PathConstraints(Constants.Swerve.maxSpeed, Constants.Swerve.maxAcceleration, Constants.Swerve.maxAngularVelocity, Constants.Swerve.maxAngularAcceleration), // The constraints for this path. If using a differential drivetrain, the angular constraints have no effect.
-                new GoalEndState(0.0, angle) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
-            );
+    //             // Create the path using the bezier points created above
+    //             PathPlannerPath path = new PathPlannerPath(
+    //                 bezierPoints,
+    //                 new PathConstraints(Constants.Swerve.maxSpeed, Constants.Swerve.maxAcceleration, Constants.Swerve.maxAngularVelocity, Constants.Swerve.maxAngularAcceleration), // The constraints for this path. If using a differential drivetrain, the angular constraints have no effect.
+    //                 new GoalEndState(0.0, new Rotation2d(absoluteYaw)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+    //             );
+    //             vision.getCamera().setPipelineIndex(0);
+    //             // Prevent the path from being flipped if the coordinates are already correct
+    //             path.preventFlipping = true;
+    //             return path;
+    //         }
+    //         List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
+    //             new Pose2d(x, y, angle)
+    //         );
+    //         vision.getCamera().setPipelineIndex(0);
+    //         // Create the path using the bezier points created above
+    //         PathPlannerPath path = new PathPlannerPath(
+    //             bezierPoints,
+    //             new PathConstraints(Constants.Swerve.maxSpeed, Constants.Swerve.maxAcceleration, Constants.Swerve.maxAngularVelocity, Constants.Swerve.maxAngularAcceleration), // The constraints for this path. If using a differential drivetrain, the angular constraints have no effect.
+    //             new GoalEndState(0.0, angle) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+    //         );
 
-            // Prevent the path from being flipped if the coordinates are already correct
-            path.preventFlipping = true;
-            return path;
-    }
+    //         // Prevent the path from being flipped if the coordinates are already correct
+    //         path.preventFlipping = true;
+    //         return path;
+    // }
 
     public PathPlannerPath onthefly(PoseEstimator estimation, Vision vision, double y_translation){
         Pose2d estimatedPose = estimation.getCurrentPose();
@@ -339,5 +339,33 @@ public class TrajectoryCreation {
             path.preventFlipping = true;
             return path;
         }
+    }
+
+    public PathPlannerPath noteOnTheFly(PoseEstimator estimation, Vision vision){
+        Pose2d estimatedPose = estimation.getCurrentPose();
+        double x = estimatedPose.getX();
+        double y = estimatedPose.getY();
+        Rotation2d angle = estimatedPose.getRotation();
+        boolean hasTargets = vision.hasTarget();
+
+      
+        if (hasTargets){
+            Pose2d notespace = vision.getNoteSpace();
+            System.out.println(notespace.getX());
+            System.out.println(notespace.getY());
+            double offset = Constants.Swerve.trackWidth/2; //center offset
+            List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
+                new Pose2d(x, y, angle),
+                new Pose2d(x + notespace.getX() , y + notespace.getY() + offset, new Rotation2d(Units.degreesToRadians((angle.getDegrees() + notespace.getRotation().getDegrees()))))
+            );
+
+            PathPlannerPath path = new PathPlannerPath(bezierPoints,
+             new PathConstraints(Constants.Swerve.maxSpeed, Constants.Swerve.maxAcceleration, Constants.Swerve.maxAngularVelocity, Constants.Swerve.maxAngularAcceleration), 
+             new GoalEndState(0, new Rotation2d(Units.degreesToRadians(angle.getDegrees() + notespace.getRotation().getDegrees()))));
+             return path;
+
+        }
+        System.out.println("NO TARGETS");
+        return null;
     }
 }

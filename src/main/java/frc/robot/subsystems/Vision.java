@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -24,6 +25,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 // import frc.robot.Constants;
@@ -227,6 +229,42 @@ public class Vision extends SubsystemBase {
     m_PoseEstimator.setReferencePose(latestPose);
     return m_PoseEstimator.update();
   }
+
+  public double getTargetPitch(){
+    PhotonPipelineResult result = camera.getLatestResult();
+    return result.getBestTarget().getPitch();
+  }
+
+  public double getTargetYaw(){
+    PhotonPipelineResult result = camera.getLatestResult();
+    return result.getBestTarget().getYaw();
+  }
+
+  public boolean hasTarget(){
+    PhotonPipelineResult result = camera.getLatestResult();
+    if (result.hasTargets())
+      return true;
+    return false;
+  }
+
+  public void switchPipeline(int id){
+    camera.setPipelineIndex(id);
+  }
+
+
+  public Pose2d getNoteSpace(){ //
+    //
+    double range =
+    //note, the algorithm photonvision uses is the exact same as the limelight one, commented out below
+    PhotonUtils.calculateDistanceToTargetMeters(
+            robotToCam.getZ(),
+            Units.inchesToMeters(0),
+            0,
+            Units.degreesToRadians(getTargetPitch()));
+
+     return new Pose2d(PhotonUtils.estimateCameraToTargetTranslation(range, new Rotation2d(Units.degreesToRadians(getTargetYaw()))), new Rotation2d(Units.degreesToRadians(getTargetYaw())));
+  }
+
 
   public PhotonPoseEstimator getVisionPose(){
     return m_PoseEstimator;

@@ -38,8 +38,8 @@ public class FollowNote extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    PathPlannerPath path = m_traj.moveToNote(poseEstimatorSystem, m_vision);
-
+    m_vision.switchPipeline(0);
+    PathPlannerPath path = m_traj.noteOnTheFly(poseEstimatorSystem, m_vision);
     controllerCommand = AutoBuilder.followPath(path);
     controllerCommand.initialize();
   }
@@ -53,6 +53,7 @@ public class FollowNote extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_vision.switchPipeline(0);
     controllerCommand.end(interrupted);
   }
 
