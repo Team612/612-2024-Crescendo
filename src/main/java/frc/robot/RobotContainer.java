@@ -42,11 +42,10 @@ import frc.robot.commands.Characterization.FeedForwardCharacterization;
 import frc.robot.commands.Characterization.FeedForwardCharacterization.FeedForwardCharacterizationData;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.IntakeAndPivot;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Shooter;
 import frc.robot.commands.ShooterOut;
-import frc.robot.commands.ShooterIn;
 import frc.robot.commands.PivotArm;
 import frc.robot.commands.RunOnTheFly;
 import frc.robot.subsystems.PoseEstimator;
@@ -62,24 +61,21 @@ import frc.robot.commands.RetractArm;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakeAndPivot;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Intake m_IntakeSubsystem = new Intake();
-  private final Arm m_arm = new Arm();
+  private final IntakeAndPivot m_IntakeSubsystem = new IntakeAndPivot();
+  private final IntakeAndPivot m_arm = new IntakeAndPivot();
   private final Shooter m_Shooter = new Shooter();
   private final PoseEstimator m_PoseEstimator = new PoseEstimator();
   private final Vision m_Vision = Vision.getVisionInstance();
   private final Climb m_Climb = new Climb();
   private final TrajectoryCreation m_Trajectory = new TrajectoryCreation();
 //commands 
-  private final IntakeIn m_IntakeIn = new IntakeIn(m_IntakeSubsystem, 2);
-  private final IntakeOut m_IntakeOut = new IntakeOut(m_IntakeSubsystem, 2);
-  private final ShooterOut m_ShooterOut = new ShooterOut(m_Shooter, 2, true);
-  private final ShooterIn m_ShooterIn= new ShooterIn(m_Shooter, 2, true);
-  private final ShooterOut m_ShooterOutHalf = new ShooterOut(m_Shooter, 2, false);
-  private final ShooterIn m_ShooterInHalf = new ShooterIn(m_Shooter, 2, false);
+  private final IntakeIn m_IntakeIn = new IntakeIn(m_IntakeSubsystem);
+  private final IntakeOut m_IntakeOut = new IntakeOut(m_IntakeSubsystem);
+  private final ShooterOut m_ShooterOut = new ShooterOut(m_Shooter);
   private final PivotArm m_PivotArmToShooter = new PivotArm(m_arm, true, -1);
   private final PivotArm m_PivotArmToIntake = new PivotArm(m_arm, false, 1);
   private final Drivetrain m_drivetrain = Drivetrain.getInstance();
@@ -106,11 +102,11 @@ public class RobotContainer {
   );
   
   private final SequentialCommandGroup m_AutoTeleOpScoringRoutine = new SequentialCommandGroup(
-    new RunOnTheFly(m_drivetrain, m_PoseEstimator, m_Trajectory, m_Vision, rotationAxis).andThen(new ShooterOut(m_Shooter, 3, true))
+    new RunOnTheFly(m_drivetrain, m_PoseEstimator, m_Trajectory, m_Vision, rotationAxis).andThen(new ShooterOut(m_Shooter))
   );
 
   private final SequentialCommandGroup m_AutoTeleOpIntakeRoutine = new SequentialCommandGroup(
-    new RunOnTheFly(m_drivetrain, m_PoseEstimator, m_Trajectory, m_Vision, rotationAxis).andThen(new ShooterIn(m_Shooter, 3, true))
+    new RunOnTheFly(m_drivetrain, m_PoseEstimator, m_Trajectory, m_Vision, rotationAxis).andThen(new IntakeIn(m_IntakeSubsystem))
   );
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -161,18 +157,29 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     align.onTrue(new InstantCommand(() -> m_drivetrain.resetAlignment()));
-    ControlMap.GUNNER_RB.toggleOnTrue(m_ShooterIn);
     ControlMap.GUNNER_LB.toggleOnTrue(m_ShooterOut);
     ControlMap.blue1.toggleOnTrue(m_IntakeIn);
     ControlMap.blue2.toggleOnTrue(m_IntakeOut);
-    ControlMap.red4.toggleOnTrue(m_PivotArmToShooter);
-    ControlMap.red5.toggleOnTrue(m_PivotArmToIntake);
-    ControlMap.green1.toggleOnTrue(m_ShooterInHalf);
-    ControlMap.green2.toggleOnTrue(m_ShooterOutHalf);
-  }
+    // ControlMap.red4.toggleOnTrue(m_PivotArmToShooter);
+    // ControlMap.red5.toggleOnTrue(m_PivotArmToIntake);
+    if(-1*ControlMap.gunner_joystick.getRawAxis(0) < 0.1){
+      new PivotArm(m_arm, true, -1);
+    }
+    else if (ControlMap.gunner_joystick.getRawAxis(0) < 0.1) {
+      new PivotArm(m_arm, false, 1);
+    }
+ }
 
+ private void configureDefaultButton() {
+    m_drivetrain.setDefaultCommand(
+      new DefaultDrive(
+          m_drivetrain,
+          () -> -ControlMap.gunner_joystick.getRawAxis(translationAxis),
+          () -> -ControlMap.gunner_joystick.getRawAxis(strafeAxis),
+          () -> -ControlMap.gunner_joystick.getRawAxis(rotationAxis)));
+ }
 
-  private void configureDefaultCommands(){
+  private void configureDefaultCommands() {
     m_drivetrain.setDefaultCommand(
         new DefaultDrive(
             m_drivetrain,

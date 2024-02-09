@@ -14,7 +14,7 @@ public class Shooter extends SubsystemBase {
   public Shooter() {
     m_ShooterMotor = new CANSparkMax(0, CANSparkLowLevel.MotorType.kBrushless);
     m_ShooterMotor.setIdleMode(IdleMode.kBrake);
-    m_ShooterMotor.getEncoder().setPositionConversionFactor(360); // converts into degrees
+    m_ShooterMotor.getEncoder().setPositionConversionFactor(7/67); // converts into degrees
   }
   public void set(double speed) {
     m_ShooterMotor.set(speed);

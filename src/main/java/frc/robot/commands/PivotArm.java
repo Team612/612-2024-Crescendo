@@ -4,16 +4,17 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Arm;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.IntakeAndPivot;
 
-public class PivotArm extends CommandBase {
+public class PivotArm extends Command {
   /** Creates a new pivotArm. */
-  private final Arm m_Arm;
+  private final IntakeAndPivot m_Arm;
+  public Boolean done = false; //to check if program is done
   private final Boolean m_toShooter;
   private int m_turnAmount;
   private int amountTurned=0;
-  public PivotArm(Arm Arm, Boolean toShooter, int turnAmount) {
+  public PivotArm(IntakeAndPivot Arm, Boolean toShooter, int turnAmount) {
     m_Arm = Arm;
     m_toShooter = toShooter;
     m_turnAmount = turnAmount;
@@ -28,35 +29,39 @@ public class PivotArm extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
     if (m_toShooter) {
-      // going to the shooter
+
+      // going to the shooter position
       if(m_turnAmount<amountTurned){
-        m_Arm.set(-1);
+        m_Arm.setArm(-1);
         amountTurned--;
       }
       else{
-        m_Arm.set(0);
+        m_Arm.setArm(0);
       }
 
-    } else {
+    } else { //not going to shooter
       // going to the intake
       if(m_turnAmount>amountTurned){
-        m_Arm.set(1);
+        m_Arm.setArm(1);
         amountTurned++;
-      }
-      else{
-        m_Arm.set(0);
+      }else{
+        m_Arm.setArm(0);
       }
     }
+    done = true;
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_Arm.stop();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return done;
   }
 }

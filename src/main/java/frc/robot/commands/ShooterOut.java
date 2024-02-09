@@ -4,18 +4,15 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
 
-public class ShooterOut extends CommandBase {
+public class ShooterOut extends Command {
   /** Creates a new LeftShooter. */
   private final Shooter m_Shooter;
-  private final double m_timer;
-  private final boolean m_full;
-  public ShooterOut(Shooter Shooter, double delay, boolean full) {
+  private boolean done = false;
+  public ShooterOut(Shooter Shooter) {
     m_Shooter = Shooter;
-    m_timer = delay;
-    m_full = full;
     addRequirements(m_Shooter);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -23,34 +20,26 @@ public class ShooterOut extends CommandBase {
   // Called when the command is initially scheduled.
   double timer;
   @Override
-  public void initialize() {
-    timer = System.currentTimeMillis();
-  } 
+  public void initialize() {} 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double timer = System.currentTimeMillis();
-    if (m_full) {
       m_Shooter.set(1);
-      if (timer - this.timer > m_timer) {
-        m_Shooter.set(0);
+      if (m_Shooter.get() != 1) {
+        done = false;
+      } else  {
+        done = true;
       }
-    } else {
-      m_Shooter.set(0.5);
-      if (timer - this.timer > m_timer*2) {
-        m_Shooter.set(0);
-      }
-    }
   }
-
   // Called once thy command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_Shooter.set(0);
   }
 
   // Returns true when the command should end.....?
   @Override
   public boolean isFinished() {
-    return false;
+    return done;
   }
 }

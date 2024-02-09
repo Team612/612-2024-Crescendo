@@ -8,16 +8,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.Constants;
-import frc.robot.Robot;
-import frc.robot.commands.ClimbArm;
+// import frc.robot.Robot;
+// import frc.robot.commands.ClimbArm;
 
 public class Climb extends SubsystemBase {
-  private Robot m_robot;
-  private final DoubleSolenoid m_piston1 = new DoubleSolenoid(Constants.VisionConstants.PCM_2, Constants.VisionConstants.solenoidType, Constants.VisionConstants.firstSolenoid[1], Constants.VisionConstants.firstSolenoid[0]);
-  private final DoubleSolenoid m_piston2 = new DoubleSolenoid(Constants.VisionConstants.PCM_2, Constants.VisionConstants.solenoidType, Constants.VisionConstants.secondSolenoid[1] ,Constants.VisionConstants.secondSolenoid[0]);
-  //Pushes the piston out
+  private final DoubleSolenoid m_piston1;
+  private final DoubleSolenoid m_piston2;  //Pushes the piston out
   /** Creates a new Climb. */
-  public Climb() {}
+  public Climb() {
+    m_piston1 = new DoubleSolenoid(Constants.VisionConstants.PCM_2, Constants.VisionConstants.solenoidType, Constants.VisionConstants.firstSolenoid[1], Constants.VisionConstants.firstSolenoid[0]);
+    m_piston2 = new DoubleSolenoid(Constants.VisionConstants.PCM_2, Constants.VisionConstants.solenoidType, Constants.VisionConstants.secondSolenoid[1] ,Constants.VisionConstants.secondSolenoid[0]);
+  }
   public void extendArm(){
     m_piston1.set(Value.kForward);
     m_piston2.set(Value.kForward);
@@ -37,6 +38,7 @@ public void retractArm(){
       m_piston2.set(Value);
     }
 }
+
 public void climb() {
   extendArm();
   retractArm();
