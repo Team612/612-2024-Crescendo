@@ -17,7 +17,7 @@ public class ClimbArm extends Command {
     //Extend the pivot arm
     @Override
     public void initialize(){
-        
+        m_climb.freezeMotors();
     }
 
     //Retract pivot arm to pull robot to the rung
@@ -29,6 +29,7 @@ public class ClimbArm extends Command {
     
     @Override
     public void end(boolean interrupted){
+        m_climb.freezeMotors();
     }
 
     @Override

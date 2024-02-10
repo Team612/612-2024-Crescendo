@@ -18,7 +18,7 @@ public class RetractArm extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+    m_climb.freezeMotors();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -30,7 +30,7 @@ public class RetractArm extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    
+    m_climb.freezeMotors();
   }
 
   // Returns true when the command should end.

@@ -11,7 +11,7 @@ public class PivotArm extends Command {
   /** Creates a new pivotArm. */
   private final IntakeAndPivot m_Arm;
   public Boolean done = false; //to check if program is done
-  private final Boolean m_toShooter;
+  private final boolean m_toShooter;
   private int m_turnAmount;
   private int amountTurned=0;
   public PivotArm(IntakeAndPivot Arm, Boolean toShooter, int turnAmount) {
@@ -24,7 +24,9 @@ public class PivotArm extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+        m_Arm.setArm(0);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -56,7 +58,7 @@ public class PivotArm extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_Arm.stop();
+    m_Arm.setArm(0);
   }
 
   // Returns true when the command should end.

@@ -20,7 +20,9 @@ public class ShooterOut extends Command {
   // Called when the command is initially scheduled.
   double timer;
   @Override
-  public void initialize() {} 
+  public void initialize() {
+      m_Shooter.set(0); 
+  }
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {

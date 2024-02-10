@@ -19,7 +19,9 @@ public class IntakeIn extends Command{
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {} 
+  public void initialize() {
+    m_IntakeAndPivot.setIntake(0);;
+  } 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {

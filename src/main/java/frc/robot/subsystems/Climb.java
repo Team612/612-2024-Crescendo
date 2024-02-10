@@ -39,6 +39,12 @@ public void retractArm(){
     }
 }
 
+public void freezeMotors(){
+    m_piston1.set(Value.kOff);
+    m_piston2.set(Value.kOff);
+    System.out.println("STOP");
+}
+
 public void climb() {
   extendArm();
   retractArm();

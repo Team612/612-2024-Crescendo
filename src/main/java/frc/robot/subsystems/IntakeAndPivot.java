@@ -6,20 +6,29 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 public class IntakeAndPivot extends SubsystemBase {
   /** Creates a new Arm. */
-  private CANSparkMax m_Arm;
+  private CANSparkMax m_pivotMotor;
   private CANSparkMax m_IntakeMotor;
+  private RelativeEncoder encPiv;
+  private RelativeEncoder encIntake;
+
   public IntakeAndPivot() {
-    m_Arm = new CANSparkMax(0, CANSparkLowLevel.MotorType.kBrushless);
-    m_Arm.setIdleMode(IdleMode.kBrake);
-    m_Arm.getEncoder().setPositionConversionFactor(7/67); // converts into degrees
+    m_pivotMotor = new CANSparkMax(0, CANSparkLowLevel.MotorType.kBrushless);
     m_IntakeMotor = new CANSparkMax(0, CANSparkLowLevel.MotorType.kBrushless);
+    encPiv = m_pivotMotor.getEncoder();
+    encIntake = m_IntakeMotor.getEncoder();
+  }
+
+  public void configurePivotMotor(){
+    m_pivotMotor.setIdleMode(IdleMode.kBrake);
     m_IntakeMotor.setIdleMode(IdleMode.kBrake);
-    m_IntakeMotor.getEncoder().setPositionConversionFactor(7/67); // converts into degrees
+    encIntake.setPositionConversionFactor(7/67);
+    encPiv.setPositionConversionFactor(7/67); // converts into degrees
   }
     /** Creates a new Intake. */
   public void setIntake(double speed) {
@@ -32,16 +41,13 @@ public class IntakeAndPivot extends SubsystemBase {
       m_IntakeMotor.getEncoder().setPosition(0);
     }
   public void setArm(double speed) {
-    m_Arm.set(speed);
+    m_pivotMotor.set(speed);
   }
   public double getArm() {
-    return m_Arm.get();
+    return m_pivotMotor.get();
   }
   public void resetEncoderPosArm() {
-    m_Arm.getEncoder().setPosition(0);
-  }
-  public void stop() {
-    m_Arm.set(0);
+    m_pivotMotor.getEncoder().setPosition(0);
   }
   @Override
   public void periodic() {
