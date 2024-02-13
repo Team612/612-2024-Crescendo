@@ -24,6 +24,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -168,7 +169,7 @@ public class Vision extends SubsystemBase {
 
     aprilTagFieldLayout = new AprilTagFieldLayout(atList, 16.451 , 8.211 );
 
-    robotToCam = new Transform3d(new Translation3d(0.09, 0.0, 0.3), new Rotation3d(0,0,0)); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
+    robotToCam = new Transform3d(new Translation3d(0.210, 0.0, 0.515), new Rotation3d(0,0,0)); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
     
     m_PoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, this.camera, robotToCam);
 
@@ -252,7 +253,7 @@ public class Vision extends SubsystemBase {
   }
 
 
-  public Pose2d getNoteSpace(){ //
+  public Transform2d getNoteSpace(){ //
     //
     double range =
     //note, the algorithm photonvision uses is the exact same as the limelight one, commented out below
@@ -261,8 +262,9 @@ public class Vision extends SubsystemBase {
             Units.inchesToMeters(0),
             0,
             Units.degreesToRadians(getTargetPitch()));
-
-     return new Pose2d(PhotonUtils.estimateCameraToTargetTranslation(range, new Rotation2d(Units.degreesToRadians(getTargetYaw()))), new Rotation2d(Units.degreesToRadians(getTargetYaw())));
+      //return new Pose2d(PhotonUtils.estimateCameraToTargetTranslation(range, new Rotation2d(Units.degreesToRadians(getTargetYaw()))), new Rotation2d(Units.degreesToRadians(getTargetYaw())));
+      Translation2d translation = PhotonUtils.estimateCameraToTargetTranslation(range, new Rotation2d(Units.degreesToRadians(getTargetYaw())));
+      return new Transform2d(translation, translation.getAngle());
   }
 
 
@@ -275,6 +277,13 @@ public class Vision extends SubsystemBase {
     if (camera.getDistCoeffs().equals(Optional.empty())){
       System.out.println("NO CALIBRATION");
     }
+    if (hasTarget() && camera.getLatestResult().getBestTarget().getFiducialId() == -1){
+      SmartDashboard.putNumber("note x", getNoteSpace().getX());
+      SmartDashboard.putNumber("note y", getNoteSpace().getY());
+    }
     SmartDashboard.putBoolean("Sees tag", camera.getLatestResult().hasTargets());
+
   }
+
+  
 }

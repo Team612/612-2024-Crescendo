@@ -4,13 +4,18 @@
 
 package frc.robot.commands;
 
+import javax.xml.crypto.dsig.Transform;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.PoseEstimator;
+import frc.robot.subsystems.TrajectoryConfiguration;
 import frc.robot.subsystems.Vision;
 
 public class FollowNote extends Command {
@@ -19,6 +24,7 @@ public class FollowNote extends Command {
   private final TrajectoryCreation m_traj;
   private final Vision m_vision;
   private final double translation;
+  private Transform2d notespace;
 
   private Command controllerCommand = Commands.none();
 
@@ -38,23 +44,27 @@ public class FollowNote extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_vision.switchPipeline(0);
-    PathPlannerPath path = m_traj.noteOnTheFly(poseEstimatorSystem, m_vision);
+    PathPlannerPath path = m_traj.noteOnTheFly(poseEstimatorSystem, m_vision,driveSystem);
     controllerCommand = AutoBuilder.followPath(path);
     controllerCommand.initialize();
+  
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     controllerCommand.execute();
+    System.out.println(" Current Pose: " + poseEstimatorSystem.getCurrentPose().getX() + " Speed, " + driveSystem.getStates()[1].speedMetersPerSecond);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_vision.switchPipeline(0);
+    System.out.println("--------------------DONE------------------");
     controllerCommand.end(interrupted);
+    System.out.println(poseEstimatorSystem.getCurrentPose().getX());
+    System.out.println(poseEstimatorSystem.getCurrentPose().getY());
+
   }
 
   // Returns true when the command should end.

@@ -80,9 +80,9 @@ public final class Constants {
 
     /* Swerve Profiling Values */
     public static final double maxSpeed = 4.5; // meters per second
-    public static final double maxAngularVelocity = 11.5;
+    public static final double maxAngularVelocity = Math.PI;
     public static final double maxAcceleration = 1;
-    public static final double maxAngularAcceleration = Math.PI;
+    public static final double maxAngularAcceleration = Math.PI/6;
 
     /* Neutral Modes */
     public static final IdleMode angleNeutralMode = IdleMode.kBrake;
@@ -150,7 +150,7 @@ public final class Constants {
   }
 
   public static class VisionConstants{
-    public static String cameraName = "Microsoft_LifeCam_HD-3000";
+    public static String cameraName = "UC40M_Video";
 
     //constraints
     public static final TrapezoidProfile.Constraints ThetaControllerConstraints = 

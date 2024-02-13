@@ -17,6 +17,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Quaternion;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
@@ -24,6 +26,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
 import frc.robot.ShuffleBoardButtons;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.Vision;
 
@@ -55,7 +58,6 @@ public class TrajectoryCreation {
 
     public PathPlannerPath StrafeLeftMeter(PoseEstimator estimation){ 
         Pose2d estimatedPose = estimation.getCurrentPose();
-
         double x = estimatedPose.getX();
         double y = estimatedPose.getY();
         Rotation2d angle = estimatedPose.getRotation();
@@ -181,7 +183,6 @@ public class TrajectoryCreation {
 
     public PathPlannerPath onthefly(PoseEstimator estimation, Vision vision, double y_translation){
         Pose2d estimatedPose = estimation.getCurrentPose();
-
         double x = estimatedPose.getX();
         double y = estimatedPose.getY();
         Rotation2d angle = estimatedPose.getRotation();
@@ -341,27 +342,32 @@ public class TrajectoryCreation {
         }
     }
 
-    public PathPlannerPath noteOnTheFly(PoseEstimator estimation, Vision vision){
+    public PathPlannerPath noteOnTheFly(PoseEstimator estimation, Vision vision, Drivetrain drivetrain){
         Pose2d estimatedPose = estimation.getCurrentPose();
         double x = estimatedPose.getX();
         double y = estimatedPose.getY();
         Rotation2d angle = estimatedPose.getRotation();
         boolean hasTargets = vision.hasTarget();
 
-      
         if (hasTargets){
-            Pose2d notespace = vision.getNoteSpace();
-            System.out.println(notespace.getX());
-            System.out.println(notespace.getY());
-            double offset = Constants.Swerve.trackWidth/2; //center offset
+            Transform2d notespace = vision.getNoteSpace();
+            double offset = Units.inchesToMeters(10); //center offset
+            notespace = new Transform2d(notespace.getX() - 0.5, notespace.getY(), notespace.getRotation());
+            Pose2d transformedPose = estimatedPose.transformBy(notespace);
+            double endLocationX = transformedPose.getX();
+            double endLocationY = transformedPose.getY() - (2 * notespace.getY()) + 0.075;
+            Rotation2d endLocationRotation = transformedPose.getRotation();
             List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
                 new Pose2d(x, y, angle),
-                new Pose2d(x + notespace.getX() , y + notespace.getY() + offset, new Rotation2d(Units.degreesToRadians((angle.getDegrees() + notespace.getRotation().getDegrees()))))
+                // new Pose2d(x - 0.3,y,angle),
+                // new Pose2d(12, y, angle)
+                new Pose2d(endLocationX, endLocationY, angle)
             );
 
             PathPlannerPath path = new PathPlannerPath(bezierPoints,
              new PathConstraints(Constants.Swerve.maxSpeed, Constants.Swerve.maxAcceleration, Constants.Swerve.maxAngularVelocity, Constants.Swerve.maxAngularAcceleration), 
-             new GoalEndState(0, new Rotation2d(Units.degreesToRadians(angle.getDegrees() + notespace.getRotation().getDegrees()))));
+             new GoalEndState(0, angle));
+             path.preventFlipping = true; //prevents the path from being flipped once the coords are reached
              return path;
 
         }

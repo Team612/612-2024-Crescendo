@@ -78,45 +78,48 @@ public class PoseEstimator extends SubsystemBase {
   public void periodic() {
     m_DrivePoseEstimator.update(m_drivetrain.getNavxAngle(), m_drivetrain.getPositions());
 
-    if(m_PhotonPoseEstimator != null){
+    //if(m_PhotonPoseEstimator != null){
      
-      m_PhotonPoseEstimator.update().ifPresent(estimatedRobotPose -> {
-      var estimatedPose = estimatedRobotPose.estimatedPose;
+      //m_PhotonPoseEstimator.update().ifPresent(estimatedRobotPose -> {
+      //var estimatedPose = estimatedRobotPose.estimatedPose;
      
       // Make sure we have a new measurement, and that it's on the field
-      if (
-        // estimatedRobotPose.timestampSeconds != previousPipelineTimestamp && 
-      estimatedPose.getX() >= 0.0 && estimatedPose.getX() <= FIELD_LENGTH_METERS
-      && estimatedPose.getY() >= 0.0 && estimatedPose.getY() <= FIELD_WIDTH_METERS) {
-        if (estimatedRobotPose.targetsUsed.size() >= 1) {
+      // if (m_Vision.getCamera().getLatestResult().getBestTarget().getFiducialId() >= 0){
+      // if (
+      //   // estimatedRobotPose.timestampSeconds != previousPipelineTimestamp && 
+      // estimatedPose.getX() >= 0.0 && estimatedPose.getX() <= FIELD_LENGTH_METERS
+      // && estimatedPose.getY() >= 0.0 && estimatedPose.getY() <= FIELD_WIDTH_METERS) {
+      //   if (estimatedRobotPose.targetsUsed.size() >= 1) {
         
-          for (PhotonTrackedTarget target : estimatedRobotPose.targetsUsed) {
+      //     for (PhotonTrackedTarget target : estimatedRobotPose.targetsUsed) {
 
-            Pose3d targetPose = m_Vision.return_tag_pose(target.getFiducialId());
-            Transform3d bestTarget = target.getBestCameraToTarget();
-            Pose3d camPose = targetPose.transformBy(bestTarget.inverse());            
-            double distance = Math.hypot(bestTarget.getX(), bestTarget.getY());
+      //       Pose3d targetPose = m_Vision.return_tag_pose(target.getFiducialId());
+      //       Transform3d bestTarget = target.getBestCameraToTarget();
+      //       Pose3d camPose = targetPose.transformBy(bestTarget.inverse());            
+      //       double distance = Math.hypot(bestTarget.getX(), bestTarget.getY());
 
-            //checking from the camera to the tag is less than 4
-            if (target.getPoseAmbiguity() <= .2) {
-              previousPipelineTimestamp = estimatedRobotPose.timestampSeconds;
-              m_DrivePoseEstimator.addVisionMeasurement(camPose.toPose2d(), estimatedRobotPose.timestampSeconds);
-            }
-          }
-        } 
+      //       //checking from the camera to the tag is less than 4
+      //       if (target.getPoseAmbiguity() <= .2) {
+      //         previousPipelineTimestamp = estimatedRobotPose.timestampSeconds;
+      //         m_DrivePoseEstimator.addVisionMeasurement(camPose.toPose2d(), estimatedRobotPose.timestampSeconds);
+      //       }
+      //     }
+      //   } 
+      // }
 
-        else {
-            previousPipelineTimestamp = estimatedRobotPose.timestampSeconds;
-            m_DrivePoseEstimator.addVisionMeasurement(estimatedPose.toPose2d(), estimatedRobotPose.timestampSeconds);
-        }
-      }
-      });
+      //   else {
+      //       previousPipelineTimestamp = estimatedRobotPose.timestampSeconds;
+      //       m_DrivePoseEstimator.addVisionMeasurement(estimatedPose.toPose2d(), estimatedRobotPose.timestampSeconds);
+      //   }
+      // }
+      //});
 
       
-    }
+    // }
     m_field.setRobotPose(getCurrentPose());
     SmartDashboard.putNumber("PoseEstimator X", getCurrentPose().getX());
-    SmartDashboard.putNumber("PoseEstimator Y", getCurrentPose().getY());
+     SmartDashboard.putNumber("PoseEstimator Y", getCurrentPose().getY());
+     SmartDashboard.putNumber("PoseEstimator Angle", getCurrentPose().getRotation().getDegrees());
   }
 
 

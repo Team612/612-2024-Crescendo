@@ -176,10 +176,10 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-    for (SwerveModule mod : mSwerveMods) {
-      SmartDashboard.putNumber(
-          "Mod " + mod.moduleNumber + " velocity", mod.getCharacterizationVelocity());
-    }
+    // for (SwerveModule mod : mSwerveMods) {
+    //   SmartDashboard.putNumber(
+    //       "Mod " + mod.moduleNumber + " velocity", mod.getCharacterizationVelocity());
+    // }
     SmartDashboard.putNumber("Current Angle", navx.getAngle());
     if (isCharacterizing) {
       // Run in characterization mode
