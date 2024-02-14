@@ -128,6 +128,11 @@ public class Drivetrain extends SubsystemBase {
     return Rotation2d.fromDegrees(navx.getPitch());
   }
 
+  public double getRoll(){
+    return navx.getRoll();
+  }
+
+
   public void runCharacterizationVolts(double volts) {
     isCharacterizing = true;
     characterizationVolts = volts;

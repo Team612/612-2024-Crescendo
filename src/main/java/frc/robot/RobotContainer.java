@@ -50,6 +50,7 @@ import frc.robot.commands.PivotArm;
 import frc.robot.commands.RunOnTheFly;
 import frc.robot.subsystems.PoseEstimator;
 import frc.robot.commands.TrajectoryCreation;
+import frc.robot.commands.driveToClimb;
 import frc.robot.subsystems.Vision;
 import frc.robot.commands.ClimbArm;
 import frc.robot.commands.RetractArm;
@@ -109,6 +110,9 @@ public class RobotContainer {
     new RunOnTheFly(m_drivetrain, m_PoseEstimator, m_Trajectory, m_Vision, rotationAxis).andThen(new IntakeIn(m_IntakeSubsystem))
   );
 
+  private final SequentialCommandGroup m_climbFull = new SequentialCommandGroup(
+    new driveToClimb(m_drivetrain).andThen(new ClimbArm(m_Climb)).andThen(new RetractArm(m_Climb))
+  );
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
   // private final SequentialCommandGroup m_RedTopScoreAndLeave = new SequentialCommandGroup(
