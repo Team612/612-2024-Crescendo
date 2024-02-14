@@ -348,15 +348,26 @@ public class TrajectoryCreation {
         double y = estimatedPose.getY();
         Rotation2d angle = estimatedPose.getRotation();
         boolean hasTargets = vision.hasTarget();
-
+        
         if (hasTargets){
+            //get the current RELATIVE notespace
             Transform2d notespace = vision.getNoteSpace();
             double offset = Units.inchesToMeters(10); //center offset
-            notespace = new Transform2d(notespace.getX() - 0.5, notespace.getY(), notespace.getRotation());
+            //add whatever translations to it
+            notespace = new Transform2d(notespace.getX() - 0.5, notespace.getY() + 0.1, notespace.getRotation());
+            //transform the notespace to field relative coords. The angle is in estimatedPose, and the transformation is done by this angle.
             Pose2d transformedPose = estimatedPose.transformBy(notespace);
+            //this is assuming that the current angle in the transformation is 0 degrees.
+            // transformedPose.rotateBy(new Rotation2d(
+            //     Units.degreesToRadians(-vision.getTargetYaw() + drivetrain.getNavxAngle().getDegrees()))
+            //     );
+
             double endLocationX = transformedPose.getX();
-            double endLocationY = transformedPose.getY() - (2 * notespace.getY()) + 0.075;
-            Rotation2d endLocationRotation = transformedPose.getRotation();
+            double endLocationY = (transformedPose.getY()); //- (2 * notespace.getY()) + 0.075
+            System.out.println("---------------TRANSFORMATIONS----------------");
+            System.out.println("End Location X: " + endLocationX);
+            System.out.println("End Location Y: " + endLocationY);
+            System.out.println("Transformed By (angle): " + transformedPose.getRotation().getDegrees());
             List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
                 new Pose2d(x, y, angle),
                 // new Pose2d(x - 0.3,y,angle),

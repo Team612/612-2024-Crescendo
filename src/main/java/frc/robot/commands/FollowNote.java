@@ -45,8 +45,15 @@ public class FollowNote extends Command {
   @Override
   public void initialize() {
     PathPlannerPath path = m_traj.noteOnTheFly(poseEstimatorSystem, m_vision,driveSystem);
+    if (path == null) {
+      System.out.println("NO TARGETS");
+      end(true);
+    }
+    else {
     controllerCommand = AutoBuilder.followPath(path);
     controllerCommand.initialize();
+    }
+    
   
   }
 

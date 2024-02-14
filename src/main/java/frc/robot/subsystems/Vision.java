@@ -35,6 +35,7 @@ import frc.robot.ShuffleBoardButtons;
 public class Vision extends SubsystemBase {
   private static AprilTagFieldLayout aprilTagFieldLayout;
   private static Transform3d robotToCam;
+  private Drivetrain m_drivetrain;
   public PhotonPoseEstimator m_PoseEstimator;
 
   static Vision visionInstance = null;
@@ -173,6 +174,8 @@ public class Vision extends SubsystemBase {
     
     m_PoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, this.camera, robotToCam);
 
+    m_drivetrain = Drivetrain.getInstance();
+
     //m_PoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
     
 
@@ -263,8 +266,8 @@ public class Vision extends SubsystemBase {
             0,
             Units.degreesToRadians(getTargetPitch()));
       //return new Pose2d(PhotonUtils.estimateCameraToTargetTranslation(range, new Rotation2d(Units.degreesToRadians(getTargetYaw()))), new Rotation2d(Units.degreesToRadians(getTargetYaw())));
-      Translation2d translation = PhotonUtils.estimateCameraToTargetTranslation(range, new Rotation2d(Units.degreesToRadians(getTargetYaw())));
-      return new Transform2d(translation, translation.getAngle());
+      Translation2d translation = PhotonUtils.estimateCameraToTargetTranslation(range, new Rotation2d(Units.degreesToRadians(-getTargetYaw())));
+      return new Transform2d(translation, new Rotation2d()); //translation.getAngle().plus(m_drivetrain.getNavxAngle()
   }
 
 
