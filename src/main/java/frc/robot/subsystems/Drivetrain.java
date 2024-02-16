@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
+import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.Constants;
 
 public class Drivetrain extends SubsystemBase {
