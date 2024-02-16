@@ -6,13 +6,15 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Climb;
+import frc.robot.subsystems.Drivetrain;
 public class autoClimb extends Command {
   private final Climb m_climb;
-
+    private final Drivetrain m_drivetrain;
     //Constructor
-    public autoClimb(Climb climb){
+    public autoClimb(Drivetrain drive, Climb climb){
         m_climb = climb;
-        addRequirements(climb);
+        m_drivetrain = drive;
+        addRequirements(m_climb, m_drivetrain);
     }
     //Extend the pivot arm
     @Override
@@ -23,7 +25,15 @@ public class autoClimb extends Command {
     //Retract pivot arm to pull robot to the rung
     @Override
     public void execute(){
-        m_climb.autoClimb();
+            if (m_drivetrain.getRoll() > 10){
+                m_climb.Oneset();
+            }
+            else if (m_drivetrain.getRoll() < -10){
+                m_climb.Twoset();
+            }
+            else{
+                m_climb.freezeMotors();
+            }
     }
     
     

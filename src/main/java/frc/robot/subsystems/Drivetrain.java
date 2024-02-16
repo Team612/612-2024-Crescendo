@@ -103,6 +103,14 @@ public class Drivetrain extends SubsystemBase {
     return positions;
   }
 
+  public double getPositionsDist() {
+    SwerveModulePosition[] positions = new SwerveModulePosition[4];
+    for (SwerveModule mod : mSwerveMods) {
+      return mod.getDistance();
+    }
+    return 0;
+  }
+
   public void zeroGyro() {
     navx.zeroYaw();
   }

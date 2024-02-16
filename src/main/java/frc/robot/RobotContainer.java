@@ -50,6 +50,7 @@ import frc.robot.commands.PivotArm;
 import frc.robot.commands.RunOnTheFly;
 import frc.robot.subsystems.PoseEstimator;
 import frc.robot.commands.TrajectoryCreation;
+import frc.robot.commands.autoClimb;
 import frc.robot.commands.driveToClimb;
 import frc.robot.subsystems.Vision;
 import frc.robot.commands.ClimbArm;
@@ -111,7 +112,7 @@ public class RobotContainer {
   );
 
   private final SequentialCommandGroup m_climbFull = new SequentialCommandGroup(
-    new driveToClimb(m_drivetrain).andThen(new ClimbArm(m_Climb)).andThen(new RetractArm(m_Climb))
+    new driveToClimb(m_drivetrain).andThen(new ClimbArm(m_Climb)).andThen(new RetractArm(m_Climb)).andThen(new autoClimb(m_drivetrain, m_Climb))
   );
   // Replace with CommandPS4Controller or CommandJoystick if needed
 

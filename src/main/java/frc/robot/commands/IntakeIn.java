@@ -20,17 +20,18 @@ public class IntakeIn extends Command{
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_IntakeAndPivot.setIntake(0);;
+    m_IntakeAndPivot.setIntake(0);
   } 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     m_IntakeAndPivot.setIntake(-1);
-    if (m_IntakeAndPivot.getIntake() != -1) {
-      done = false;
-    } else {
-      done = true;
-    }
+    // if (m_IntakeAndPivot.getIntake() <= -1) {
+    //   done = false;
+    // } else {
+    //   done = true;
+    // }
+    done = m_IntakeAndPivot.irSensorDetected();
   }
   @Override
   public void end(boolean isFinished) {

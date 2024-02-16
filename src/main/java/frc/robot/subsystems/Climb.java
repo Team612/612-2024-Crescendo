@@ -4,21 +4,16 @@ import frc.robot.Constants;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;    
-import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.wpilibj.I2C;
+import frc.robot.subsystems.Drivetrain;
 
 public class Climb extends SubsystemBase {
     //defines both Talons and Solenoids
     private final DoubleSolenoid secondClimb;
     private final DoubleSolenoid climb;
-    private static AHRS navx;
-    private double navxM;
-
+    
     public Climb(){
         secondClimb = new DoubleSolenoid(Constants.VisionConstants.PCM_2, Constants.VisionConstants.solenoidType, Constants.VisionConstants.firstSolenoid[0], Constants.VisionConstants.firstSolenoid[1]);
         climb  = new DoubleSolenoid(Constants.VisionConstants.PCM_2, Constants.VisionConstants.solenoidType, Constants.VisionConstants.secondSolenoid[0], Constants.VisionConstants.secondSolenoid[1]);
-        navx = new AHRS(I2C.Port.kMXP);
-        navxM = navx.getRoll();
     }
     //Pushes the piston out
     public void extendArm(){
@@ -38,27 +33,24 @@ public class Climb extends SubsystemBase {
         secondClimb.set(Value.kOff);
     }
 
+    public void Oneset(){
+        climb.set(Value.kForward);
+    }
+
+    public void Twoset(){
+        secondClimb.set(Value.kForward);
+    }
+
     public void freezeMotors(){
         climb.set(Value.kOff);
         secondClimb.set(Value.kOff);
     }
 
-    public void autoClimb(){
-        if (getRoll() > 10){
-            climb.set(Value.kForward);
-        }
-        else if (getRoll() < -10){
-            secondClimb.set(Value.kForward);
-        }
-        else{
-            climb.set(Value.kOff);
-            secondClimb.set(Value.kOff);
-        }
-    }
 
-    public double getRoll(){
-        return navx.getRoll();
-      }
+
+    // public double getRoll(){
+    //     return navx.getRoll();
+    //   }
 
     //Pivots the pivot arms
 

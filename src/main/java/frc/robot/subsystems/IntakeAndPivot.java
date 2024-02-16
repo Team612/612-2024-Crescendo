@@ -4,9 +4,13 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+
+import org.ejml.equation.ManagerFunctions.Input1;
+
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkBase.IdleMode;
 
@@ -15,6 +19,7 @@ public class IntakeAndPivot extends SubsystemBase {
   private CANSparkMax m_pivotMotor;
   private CANSparkMax m_IntakeMotor;
   private RelativeEncoder encPiv;
+  private DigitalInput dig = new DigitalInput(0);
   private RelativeEncoder encIntake;
 
   public IntakeAndPivot() {
@@ -49,6 +54,15 @@ public class IntakeAndPivot extends SubsystemBase {
   public void resetEncoderPosArm() {
     m_pivotMotor.getEncoder().setPosition(0);
   }
+
+  public boolean irSensorDetected(){
+    if(dig.get()==true){
+       setIntake(0);
+       return true;
+    }
+    return false;
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

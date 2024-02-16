@@ -138,6 +138,11 @@ public class SwerveModule {
     return new SwerveModulePosition(driveMotor.getEncoder().getPosition(), getAngle());
   }
 
+  public double getDistance() {
+    return driveMotor.getEncoder().getPosition();
+  }
+
+
   /* Sets the speed of the swerve module. If it's openLoop, then it takes in a percentage, otherwise, it calculates and runs a PID */
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
     if (isOpenLoop) {
