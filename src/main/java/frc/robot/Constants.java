@@ -150,7 +150,8 @@ public final class Constants {
   }
 
   public static class VisionConstants{
-    public static String cameraName = "UC40M_Video";
+    public static String cameraNameAprilTag = "Apriltag";
+    public static String cameraNameObject = "Object";
 
     //constraints
     public static final TrapezoidProfile.Constraints ThetaControllerConstraints = 
