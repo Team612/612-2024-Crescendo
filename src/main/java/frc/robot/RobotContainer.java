@@ -4,59 +4,149 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.DriveCommands.DefaultDrive;
+import frc.robot.commands.DriveCommands.FieldOrientedDrive;
+import frc.robot.commands.TrajectoryCommands.FollowNote;
+import frc.robot.commands.TrajectoryCommands.RunOnTheFly;
+import frc.robot.commands.TrajectoryCommands.TrajectoryCreation;
+import frc.robot.commands.CharacterizationCommands.FeedForwardCharacterization;
+import frc.robot.commands.CharacterizationCommands.FeedForwardCharacterization.FeedForwardCharacterizationData;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.PoseEstimator;
+import frc.robot.subsystems.TrajectoryConfiguration;
+import frc.robot.subsystems.Vision;
+
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final Drivetrain m_drivetrain = Drivetrain.getInstance();
+  private final PoseEstimator m_poseEstimator = PoseEstimator.getPoseEstimatorInstance();
+  private final TrajectoryConfiguration m_trajectoryConfig = TrajectoryConfiguration.getInstance();
+  private final Vision m_vision = Vision.getVisionInstance();
+
+  private final TrajectoryCreation m_traj = new TrajectoryCreation();
+  private final RunOnTheFly m_runOnTheFly = new RunOnTheFly(m_drivetrain, m_poseEstimator, m_traj, m_vision, 0);
+  private final FollowNote m_moveToNote = new FollowNote(m_drivetrain, m_poseEstimator, m_traj, m_vision, 0);
+              
+  private final Joystick driver = new Joystick(0);
+
+  /* Drive Controls */
+  private final int translationAxis = XboxController.Axis.kLeftY.value;
+  private final int strafeAxis = XboxController.Axis.kLeftX.value;
+  private final int rotationAxis = XboxController.Axis.kRightX.value;
+
+  private final DefaultDrive m_defaultDrive = new DefaultDrive( m_drivetrain,
+            () -> -driver.getRawAxis(translationAxis),
+            () -> -driver.getRawAxis(strafeAxis),
+            () -> -driver.getRawAxis(rotationAxis));
+
+  /* Driver Buttons */
+  private final JoystickButton align =
+      new JoystickButton(driver, XboxController.Button.kY.value);
+  private final JoystickButton fieldCentric =
+      new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+  private final JoystickButton robotToField =
+      new JoystickButton(driver, XboxController.Button.kB.value);
+
+  //Drive subsystems declarations 
+  private final SendableChooser<Command> m_chooser = new SendableChooser<>();
+
+  private boolean isFieldOriented = true;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  // private final SequentialCommandGroup m_RedTopScoreAndLeave = new SequentialCommandGroup(
+  //   boop
+  //   .andThen(new FollowTrajectoryPathPlanner(m_drivetrain, estimator, "RedTopLeave", Constants.DrivetrainConstants.constraint, true, false))
+  // );
+
+  // private final SequentialCommandGroup m_RedBottomScoreAndLeave = new SequentialCommandGroup(
+  //   boop
+  //   .andThen(new FollowTrajectoryPathPlanner(m_drivetrain, estimator, "RedBottomLeave", Constants.DrivetrainConstants.constraint, true, false))
+  // );
+
+  // private final SequentialCommandGroup m_BlueTopScoreAndLeave = new SequentialCommandGroup(
+  //   boop
+  //   .andThen(new FollowTrajectoryPathPlanner(m_drivetrain, estimator, "BlueTopLeave", Constants.DrivetrainConstants.constraint, true, false))
+  // );
+
+  // private final SequentialCommandGroup m_BlueBottomScoreAndLeave = new SequentialCommandGroup(
+  //   boop
+  //   .andThen(new FollowTrajectoryPathPlanner(m_drivetrain, estimator, "BlueBottomLeave", Constants.DrivetrainConstants.constraint, true, false))
+  // );
+
   public RobotContainer() {
     // Configure the trigger bindings
-    configureBindings();
+    configureButtonBindings();
+    configureShuffleBoardBindings();
+    configureDefaultCommands();
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
-  private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
+  private void configureShuffleBoardBindings(){
+    // m_chooser.addOption("Auto-Balance", new DockingSequence(m_drivetrain));
+    // m_chooser.addOption("Red Top Leave And Dock", new ProxyCommand(() -> m_RedTopLeaveAndDock));
+    // m_chooser.addOption("Blue Top Leave And Dock", new ProxyCommand(() -> m_BlueTopLeaveAndDock));
+    // m_chooser.addOption("Red Bottom Leave And Dock", new ProxyCommand(() -> m_RedBottomLeaveAndDock));
+    // m_chooser.addOption("Blue Bottom Leave and Dock", new ProxyCommand(() -> m_BlueBottomLeaveAndDock));
+    m_chooser.addOption("Run on Fly", m_runOnTheFly);
+    m_chooser.addOption("Test Path", m_trajectoryConfig.followPathGui("Double Path"));
+    m_chooser.addOption("Move to Note", m_moveToNote);
+    m_chooser.addOption("Swerve Characterization", new FeedForwardCharacterization(
+              m_drivetrain,
+              true,
+              new FeedForwardCharacterizationData("drive"),
+              m_drivetrain::runCharacterizationVolts,
+              m_drivetrain::getCharacterizationVelocity));
+    SmartDashboard.putData(m_chooser);
+    // SmartDashboard.putData("Slowmo (Toggle)", new SlowmoDrive(m_drivetrain));
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
+  private void configureButtonBindings() {
+    align.onTrue(new InstantCommand(() -> m_drivetrain.resetAlignment()));
+    fieldCentric.onTrue(new InstantCommand(() -> m_drivetrain.zeroGyro()));
+    robotToField.toggleOnTrue(m_defaultDrive);
+  }
+
+
+  private void configureDefaultCommands(){
+    m_drivetrain.setDefaultCommand(
+        new FieldOrientedDrive(
+            m_drivetrain,
+            () -> -driver.getRawAxis(translationAxis),
+            () -> -driver.getRawAxis(strafeAxis),
+            () -> -driver.getRawAxis(rotationAxis)));
+  }
+
+  // public void TeleopHeading(){
+  //   Rotation2d finalHeading = new Rotation2d(Units.degreesToRadians(-180));
+  //   Rotation2d currentHeading = m_poseEstimator.getCurrentPose().getRotation();
+  //   Rotation2d deltaHeading = finalHeading.minus(currentHeading);
+  //   if(Robot.initAllianceColor == Alliance.Blue){
+  //     m_drivetrain.setNavxAngleOffset(deltaHeading.plus(new Rotation2d(Units.degreesToRadians(0))));
+  //   }
+    
+  //   if(Robot.initAllianceColor == Alliance.Red){
+  //     m_drivetrain.setNavxAngleOffset(deltaHeading.plus(new Rotation2d(Units.degreesToRadians(180))));
+  //   }
+  // }
+  
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return m_chooser.getSelected();
   }
+
 }
