@@ -21,11 +21,16 @@ public final class Constants {
   public static class IntakeConstants{
     public static final int pivotID = 9;
     public static final int rollerID = 10;
+    public static final double intakeUpSpeed = 0.1;
+    public static final double intakeDownSpeed = -0.1;
+    public static final double rollerSpeed = 0.1;
   }
 
   // Shooter constants
   public static class ShooterConstants{
     public static final int shooterLeftID = 11;
     public static final int shooterRightID = 12;
+    public static final double shooterLeftSpeed = 0.1;
+    public static final double shooterRightSpeed = 0.1;
   }
 }
