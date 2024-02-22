@@ -354,7 +354,8 @@ public class TrajectoryCreation {
             Transform2d notespace = vision.getNoteSpace();
             double offset = Units.inchesToMeters(10); //center offset
             //add whatever translations to it
-            notespace = new Transform2d(notespace.getX() - 0.5, notespace.getY(), notespace.getRotation());
+            //notespace = new Transform2d(notespace.getX() - (0.5 * Math.cos(drivetrain.getNavxAngle().getDegrees())), notespace.getY() - 0.2 + (0.2 * -Math.sin(drivetrain.getNavxAngle().getDegrees())), notespace.getRotation());
+            notespace = new Transform2d(notespace.getX() -0.5, notespace.getY(), notespace.getRotation());
             //transform the notespace to field relative coords. The angle is in estimatedPose, and the transformation is done by this angle.
             Pose2d transformedPose = estimatedPose.transformBy(notespace);
             //this is assuming that the current angle in the transformation is 0 degrees.
