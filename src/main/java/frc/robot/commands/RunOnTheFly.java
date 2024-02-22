@@ -32,12 +32,14 @@ public class RunOnTheFly extends Command {
     m_vision = v;
     translation = y;
 
+
     addRequirements(d, v, p);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
     PathPlannerPath path = m_traj.onthefly(poseEstimatorSystem, m_vision, translation);
 
     controllerCommand = AutoBuilder.followPath(path);

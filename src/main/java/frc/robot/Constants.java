@@ -63,9 +63,9 @@ public final class Constants {
     public static final double driveKFF = 0.0;
 
     /* Drive Motor Characterization Values */
-    public static final double driveKS = 0.667;
-    public static final double driveKV = 2.44;
-    public static final double driveKA = 0.27;
+    public static final double driveKS = 0.22005;
+    public static final double driveKV = 2.74490;
+    public static final double driveKA = 0;
 
      //have to tune manually
      public static final double kPXController = 5; // ~ 1cm error
@@ -80,9 +80,9 @@ public final class Constants {
 
     /* Swerve Profiling Values */
     public static final double maxSpeed = 4.5; // meters per second
-    public static final double maxAngularVelocity = 11.5;
+    public static final double maxAngularVelocity = Math.PI;
     public static final double maxAcceleration = 1;
-    public static final double maxAngularAcceleration = Math.PI;
+    public static final double maxAngularAcceleration = Math.PI/6;
 
     /* Neutral Modes */
     public static final IdleMode angleNeutralMode = IdleMode.kBrake;
@@ -150,7 +150,8 @@ public final class Constants {
   }
 
   public static class VisionConstants{
-    public static String cameraName = "Microsoft_LifeCam_HD-3000";
+    public static String cameraNameAprilTag = "Apriltag";
+    public static String cameraNameObject = "Object";
 
     //constraints
     public static final TrapezoidProfile.Constraints ThetaControllerConstraints = 

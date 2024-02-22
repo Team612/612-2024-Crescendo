@@ -22,9 +22,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
+import frc.robot.commands.FollowNote;
+import frc.robot.commands.TrajectoryCreation;
 
 public class PoseEstimator extends SubsystemBase {
   /** Creates a new PoseEstimator. */
@@ -33,6 +38,7 @@ public class PoseEstimator extends SubsystemBase {
   Vision m_Vision;
   Drivetrain m_drivetrain;
   private Field2d m_field;
+  private boolean updateWithAprilTags;
 
   
   public static final double FIELD_LENGTH_METERS = Units.inchesToMeters(651.25);
@@ -51,6 +57,7 @@ public class PoseEstimator extends SubsystemBase {
     m_drivetrain = Drivetrain.getInstance();
     m_Vision = Vision.getVisionInstance();
     m_field = new Field2d();
+    updateWithAprilTags = true;
     SmartDashboard.putData("Field", m_field);
 
 
@@ -72,39 +79,43 @@ public class PoseEstimator extends SubsystemBase {
     return estimator;
   }
 
+  public void isUsingAprilTag(boolean b){
+    updateWithAprilTags = b;
+  }
+
   private boolean once = true;
 
   @Override
   public void periodic() {
     m_DrivePoseEstimator.update(m_drivetrain.getNavxAngle(), m_drivetrain.getPositions());
 
-    if(m_PhotonPoseEstimator != null){
+    if(m_PhotonPoseEstimator != null && updateWithAprilTags){
      
       m_PhotonPoseEstimator.update().ifPresent(estimatedRobotPose -> {
       var estimatedPose = estimatedRobotPose.estimatedPose;
      
       // Make sure we have a new measurement, and that it's on the field
+      if (m_Vision.getCamera().getLatestResult().getBestTarget().getFiducialId() >= 0){
       if (
         // estimatedRobotPose.timestampSeconds != previousPipelineTimestamp && 
       estimatedPose.getX() >= 0.0 && estimatedPose.getX() <= FIELD_LENGTH_METERS
       && estimatedPose.getY() >= 0.0 && estimatedPose.getY() <= FIELD_WIDTH_METERS) {
-          System.out.println("run");
         if (estimatedRobotPose.targetsUsed.size() >= 1) {
         
           for (PhotonTrackedTarget target : estimatedRobotPose.targetsUsed) {
-
             Pose3d targetPose = m_Vision.return_tag_pose(target.getFiducialId());
             Transform3d bestTarget = target.getBestCameraToTarget();
             Pose3d camPose = targetPose.transformBy(bestTarget.inverse());            
             double distance = Math.hypot(bestTarget.getX(), bestTarget.getY());
 
-            //checking from the camera to the tag is less than 4
-            if (distance < 4 && target.getPoseAmbiguity() <= .2) {
+      //       //checking from the camera to the tag is less than 4
+            if (target.getPoseAmbiguity() <= .2) {
               previousPipelineTimestamp = estimatedRobotPose.timestampSeconds;
               m_DrivePoseEstimator.addVisionMeasurement(camPose.toPose2d(), estimatedRobotPose.timestampSeconds);
             }
           }
         } 
+      }
 
         else {
             previousPipelineTimestamp = estimatedRobotPose.timestampSeconds;
@@ -117,7 +128,8 @@ public class PoseEstimator extends SubsystemBase {
     }
     m_field.setRobotPose(getCurrentPose());
     SmartDashboard.putNumber("PoseEstimator X", getCurrentPose().getX());
-    SmartDashboard.putNumber("PoseEstimator Y", getCurrentPose().getY());
+     SmartDashboard.putNumber("PoseEstimator Y", getCurrentPose().getY());
+     SmartDashboard.putNumber("PoseEstimator Angle", getCurrentPose().getRotation().getDegrees());
   }
 
 
