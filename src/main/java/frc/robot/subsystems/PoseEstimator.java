@@ -17,8 +17,14 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.RobotContainer;
+import frc.robot.commands.TrajectoryCommands.TrajectoryCreation;
+import frc.robot.commands.TrajectoryCommands.FollowNote;
 
 public class PoseEstimator extends SubsystemBase {
   /** Creates a new PoseEstimator. */
@@ -27,6 +33,7 @@ public class PoseEstimator extends SubsystemBase {
   Vision m_vision;
   Drivetrain m_drivetrain;
   private Field2d m_field;
+  private boolean updateWithAprilTags;
 
   
   public static final double FIELD_LENGTH_METERS = Units.inchesToMeters(651.25);
@@ -45,6 +52,7 @@ public class PoseEstimator extends SubsystemBase {
     m_drivetrain = Drivetrain.getInstance();
     m_vision = Vision.getVisionInstance();
     m_field = new Field2d();
+    updateWithAprilTags = true;
     SmartDashboard.putData("Field", m_field);
 
 
@@ -66,13 +74,17 @@ public class PoseEstimator extends SubsystemBase {
     return estimator;
   }
 
+  public void isUsingAprilTag(boolean b){
+    updateWithAprilTags = b;
+  }
+
   private boolean once = true;
 
   @Override
   public void periodic() {
     m_DrivePoseEstimator.update(m_drivetrain.getNavxAngle(), m_drivetrain.getPositions());
 
-    if(m_PhotonPoseEstimator != null){
+    if(m_PhotonPoseEstimator != null && updateWithAprilTags){
      
       m_PhotonPoseEstimator.update().ifPresent(estimatedRobotPose -> {
       var estimatedPose = estimatedRobotPose.estimatedPose;
@@ -86,7 +98,6 @@ public class PoseEstimator extends SubsystemBase {
         if (estimatedRobotPose.targetsUsed.size() >= 1) {
         
           for (PhotonTrackedTarget target : estimatedRobotPose.targetsUsed) {
-
             Pose3d targetPose = m_vision.return_tag_pose(target.getFiducialId());
             Transform3d bestTarget = target.getBestCameraToTarget();
             Pose3d camPose = targetPose.transformBy(bestTarget.inverse());            

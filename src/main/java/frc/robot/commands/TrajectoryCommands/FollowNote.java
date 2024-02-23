@@ -56,6 +56,8 @@ public class FollowNote extends Command {
     controllerCommand = AutoBuilder.followPath(path);
     controllerCommand.initialize();
     }
+    //we dont want to update using apriltag during the trajectory
+    poseEstimatorSystem.isUsingAprilTag(false);
     
   
   }
@@ -64,7 +66,7 @@ public class FollowNote extends Command {
   @Override
   public void execute() {
     controllerCommand.execute();
-    System.out.println(" Current Pose: " + poseEstimatorSystem.getCurrentPose().getX() + " Speed, " + driveSystem.getStates()[1].speedMetersPerSecond);
+    System.out.println(" Current Pose: " + poseEstimatorSystem.getCurrentPose().getY() + " Speed, " + driveSystem.getStates()[1].speedMetersPerSecond);
   }
 
   // Called once the command ends or is interrupted.
@@ -72,6 +74,7 @@ public class FollowNote extends Command {
   public void end(boolean interrupted) {
     System.out.println("--------------------DONE------------------");
     controllerCommand.end(interrupted);
+    poseEstimatorSystem.isUsingAprilTag(true);
     System.out.println(poseEstimatorSystem.getCurrentPose().getX());
     System.out.println(poseEstimatorSystem.getCurrentPose().getY());
 

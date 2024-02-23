@@ -175,8 +175,7 @@ public class Vision extends SubsystemBase {
 
     robotToCamApril = new Transform3d(new Translation3d(0.20, 0.04, 0.46), new Rotation3d()); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
 
-    robotToCamObject = new Transform3d(new Translation3d(0.20,0.0
-    ,0.48), new Rotation3d());
+    robotToCamObject = new Transform3d(new Translation3d(0,-0.22,0.485), new Rotation3d()); //0.20,-0.04
     
     m_PoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, this.cameraApriltag, robotToCamApril);
 
@@ -286,11 +285,9 @@ public class Vision extends SubsystemBase {
     if (cameraApriltag.getDistCoeffs().equals(Optional.empty())){
       System.out.println("NO CALIBRATION");
     }
-    if (hasTarget() && cameraObject.getLatestResult().getBestTarget().getFiducialId() == -1){
-      Transform2d currentSpace = getNoteSpace(); //so we dont call it twice and run the risk it does not see it on the 2nd call.
-      SmartDashboard.putNumber("note x", currentSpace.getX());
-      SmartDashboard.putNumber("note y", currentSpace.getY());
-      
+    if (hasTarget()){
+      SmartDashboard.putNumber("note x", getNoteSpace().getX());
+      SmartDashboard.putNumber("note y", getNoteSpace().getY());
     }
     SmartDashboard.putBoolean("Sees tag", cameraObject.getLatestResult().hasTargets());
 
