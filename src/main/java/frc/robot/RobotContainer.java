@@ -14,13 +14,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.DefaultDrive;
-import frc.robot.commands.FieldOrientedDrive;
-import frc.robot.commands.FollowNote;
-import frc.robot.commands.RunOnTheFly;
-import frc.robot.commands.TrajectoryCreation;
-import frc.robot.commands.Characterization.FeedForwardCharacterization;
-import frc.robot.commands.Characterization.FeedForwardCharacterization.FeedForwardCharacterizationData;
+import frc.robot.commands.DriveCommands.DefaultDrive;
+import frc.robot.commands.DriveCommands.FieldOrientedDrive;
+import frc.robot.commands.TrajectoryCommands.FollowNote;
+import frc.robot.commands.TrajectoryCommands.RunOnTheFly;
+import frc.robot.commands.TrajectoryCommands.TrajectoryCreation;
+import frc.robot.commands.CharacterizationCommands.FeedForwardCharacterization;
+import frc.robot.commands.CharacterizationCommands.FeedForwardCharacterization.FeedForwardCharacterizationData;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -65,7 +65,7 @@ public class RobotContainer {
 
   //Drive subsystems declarations 
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
- 
+
   private boolean isFieldOriented = true;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed

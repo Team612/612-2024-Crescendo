@@ -4,8 +4,8 @@
 
 package frc.robot;
 
-import com.revrobotics.CANSparkBase.IdleMode;
-
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import frc.robot.subsystems.SwerveLib.COTSTalonFXSwerveConstants;
 import frc.robot.subsystems.SwerveLib.SwerveModuleConstants;
 
 /**
@@ -24,8 +25,11 @@ import frc.robot.subsystems.SwerveLib.SwerveModuleConstants;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final class Swerve {
+  public static final class SwerveConstants {
     public static final double stickDeadband = 0.1;
+
+    public static final COTSTalonFXSwerveConstants chosenModule =  
+    COTSTalonFXSwerveConstants.WCP.SwerveXStandard.KrakenX60(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L2);    
 
     /* Drivetrain Constants */
     public static final double trackWidth = Units.inchesToMeters(18.596);
@@ -33,8 +37,9 @@ public final class Constants {
     public static final double wheelDiameter = Units.inchesToMeters(4.0);
     public static final double wheelCircumference = wheelDiameter * Math.PI;
 
-    public static final double driveGearRatio = (6.75 / 1.0); // 6.75:1
-    public static final double angleGearRatio = (150.0 / 7.0); // 12.8:1
+    public static final double driveGearRatio = chosenModule.driveGearRatio; // 6.75:1
+    //NOTE: the angle gear ratio provided by the manufactor is different than the one we had down previously... might need to change it
+    public static final double angleGearRatio = chosenModule.angleGearRatio; // 12.8:1 (150.0 / 7.0);
 
     public static final SwerveDriveKinematics swerveKinematics =
         new SwerveDriveKinematics(
@@ -48,7 +53,14 @@ public final class Constants {
 
     /* Swerve Current Limiting */
     public static final int angleContinuousCurrentLimit = 20;
-    public static final int driveContinuousCurrentLimit = 80;
+    public static final int angleCurrentThreshold = 40;
+    public static final double angleCurrentThresholdTime = 0.1;
+     public static final boolean angleEnableCurrentLimit = true;
+
+    public static final int driveContinuousCurrentLimit = 35; //original threshold: 80
+    public static final int driveCurrentThreshold = 60;
+    public static final double driveCurrentThresholdTime = 0.1;
+    public static final boolean driveEnableCurrentLimit = true;
 
     /* Angle Motor PID Values */
     public static final double angleKP = 0.01;
@@ -84,13 +96,13 @@ public final class Constants {
     public static final double maxAcceleration = 1;
     public static final double maxAngularAcceleration = Math.PI/6;
 
-    /* Neutral Modes */
-    public static final IdleMode angleNeutralMode = IdleMode.kBrake;
-    public static final IdleMode driveNeutralMode = IdleMode.kBrake;
+     /* Neutral Modes */
+    public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Coast;
+    public static final NeutralModeValue driveNeutralMode = NeutralModeValue.Brake;
 
     /* Motor Inverts */
-    public static final boolean driveInvert = false;
-    public static final boolean angleInvert = true;
+    public static final InvertedValue driveInvert = chosenModule.driveMotorInvert;
+    public static final InvertedValue angleInvert = chosenModule.angleMotorInvert;
 
     /* Angle Encoder Invert */
     public static final boolean canCoderInvert = false;
@@ -142,12 +154,9 @@ public final class Constants {
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, desiredAngle);
     }
-  }
 
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
-    public static int kGunnerControllerPort = 1;
   }
+  
 
   public static class VisionConstants{
     public static String cameraNameAprilTag = "Apriltag";
@@ -176,5 +185,22 @@ public final class Constants {
     public static final double GOAL_RANGE_METERS = 1;
     
     public static final Transform3d CAMERA_TO_Robot = new Transform3d();
+  }
+
+  public static class OperatorConstants {
+    public static final int kGunnerControllerPort = 1;
+    public static final int kDriverControllerPort = 0;
+  }
+  
+  // Intake constants
+  public static class IntakeConstants{
+    public static final int pivotID = 9;
+    public static final int rollerID = 10;
+  }
+
+  // Shooter constants
+  public static class ShooterConstants{
+    public static final int shooterLeftID = 11;
+    public static final int shooterRightID = 12;
   }
 }

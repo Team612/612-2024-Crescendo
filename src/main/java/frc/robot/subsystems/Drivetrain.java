@@ -3,26 +3,18 @@ package frc.robot.subsystems;
 import java.util.function.Consumer;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.FollowPathHolonomic;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.SwerveModule;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
@@ -44,10 +36,10 @@ public class Drivetrain extends SubsystemBase {
   public Drivetrain() {
     mSwerveMods =
         new SwerveModule[] {
-          new SwerveModule(0, Constants.Swerve.Mod0.constants),
-          new SwerveModule(1, Constants.Swerve.Mod1.constants),
-          new SwerveModule(2, Constants.Swerve.Mod2.constants),
-          new SwerveModule(3, Constants.Swerve.Mod3.constants)
+          new SwerveModule(0, Constants.SwerveConstants.Mod0.constants),
+          new SwerveModule(1, Constants.SwerveConstants.Mod1.constants),
+          new SwerveModule(2, Constants.SwerveConstants.Mod2.constants),
+          new SwerveModule(3, Constants.SwerveConstants.Mod3.constants)
         };
     
     navx = new AHRS(I2C.Port.kMXP); 
@@ -69,11 +61,11 @@ public class Drivetrain extends SubsystemBase {
   public void drive(
       Translation2d translation, double rotation, boolean isOpenLoop) {
     SwerveModuleState[] swerveModuleStates =
-        Constants.Swerve.swerveKinematics.toSwerveModuleStates(
+        Constants.SwerveConstants.swerveKinematics.toSwerveModuleStates(
           ChassisSpeeds.fromFieldRelativeSpeeds(
                     translation.getX(), translation.getY(), rotation, getNavxAngle()));
     
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.SwerveConstants.maxSpeed);
 
     for (SwerveModule mod : mSwerveMods) {
       mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
@@ -83,10 +75,10 @@ public class Drivetrain extends SubsystemBase {
   public void driveRobotRelative(
       Translation2d translation, double rotation, boolean isOpenLoop) {
     SwerveModuleState[] swerveModuleStates = 
-        Constants.Swerve.swerveKinematics.toSwerveModuleStates(
+        Constants.SwerveConstants.swerveKinematics.toSwerveModuleStates(
           new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
     
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.SwerveConstants.maxSpeed);
 
     for (SwerveModule mod : mSwerveMods) {
       mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
@@ -95,18 +87,31 @@ public class Drivetrain extends SubsystemBase {
 
   public void autoDrive(ChassisSpeeds speeds) {
     SwerveModuleState[] swerveModuleStates =
-        Constants.Swerve.swerveKinematics.toSwerveModuleStates(speeds);
+        Constants.SwerveConstants.swerveKinematics.toSwerveModuleStates(speeds);
     
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.SwerveConstants.maxSpeed);
 
     for (SwerveModule mod : mSwerveMods) {
       mod.setDesiredState(swerveModuleStates[mod.moduleNumber], false);
     }
   }
 
+  public void wheelTest(ChassisSpeeds speeds, int n){
+      SwerveModuleState[] swerveModuleStates =
+        Constants.SwerveConstants.swerveKinematics.toSwerveModuleStates(speeds);
+
+      SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.SwerveConstants.maxSpeed);
+
+    for (SwerveModule mod : mSwerveMods) {
+      if (mod.moduleNumber == n){
+      mod.setDesiredState(swerveModuleStates[mod.moduleNumber], false);
+      }
+    }
+  }
+
   /* Used by SwerveControllerCommand in Auto */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.maxSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.SwerveConstants.maxSpeed);
 
     for (SwerveModule mod : mSwerveMods) {
       mod.setDesiredState(desiredStates[mod.moduleNumber], false);
@@ -130,7 +135,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public ChassisSpeeds getChassisSpeeds() {
-    ChassisSpeeds result = Constants.Swerve.swerveKinematics.toChassisSpeeds(getStates());
+    ChassisSpeeds result = Constants.SwerveConstants.swerveKinematics.toChassisSpeeds(getStates());
     return result;
   }
 
