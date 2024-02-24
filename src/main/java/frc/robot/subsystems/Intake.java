@@ -4,15 +4,15 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
 import frc.robot.Constants;
 import com.revrobotics.SparkLimitSwitch;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
   private static final double DEADZONE = 0.05;
@@ -50,7 +50,6 @@ public class Intake extends SubsystemBase {
     if(Math.abs(rotate) < DEADZONE) rotate = 0;
     m_IntakeRollerMotor.set(TalonSRXControlMode.PercentOutput, rotate);
   }
-  
 
   @Override
   public void periodic() {
