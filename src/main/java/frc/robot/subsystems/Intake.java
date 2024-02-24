@@ -35,12 +35,22 @@ public class Intake extends SubsystemBase {
     }
     return instance;
   }
+  // public double {
 
+  // } 
+  // public doublle
   // return limit switch states
   public boolean getIntakeLimitState(){
     return m_IntakePivotMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
   }
+  
+  public double getIntake(){
+    return m_IntakeRollerMotor.getActiveTrajectoryPosition();
+  }
 
+  public double getArm(){
+    return m_IntakePivotMotor.get();
+  }
   // move intake pivot
   public void rotateIntake(double rotate){
     if(Math.abs(rotate) < DEADZONE) rotate = 0;

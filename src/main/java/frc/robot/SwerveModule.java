@@ -1,4 +1,5 @@
 package frc.robot;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -169,5 +170,13 @@ public class SwerveModule {
 
   public void setTurnVoltage(double volts) {
     angleMotor.setVoltage(volts);
+  }
+
+  public StatusSignal<Double> getAngleVoltage() {
+    return driveMotor.getMotorVoltage();
+  }
+
+  public StatusSignal<Double> getDriveVoltage() {
+    return angleMotor.getMotorVoltage();
   }
 }
