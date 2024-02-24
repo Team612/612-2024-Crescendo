@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import java.util.function.BooleanSupplier;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -13,14 +16,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.FieldOrientedDrive;
 import frc.robot.commands.FollowNote;
+import frc.robot.commands.JustTurn;
+import frc.robot.commands.MoveToNote;
 import frc.robot.commands.RunOnTheFly;
+import frc.robot.commands.TestMeter;
 import frc.robot.commands.TrajectoryCreation;
+import frc.robot.commands.TurnToNote;
 import frc.robot.commands.Characterization.FeedForwardCharacterization;
 import frc.robot.commands.Characterization.FeedForwardCharacterization.FeedForwardCharacterizationData;
+import frc.robot.commands.Pathfinding.PathfindToSpeaker;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -42,6 +51,10 @@ public class RobotContainer {
   private final TrajectoryCreation m_traj = new TrajectoryCreation();
   private final RunOnTheFly m_runOnTheFly = new RunOnTheFly(m_drivetrain, m_poseEstimator, m_traj, m_vision, 0);
   private final FollowNote m_moveToNote = new FollowNote(m_drivetrain, m_poseEstimator, m_traj, m_vision, 0);
+  private final TurnToNote m_turnNote = new TurnToNote(m_drivetrain, m_vision);
+  private final MoveToNote m_turnPID = new MoveToNote(m_drivetrain, m_vision);
+  private final JustTurn m_justTurn = new JustTurn(m_drivetrain, m_vision);
+  private final TestMeter m_justMove = new TestMeter(m_drivetrain);
               
   private final Joystick driver = new Joystick(0);
 
@@ -58,7 +71,7 @@ public class RobotContainer {
   /* Driver Buttons */
   private final JoystickButton align =
       new JoystickButton(driver, XboxController.Button.kY.value);
-  private final JoystickButton fieldCentric =
+  private final JoystickButton resetNavx =
       new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
   private final JoystickButton robotToField =
       new JoystickButton(driver, XboxController.Button.kB.value);
@@ -66,29 +79,7 @@ public class RobotContainer {
   //Drive subsystems declarations 
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
-  private boolean isFieldOriented = true;
-
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-
-  // private final SequentialCommandGroup m_RedTopScoreAndLeave = new SequentialCommandGroup(
-  //   boop
-  //   .andThen(new FollowTrajectoryPathPlanner(m_drivetrain, estimator, "RedTopLeave", Constants.DrivetrainConstants.constraint, true, false))
-  // );
-
-  // private final SequentialCommandGroup m_RedBottomScoreAndLeave = new SequentialCommandGroup(
-  //   boop
-  //   .andThen(new FollowTrajectoryPathPlanner(m_drivetrain, estimator, "RedBottomLeave", Constants.DrivetrainConstants.constraint, true, false))
-  // );
-
-  // private final SequentialCommandGroup m_BlueTopScoreAndLeave = new SequentialCommandGroup(
-  //   boop
-  //   .andThen(new FollowTrajectoryPathPlanner(m_drivetrain, estimator, "BlueTopLeave", Constants.DrivetrainConstants.constraint, true, false))
-  // );
-
-  // private final SequentialCommandGroup m_BlueBottomScoreAndLeave = new SequentialCommandGroup(
-  //   boop
-  //   .andThen(new FollowTrajectoryPathPlanner(m_drivetrain, estimator, "BlueBottomLeave", Constants.DrivetrainConstants.constraint, true, false))
-  // );
+  private final PathfindToSpeaker m_pathfindToSpeaker = new PathfindToSpeaker(m_drivetrain, m_poseEstimator, m_vision);
 
   public RobotContainer() {
     // Configure the trigger bindings
@@ -98,14 +89,14 @@ public class RobotContainer {
   }
 
   private void configureShuffleBoardBindings(){
-    // m_chooser.addOption("Auto-Balance", new DockingSequence(m_drivetrain));
-    // m_chooser.addOption("Red Top Leave And Dock", new ProxyCommand(() -> m_RedTopLeaveAndDock));
-    // m_chooser.addOption("Blue Top Leave And Dock", new ProxyCommand(() -> m_BlueTopLeaveAndDock));
-    // m_chooser.addOption("Red Bottom Leave And Dock", new ProxyCommand(() -> m_RedBottomLeaveAndDock));
-    // m_chooser.addOption("Blue Bottom Leave and Dock", new ProxyCommand(() -> m_BlueBottomLeaveAndDock));
     m_chooser.addOption("Run on Fly", m_runOnTheFly);
     m_chooser.addOption("Test Path", m_trajectoryConfig.followPathGui("Double Path"));
     m_chooser.addOption("Move to Note", m_moveToNote);
+    m_chooser.addOption("Pathfind to Speaker", m_pathfindToSpeaker);
+    m_chooser.addOption("Combined turn and go", m_turnPID);
+    m_chooser.addOption("just turn", m_justTurn);
+    m_chooser.addOption("just move", m_justMove);
+    m_chooser.addOption("Turn move note", m_turnNote);
     m_chooser.addOption("Swerve Characterization", new FeedForwardCharacterization(
               m_drivetrain,
               true,
@@ -113,15 +104,13 @@ public class RobotContainer {
               m_drivetrain::runCharacterizationVolts,
               m_drivetrain::getCharacterizationVelocity));
     SmartDashboard.putData(m_chooser);
-    // SmartDashboard.putData("Slowmo (Toggle)", new SlowmoDrive(m_drivetrain));
   }
 
   private void configureButtonBindings() {
     align.onTrue(new InstantCommand(() -> m_drivetrain.resetAlignment()));
-    fieldCentric.onTrue(new InstantCommand(() -> m_drivetrain.zeroGyro()));
+    resetNavx.onTrue(new InstantCommand(() -> m_drivetrain.zeroGyro()));
     robotToField.toggleOnTrue(m_defaultDrive);
   }
-
 
   private void configureDefaultCommands(){
     m_drivetrain.setDefaultCommand(

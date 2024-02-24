@@ -24,6 +24,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import frc.robot.Constants;
@@ -127,6 +129,15 @@ public class Drivetrain extends SubsystemBase {
       positions[mod.moduleNumber] = mod.getPosition();
     }
     return positions;
+  }
+
+  public double getEncoderMeters() {
+    double sum = 0.0;
+    SwerveModulePosition[] positions = getPositions();
+    for (SwerveModulePosition pos : positions) {
+      sum += pos.distanceMeters;
+    }
+    return sum / 4.0;
   }
 
   public ChassisSpeeds getChassisSpeeds() {

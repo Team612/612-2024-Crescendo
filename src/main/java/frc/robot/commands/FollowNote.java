@@ -44,7 +44,8 @@ public class FollowNote extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    PathPlannerPath path = m_traj.noteOnTheFly(poseEstimatorSystem, m_vision,driveSystem);
+    //PathPlannerPath path = m_traj.noteOnTheFly(poseEstimatorSystem, m_vision,driveSystem);
+    PathPlannerPath path = m_traj.noteOnTheFlyRotate(poseEstimatorSystem, m_vision, driveSystem);
     if (path == null) {
       System.out.println("NO TARGETS");
       end(true);
