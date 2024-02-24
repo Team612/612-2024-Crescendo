@@ -35,6 +35,18 @@ public class Shooter extends SubsystemBase {
     m_ShooterMotorRight.set(TalonSRXControlMode.PercentOutput, rotateRight);
   }
 
+  // move left motor
+  public void moveLeftMotor(double rotateLeft){
+    if(rotateLeft < DEADZONE) rotateLeft = 0;
+    m_ShooterMotorLeft.set(TalonSRXControlMode.PercentOutput, rotateLeft);
+  }
+
+  // move right motor
+  public void moveRightMotor(double rotateRight){
+    if(rotateRight < DEADZONE) rotateRight = 0;
+    m_ShooterMotorRight.set(TalonSRXControlMode.PercentOutput, rotateRight);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

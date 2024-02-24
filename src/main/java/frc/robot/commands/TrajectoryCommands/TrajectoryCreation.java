@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.PoseEstimator;
@@ -113,6 +114,90 @@ public class TrajectoryCreation {
             bezierPoints,
             constraints,
             new GoalEndState(0.0, angle) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+        );
+
+        // Prevent the path from being flipped if the coordinates are already correct
+        path.preventFlipping = true;
+        return path;
+    }
+
+    public PathPlannerPath alignSpeaker(PoseEstimator estimation, Vision vision) {
+        Pose2d estimatedPose = estimation.getCurrentPose();
+        double x = estimatedPose.getX();
+        double y = estimatedPose.getY();
+        Rotation2d angle = estimatedPose.getRotation();
+
+        double tagX = 0;
+        double tagY = 0;
+        Rotation2d tagAngle = new Rotation2d();
+        double xChange = 0;
+        double yChange = 0;
+       
+        if(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+            tagX = vision.return_tag_pose(7).getX();
+            tagY = vision.return_tag_pose(7).getY();; 
+            tagAngle = new Rotation2d(180);
+            xChange = 1;
+        } else {
+            tagX = vision.return_tag_pose(4).getX();
+            tagY = vision.return_tag_pose(4).getY();; 
+            tagAngle = new Rotation2d(0);
+            xChange = -1;
+        }
+
+        double offset = Constants.SwerveConstants.trackWidth / 2;
+
+        List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
+                new Pose2d(x, y, angle),
+                new Pose2d(tagX + xChange, tagY + yChange, tagAngle)
+            );
+
+        // Create the path using the bezier points created above
+        PathPlannerPath path = new PathPlannerPath(
+            bezierPoints,
+            constraints,
+            new GoalEndState(0.0, tagAngle) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+        );
+
+        // Prevent the path from being flipped if the coordinates are already correct
+        path.preventFlipping = true;
+        return path;
+    }
+    
+    public PathPlannerPath alignAmp(PoseEstimator estimation, Vision vision) {
+        Pose2d estimatedPose = estimation.getCurrentPose();
+        double x = estimatedPose.getX();
+        double y = estimatedPose.getY();
+        Rotation2d angle = estimatedPose.getRotation();
+
+        double tagX = 0;
+        double tagY = 0;
+        Rotation2d tagAngle = new Rotation2d();
+        double xChange = 0;
+        double yChange = 0;
+       
+        if(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+            tagX = vision.return_tag_pose(6).getX();
+            tagY = vision.return_tag_pose(6).getY();; 
+            tagAngle = new Rotation2d(90);
+        } else {
+            tagX = vision.return_tag_pose(5).getX();
+            tagY = vision.return_tag_pose(5).getY();; 
+            tagAngle = new Rotation2d(90);
+        }
+
+        double offset = Constants.SwerveConstants.trackWidth / 2;
+
+        List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
+                new Pose2d(x, y, angle),
+                new Pose2d(tagX + xChange, tagY + yChange, tagAngle)
+            );
+
+        // Create the path using the bezier points created above
+        PathPlannerPath path = new PathPlannerPath(
+            bezierPoints,
+            constraints,
+            new GoalEndState(0.0, tagAngle) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
         );
 
         // Prevent the path from being flipped if the coordinates are already correct

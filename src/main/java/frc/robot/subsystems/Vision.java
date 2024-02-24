@@ -31,7 +31,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 // import frc.robot.Constants;
 import frc.robot.Constants;
-import frc.robot.ShuffleBoardButtons;
 public class Vision extends SubsystemBase {
   private static AprilTagFieldLayout aprilTagFieldLayout;
   private static Transform3d robotToCamApril;
@@ -256,9 +255,13 @@ public class Vision extends SubsystemBase {
     return false;
   }
 
-  // public void switchPipeline(int id){
-  //   camera.setPipelineIndex(id);
-  // }
+  public double getNoteRange() {
+    return PhotonUtils.calculateDistanceToTargetMeters(
+            robotToCamObject.getZ(),
+            Units.inchesToMeters(0),
+            0,
+            Units.degreesToRadians(getTargetPitch()));
+  }
 
 
   public Transform2d getNoteSpace(){ //

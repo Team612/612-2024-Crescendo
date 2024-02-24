@@ -7,13 +7,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.DriveCommands.DefaultDrive;
 import frc.robot.commands.DriveCommands.FieldOrientedDrive;
 import frc.robot.commands.IntakeCommands.IntakeDown;
 import frc.robot.commands.IntakeCommands.IntakeUp;
 import frc.robot.commands.IntakeCommands.MoveRollers;
-import frc.robot.commands.ShooterCommands.ShootNote;
+import frc.robot.commands.ShooterCommands.ShootNoteAmp;
+import frc.robot.commands.ShooterCommands.ShootNoteSpeaker;
+import frc.robot.commands.ShooterCommands.ShooterLeftMotor;
+import frc.robot.commands.ShooterCommands.ShooterRightMotor;
+import frc.robot.commands.TrajectoryCommands.AlignAmp;
+import frc.robot.commands.TrajectoryCommands.AlignSpeaker;
 import frc.robot.commands.TrajectoryCommands.FollowNote;
+import frc.robot.commands.TrajectoryCommands.MoveToNote;
 import frc.robot.commands.TrajectoryCommands.RunOnTheFly;
 import frc.robot.commands.TrajectoryCommands.TrajectoryCreation;
 import frc.robot.Controls.ControlMap;
@@ -39,6 +46,9 @@ public class RobotContainer {
   private final TrajectoryCreation m_traj = new TrajectoryCreation();
   private final RunOnTheFly m_runOnTheFly = new RunOnTheFly(m_drivetrain, m_poseEstimator, m_traj, m_vision, 0);
   private final FollowNote m_moveToNote = new FollowNote(m_drivetrain, m_poseEstimator, m_traj, m_vision, 0);
+  private final AlignAmp m_alignAmp = new AlignAmp(m_poseEstimator, m_traj, m_vision);
+  private final AlignSpeaker m_alignSpeaker = new AlignSpeaker(m_poseEstimator, m_traj, m_vision);
+  private final MoveToNote m_justMove = new MoveToNote(m_drivetrain, m_vision);
 
   // Drive command
   private final DefaultDrive m_defaultDrive = new DefaultDrive( m_drivetrain,
@@ -50,10 +60,22 @@ public class RobotContainer {
   private final IntakeDown m_intakeDown = new IntakeDown(m_intake);
   private final IntakeUp m_intakeUp = new IntakeUp(m_intake);
   private final MoveRollers m_moveRollers = new MoveRollers(m_intake);
-  private final ShootNote m_shootNote = new ShootNote(m_shooter);
+  private final ShootNoteSpeaker m_shootSpeaker = new ShootNoteSpeaker(m_shooter);
+  private final ShootNoteAmp m_shootAmp = new ShootNoteAmp(m_shooter);
+  private final ShooterLeftMotor m_shootLeftMotor = new ShooterLeftMotor(m_shooter);
+  private final ShooterRightMotor m_shootRightMotor = new ShooterRightMotor(m_shooter);
 
   //Drive subsystems declarations 
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
+
+  // Speaker auto command
+  private final SequentialCommandGroup scoreSpeaker = new SequentialCommandGroup(m_alignSpeaker.andThen(m_shootSpeaker));
+
+  // Amp auto command
+  private final SequentialCommandGroup scoreAmp = new SequentialCommandGroup(m_alignAmp.andThen(m_shootAmp));
+
+  // Intake auto command
+  private final SequentialCommandGroup intakeNote = new SequentialCommandGroup(m_justMove.andThen(m_moveRollers));
 
   private boolean isFieldOriented = true;
 
@@ -68,6 +90,9 @@ public class RobotContainer {
     m_chooser.addOption("Run on Fly", m_runOnTheFly);
     m_chooser.addOption("Test Path", m_trajectoryConfig.followPathGui("Double Path"));
     m_chooser.addOption("Move to Note", m_moveToNote);
+    m_chooser.addOption("Score Speaker", scoreSpeaker);
+    m_chooser.addOption("Score Amp", scoreAmp);
+    m_chooser.addOption("Auto Intake", intakeNote);
     m_chooser.addOption("Swerve Characterization", new FeedForwardCharacterization(
               m_drivetrain,
               true,
@@ -88,7 +113,10 @@ public class RobotContainer {
     ControlMap.m_gunnerController.a().whileTrue(m_intakeDown);
     ControlMap.m_gunnerController.b().whileTrue(m_intakeUp);
     ControlMap.m_gunnerController.x().whileTrue(m_moveRollers);
-    ControlMap.m_gunnerController.y().whileTrue(m_shootNote);
+    ControlMap.m_gunnerController.y().whileTrue(m_shootSpeaker);
+    ControlMap.m_gunnerController.leftTrigger().whileTrue(m_shootAmp);
+    ControlMap.m_gunnerController.leftBumper().whileTrue(m_shootLeftMotor);
+    ControlMap.m_gunnerController.rightBumper().whileTrue(m_shootRightMotor);
   }
 
 
