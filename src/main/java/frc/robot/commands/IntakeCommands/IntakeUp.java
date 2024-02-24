@@ -5,16 +5,15 @@
 package frc.robot.commands.IntakeCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.Intake;
 
-public class MoveIntake extends Command {
+public class IntakeUp extends Command {
   private final Intake m_Intake;
-  private final double m_speed;
   /** Creates a new IntakeUp. */
-  public MoveIntake(Intake intake, double speed) {
+  public IntakeUp(Intake intake) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_Intake = intake;
-    m_speed = speed;
     addRequirements(m_Intake);
   }
 
@@ -25,7 +24,7 @@ public class MoveIntake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_Intake.rotateIntake(m_speed);
+    m_Intake.rotateIntake(Constants.IntakeConstants.intakeUpSpeed);
   }
 
   // Called once the command ends or is interrupted.
