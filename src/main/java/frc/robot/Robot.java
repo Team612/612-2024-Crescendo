@@ -25,7 +25,7 @@ public class Robot extends TimedRobot {
   public static Alliance initAllianceColor = Alliance.Blue;
 
   private void checkDSUpdate() {
-    Alliance currentAlliance = DriverStation.getAlliance().get();
+    Alliance currentAlliance = DriverStation.getAlliance().orElse(Alliance.Blue);
     // If we have data, and have a new alliance from last time
     if (DriverStation.isDSAttached() && currentAlliance != Alliance.Blue) {
       initAllianceColor = currentAlliance;

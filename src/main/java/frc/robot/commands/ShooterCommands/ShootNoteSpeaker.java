@@ -14,7 +14,7 @@ public class ShootNoteSpeaker extends Command {
   public ShootNoteSpeaker(Shooter shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_Shooter = shooter;
-    addRequirements(m_Shooter);
+    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.

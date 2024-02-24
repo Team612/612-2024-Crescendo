@@ -14,7 +14,7 @@ public class MoveRollers extends Command {
   public MoveRollers(Intake intake) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_Intake = intake;
-    addRequirements(m_Intake);
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.

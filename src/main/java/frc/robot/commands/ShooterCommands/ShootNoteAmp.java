@@ -14,7 +14,7 @@ public class ShootNoteAmp extends Command {
   public ShootNoteAmp(Shooter shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_shooter = shooter;
-    addRequirements(m_shooter);
+    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.

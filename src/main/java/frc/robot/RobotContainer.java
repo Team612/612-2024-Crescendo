@@ -88,7 +88,6 @@ public class RobotContainer {
 
   private void configureShuffleBoardBindings(){
     m_chooser.addOption("Run on Fly", m_runOnTheFly);
-    m_chooser.addOption("Test Path", m_trajectoryConfig.followPathGui("Double Path"));
     m_chooser.addOption("Move to Note", m_moveToNote);
     m_chooser.addOption("Score Speaker", scoreSpeaker);
     m_chooser.addOption("Score Amp", scoreAmp);
