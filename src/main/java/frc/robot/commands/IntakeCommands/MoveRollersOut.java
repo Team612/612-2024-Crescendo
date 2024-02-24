@@ -10,6 +10,7 @@ import frc.robot.subsystems.Intake;
 
 public class MoveRollersOut extends Command {
   private final Intake m_Intake;
+  private double count = 0;
   /** Creates a new MoveRollers. */
   public MoveRollersOut(Intake intake) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -24,6 +25,11 @@ public class MoveRollersOut extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if(m_Intake.getIRSensor() < 0.5) {
+      count++;
+    } else {
+      count = 0;
+    }
     m_Intake.moveRollers(Constants.IntakeConstants.rollerSpeedOuttake);
   }
 
@@ -37,6 +43,6 @@ public class MoveRollersOut extends Command {
   @Override
   public boolean isFinished() {
     // return m_Intake.getIRSensor();
-    return false;
+    return count >= 5;
   }
 }

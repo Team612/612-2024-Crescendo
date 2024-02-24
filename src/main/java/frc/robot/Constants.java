@@ -120,7 +120,7 @@ public final class Constants {
       public static final int driveMotorID = 2;
       public static final int angleMotorID = 3;
       public static final int canCoderID = 0;
-      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(96); //43
+      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(98); //43
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, desiredAngle);
     }
@@ -130,7 +130,7 @@ public final class Constants {
       public static final int driveMotorID = 8;
       public static final int angleMotorID = 1;
       public static final int canCoderID = 1;
-      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(84); //344
+      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(87); //344
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, desiredAngle);
     }
@@ -140,7 +140,7 @@ public final class Constants {
       public static final int driveMotorID = 4;
       public static final int angleMotorID = 5;
       public static final int canCoderID = 2;
-      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(326);
+      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(327);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, desiredAngle);
     }
@@ -150,7 +150,7 @@ public final class Constants {
       public static final int driveMotorID = 6;
       public static final int angleMotorID = 7;
       public static final int canCoderID = 3;
-      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(299);
+      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(302);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, desiredAngle);
     }
@@ -200,7 +200,7 @@ public final class Constants {
     public static final double intakeDownSpeed = -0.3;
     public static final double rollerSpeedIntake = 0.5;
     public static final double rollerSpeedOuttake = 1;
-    public static final int IRport = 1;
+    public static final int IRport = 0;
   }
 
   // Shooter constants
