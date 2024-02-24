@@ -15,7 +15,7 @@ public class MoveIntake extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     m_Intake = intake;
     m_speed = speed;
-    addRequirements(m_Intake);
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.

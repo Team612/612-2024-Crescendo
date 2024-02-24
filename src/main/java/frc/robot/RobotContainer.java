@@ -3,92 +3,83 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
-
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.DriveCommands.DefaultDrive;
 import frc.robot.commands.DriveCommands.FieldOrientedDrive;
+import frc.robot.commands.IntakeCommands.AutoIntake;
+import frc.robot.commands.IntakeCommands.IntakeDown;
+import frc.robot.commands.IntakeCommands.IntakeUp;
+import frc.robot.commands.IntakeCommands.MoveRollers;
+import frc.robot.commands.ShooterCommands.ShootNoteAmp;
+import frc.robot.commands.ShooterCommands.ShootNoteSpeaker;
+import frc.robot.commands.TrajectoryCommands.AlignAmp;
+import frc.robot.commands.TrajectoryCommands.AlignSpeaker;
 import frc.robot.commands.TrajectoryCommands.FollowNote;
+import frc.robot.commands.TrajectoryCommands.JustTurn;
+import frc.robot.commands.TrajectoryCommands.MoveToNote;
 import frc.robot.commands.TrajectoryCommands.RunOnTheFly;
 import frc.robot.commands.TrajectoryCommands.TrajectoryCreation;
+import frc.robot.controls.ControlMap;
 import frc.robot.commands.CharacterizationCommands.FeedForwardCharacterization;
 import frc.robot.commands.CharacterizationCommands.FeedForwardCharacterization.FeedForwardCharacterizationData;
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- */
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.PoseEstimator;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.TrajectoryConfiguration;
 import frc.robot.subsystems.Vision;
 
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
+  //Subsystem declerations
   private final Drivetrain m_drivetrain = Drivetrain.getInstance();
   private final PoseEstimator m_poseEstimator = PoseEstimator.getPoseEstimatorInstance();
   private final TrajectoryConfiguration m_trajectoryConfig = TrajectoryConfiguration.getInstance();
   private final Vision m_vision = Vision.getVisionInstance();
+  private final Intake m_intake = Intake.getInstance();
+  private final Shooter m_shooter = Shooter.getInstance();
 
+  // Autonomous commands
   private final TrajectoryCreation m_traj = new TrajectoryCreation();
   private final RunOnTheFly m_runOnTheFly = new RunOnTheFly(m_drivetrain, m_poseEstimator, m_traj, m_vision, 0);
   private final FollowNote m_moveToNote = new FollowNote(m_drivetrain, m_poseEstimator, m_traj, m_vision, 0);
-              
-  private final Joystick driver = new Joystick(0);
+  private final JustTurn m_justTurn = new JustTurn(m_drivetrain, m_vision);
+  private final MoveToNote m_justMove = new MoveToNote(m_drivetrain, m_vision);
+  private final AlignSpeaker m_alignSpeaker = new AlignSpeaker(m_drivetrain, m_poseEstimator, m_traj, m_vision);
+  private final AlignAmp m_alignAmp = new AlignAmp(m_drivetrain, m_poseEstimator, m_traj, m_vision);
+  private final AutoIntake m_autoIntake = new AutoIntake(m_drivetrain, m_intake);
 
-  /* Drive Controls */
-  private final int translationAxis = XboxController.Axis.kLeftY.value;
-  private final int strafeAxis = XboxController.Axis.kLeftX.value;
-  private final int rotationAxis = XboxController.Axis.kRightX.value;
-
+  // Drive command
   private final DefaultDrive m_defaultDrive = new DefaultDrive( m_drivetrain,
-            () -> -driver.getRawAxis(translationAxis),
-            () -> -driver.getRawAxis(strafeAxis),
-            () -> -driver.getRawAxis(rotationAxis));
+            () -> -ControlMap.m_driverController.getLeftY(),
+            () -> -ControlMap.m_driverController.getLeftX(),
+            () -> -ControlMap.m_driverController.getRightX());
 
-  /* Driver Buttons */
-  private final JoystickButton align =
-      new JoystickButton(driver, XboxController.Button.kY.value);
-  private final JoystickButton fieldCentric =
-      new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-  private final JoystickButton robotToField =
-      new JoystickButton(driver, XboxController.Button.kB.value);
+  // Gunner commands
+  private final IntakeDown m_intakeDown = new IntakeDown(m_intake);
+  private final IntakeUp m_intakeUp = new IntakeUp(m_intake);
+  private final MoveRollers m_moveRollers = new MoveRollers(m_intake);
+  private final ShootNoteSpeaker m_shootNoteSpeaker = new ShootNoteSpeaker(m_shooter);
+  private final ShootNoteAmp m_shootNoteAmp = new ShootNoteAmp(m_shooter);
 
   //Drive subsystems declarations 
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
-  private boolean isFieldOriented = true;
+  //Auto Scoring
+  private final SequentialCommandGroup scoreSpeaker = new SequentialCommandGroup(
+    m_alignSpeaker.andThen(m_shootNoteSpeaker)
+  );
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
+  private final SequentialCommandGroup scoreAmp = new SequentialCommandGroup(
+    m_alignAmp.andThen(m_shootNoteAmp)
+  );
 
-  // private final SequentialCommandGroup m_RedTopScoreAndLeave = new SequentialCommandGroup(
-  //   boop
-  //   .andThen(new FollowTrajectoryPathPlanner(m_drivetrain, estimator, "RedTopLeave", Constants.DrivetrainConstants.constraint, true, false))
-  // );
-
-  // private final SequentialCommandGroup m_RedBottomScoreAndLeave = new SequentialCommandGroup(
-  //   boop
-  //   .andThen(new FollowTrajectoryPathPlanner(m_drivetrain, estimator, "RedBottomLeave", Constants.DrivetrainConstants.constraint, true, false))
-  // );
-
-  // private final SequentialCommandGroup m_BlueTopScoreAndLeave = new SequentialCommandGroup(
-  //   boop
-  //   .andThen(new FollowTrajectoryPathPlanner(m_drivetrain, estimator, "BlueTopLeave", Constants.DrivetrainConstants.constraint, true, false))
-  // );
-
-  // private final SequentialCommandGroup m_BlueBottomScoreAndLeave = new SequentialCommandGroup(
-  //   boop
-  //   .andThen(new FollowTrajectoryPathPlanner(m_drivetrain, estimator, "BlueBottomLeave", Constants.DrivetrainConstants.constraint, true, false))
-  // );
+  private final SequentialCommandGroup autoIntake = new SequentialCommandGroup(
+    m_moveToNote.andThen(m_autoIntake)
+  );
 
   public RobotContainer() {
     // Configure the trigger bindings
@@ -98,14 +89,14 @@ public class RobotContainer {
   }
 
   private void configureShuffleBoardBindings(){
-    // m_chooser.addOption("Auto-Balance", new DockingSequence(m_drivetrain));
-    // m_chooser.addOption("Red Top Leave And Dock", new ProxyCommand(() -> m_RedTopLeaveAndDock));
-    // m_chooser.addOption("Blue Top Leave And Dock", new ProxyCommand(() -> m_BlueTopLeaveAndDock));
-    // m_chooser.addOption("Red Bottom Leave And Dock", new ProxyCommand(() -> m_RedBottomLeaveAndDock));
-    // m_chooser.addOption("Blue Bottom Leave and Dock", new ProxyCommand(() -> m_BlueBottomLeaveAndDock));
     m_chooser.addOption("Run on Fly", m_runOnTheFly);
     m_chooser.addOption("Test Path", m_trajectoryConfig.followPathGui("Double Path"));
     m_chooser.addOption("Move to Note", m_moveToNote);
+    m_chooser.addOption("just turn", m_justTurn);
+    m_chooser.addOption("move + turn", m_justMove);
+    m_chooser.addOption("Score Speaker", scoreSpeaker);
+    m_chooser.addOption("Score Amp", scoreAmp);
+    m_chooser.addOption("Auto Intake", autoIntake);
     m_chooser.addOption("Swerve Characterization", new FeedForwardCharacterization(
               m_drivetrain,
               true,
@@ -117,9 +108,17 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-    align.onTrue(new InstantCommand(() -> m_drivetrain.resetAlignment()));
-    fieldCentric.onTrue(new InstantCommand(() -> m_drivetrain.zeroGyro()));
-    robotToField.toggleOnTrue(m_defaultDrive);
+    // Driver button configs
+    ControlMap.m_driverController.y().onTrue(new InstantCommand(() -> m_drivetrain.resetAlignment()));
+    ControlMap.m_driverController.leftBumper().onTrue(new InstantCommand(() -> m_drivetrain.zeroGyro()));
+    ControlMap.m_driverController.b().toggleOnTrue(m_defaultDrive);
+    ControlMap.m_driverController.y().onTrue(m_justMove);
+
+    // Gunner button bindings
+    ControlMap.m_gunnerController.a().whileTrue(m_intakeDown);
+    ControlMap.m_gunnerController.b().whileTrue(m_intakeUp);
+    ControlMap.m_gunnerController.x().whileTrue(m_moveRollers);
+    ControlMap.m_gunnerController.y().whileTrue(m_shootNoteSpeaker);
   }
 
 
@@ -127,23 +126,10 @@ public class RobotContainer {
     m_drivetrain.setDefaultCommand(
         new FieldOrientedDrive(
             m_drivetrain,
-            () -> -driver.getRawAxis(translationAxis),
-            () -> -driver.getRawAxis(strafeAxis),
-            () -> -driver.getRawAxis(rotationAxis)));
+            () -> -ControlMap.m_driverController.getLeftY(),
+            () -> -ControlMap.m_driverController.getLeftX(),
+            () -> -ControlMap.m_driverController.getRightX()));
   }
-
-  // public void TeleopHeading(){
-  //   Rotation2d finalHeading = new Rotation2d(Units.degreesToRadians(-180));
-  //   Rotation2d currentHeading = m_poseEstimator.getCurrentPose().getRotation();
-  //   Rotation2d deltaHeading = finalHeading.minus(currentHeading);
-  //   if(Robot.initAllianceColor == Alliance.Blue){
-  //     m_drivetrain.setNavxAngleOffset(deltaHeading.plus(new Rotation2d(Units.degreesToRadians(0))));
-  //   }
-    
-  //   if(Robot.initAllianceColor == Alliance.Red){
-  //     m_drivetrain.setNavxAngleOffset(deltaHeading.plus(new Rotation2d(Units.degreesToRadians(180))));
-  //   }
-  // }
   
   public Command getAutonomousCommand() {
     return m_chooser.getSelected();

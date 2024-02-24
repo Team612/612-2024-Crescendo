@@ -134,6 +134,15 @@ public class Drivetrain extends SubsystemBase {
     return positions;
   }
 
+  public double getEncoderMeters() {
+    double sum = 0.0;
+    SwerveModulePosition[] positions = getPositions();
+    for (SwerveModulePosition pos : positions) {
+      sum += pos.distanceMeters;
+    }
+    return sum / 4.0;
+  }
+
   public ChassisSpeeds getChassisSpeeds() {
     ChassisSpeeds result = Constants.SwerveConstants.swerveKinematics.toChassisSpeeds(getStates());
     return result;
@@ -181,10 +190,6 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // for (SwerveModule mod : mSwerveMods) {
-    //   SmartDashboard.putNumber(
-    //       "Mod " + mod.moduleNumber + " velocity", mod.getCharacterizationVelocity());
-    // }
     SmartDashboard.putNumber("Current Angle", navx.getAngle());
     if (isCharacterizing) {
       // Run in characterization mode

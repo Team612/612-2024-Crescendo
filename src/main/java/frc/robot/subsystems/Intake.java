@@ -12,6 +12,9 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import frc.robot.Constants;
 import com.revrobotics.SparkLimitSwitch;
+
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
@@ -19,6 +22,7 @@ public class Intake extends SubsystemBase {
   private CANSparkMax m_IntakePivotMotor;
   private TalonSRX m_IntakeRollerMotor;
   static Intake instance = null;
+  private DigitalInput sharp = new DigitalInput(0);
   /** Creates a new Intake. */
   public Intake() {
     m_IntakePivotMotor = new CANSparkMax(Constants.IntakeConstants.pivotID, MotorType.kBrushless);
@@ -51,9 +55,13 @@ public class Intake extends SubsystemBase {
     m_IntakeRollerMotor.set(TalonSRXControlMode.PercentOutput, rotate);
   }
   
+  public boolean getIRSensor() {
+    return sharp.get();
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("Note Intaked", getIRSensor());
   }
 }

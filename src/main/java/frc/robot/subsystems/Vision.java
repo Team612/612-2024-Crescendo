@@ -174,8 +174,7 @@ public class Vision extends SubsystemBase {
     aprilTagFieldLayout = new AprilTagFieldLayout(atList, 16.451 , 8.211 );
 
     robotToCamApril = new Transform3d(new Translation3d(0.20, 0.04, 0.46), new Rotation3d()); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
-
-    robotToCamObject = new Transform3d(new Translation3d(0,-0.22,0.485), new Rotation3d()); //0.20,-0.04
+    robotToCamObject = new Transform3d(new Translation3d(0.20,-.075,0.48), new Rotation3d());
     
     m_PoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, this.cameraApriltag, robotToCamApril);
 
@@ -256,10 +255,13 @@ public class Vision extends SubsystemBase {
     return false;
   }
 
-  // public void switchPipeline(int id){
-  //   camera.setPipelineIndex(id);
-  // }
-
+  public double getNoteRange() {
+    return PhotonUtils.calculateDistanceToTargetMeters(
+            robotToCamObject.getZ(),
+            Units.inchesToMeters(0),
+            0,
+            Units.degreesToRadians(getTargetPitch()));
+  }
 
   public Transform2d getNoteSpace(){ //
     //
