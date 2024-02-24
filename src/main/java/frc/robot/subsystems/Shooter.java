@@ -31,8 +31,8 @@ public class Shooter extends SubsystemBase {
   public void shoot(double rotateLeft, double rotateRight){
     if(rotateLeft < DEADZONE) rotateLeft = 0;
     if(rotateRight < DEADZONE) rotateRight = 0;
-    m_ShooterMotorLeft.set(TalonSRXControlMode.PercentOutput, rotateLeft);
-    m_ShooterMotorRight.set(TalonSRXControlMode.PercentOutput, rotateRight);
+    moveLeftMotor(rotateLeft);
+    moveRightMotor(rotateRight);
   }
 
   // move left motor

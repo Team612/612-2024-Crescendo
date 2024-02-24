@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -18,6 +19,7 @@ public class Intake extends SubsystemBase {
   private static final double DEADZONE = 0.05;
   private CANSparkMax m_IntakePivotMotor;
   private TalonSRX m_IntakeRollerMotor;
+  private DigitalInput IRSensor = new DigitalInput(Constants.IntakeConstants.IRport);
   static Intake instance = null;
   /** Creates a new Intake. */
   public Intake() {
@@ -49,6 +51,10 @@ public class Intake extends SubsystemBase {
   public void moveRollers(double rotate){
     if(Math.abs(rotate) < DEADZONE) rotate = 0;
     m_IntakeRollerMotor.set(TalonSRXControlMode.PercentOutput, rotate);
+  }
+
+  public boolean getIRSensor(){
+    return IRSensor.get();
   }
 
   @Override
