@@ -118,6 +118,10 @@ public class Drivetrain extends SubsystemBase {
   public Rotation2d getNavxAngle(){
     return Rotation2d.fromDegrees(navx.getAngle());
   }
+
+  public double getNavxAngleO(){
+    return navx.getAngle();
+  }
     
   // setter for setting the navxAngleOffset
   public void setNavxAngleOffset(Rotation2d angle){
