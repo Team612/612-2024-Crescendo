@@ -115,6 +115,8 @@ public class RobotContainer {
     ControlMap.m_gunnerController.x().whileTrue(m_moveRollers);
     ControlMap.m_gunnerController.y().whileTrue(m_shootSpeaker);
     ControlMap.m_gunnerController.leftTrigger().whileTrue(m_shootAmp);
+
+    // FOR TESTING, REMOVE FOR COMP
     ControlMap.m_gunnerController.leftBumper().whileTrue(m_shootLeftMotor);
     ControlMap.m_gunnerController.rightBumper().whileTrue(m_shootRightMotor);
   }
