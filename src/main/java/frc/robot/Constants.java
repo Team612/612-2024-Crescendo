@@ -39,7 +39,7 @@ public final class Constants {
 
     public static final double driveGearRatio = chosenModule.driveGearRatio; // 6.75:1
     //NOTE: the angle gear ratio provided by the manufactor is different than the one we had down previously... might need to change it
-    public static final double angleGearRatio = chosenModule.angleGearRatio; // 12.8:1 (150.0 / 7.0);
+    public static final double angleGearRatio = 150.0 /7.0; // 12.8:1 (150.0 / 7.0);
 
     public static final SwerveDriveKinematics swerveKinematics =
         new SwerveDriveKinematics(
@@ -63,7 +63,7 @@ public final class Constants {
     public static final boolean driveEnableCurrentLimit = true;
 
     /* Angle Motor PID Values */
-    public static final double angleKP = 0.01;
+    public static final double angleKP = 10;
     public static final double angleKI = 0.0;
     public static final double angleKD = 0.0;
     public static final double angleKFF = 0.0;
@@ -120,7 +120,7 @@ public final class Constants {
       public static final int driveMotorID = 2;
       public static final int angleMotorID = 3;
       public static final int canCoderID = 0;
-      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(0); //43
+      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(96); //43
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, desiredAngle);
     }
@@ -130,7 +130,7 @@ public final class Constants {
       public static final int driveMotorID = 8;
       public static final int angleMotorID = 1;
       public static final int canCoderID = 1;
-      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(0); //344
+      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(84); //344
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, desiredAngle);
     }
@@ -140,7 +140,7 @@ public final class Constants {
       public static final int driveMotorID = 4;
       public static final int angleMotorID = 5;
       public static final int canCoderID = 2;
-      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(0);
+      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(326);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, desiredAngle);
     }
@@ -150,7 +150,7 @@ public final class Constants {
       public static final int driveMotorID = 6;
       public static final int angleMotorID = 7;
       public static final int canCoderID = 3;
-      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(0);
+      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(299);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, desiredAngle);
     }
@@ -196,9 +196,10 @@ public final class Constants {
   public static class IntakeConstants{
     public static final int pivotID = 9;
     public static final int rollerID = 10;
-    public static final double intakeUpSpeed = 0.1;
-    public static final double intakeDownSpeed = -0.1;
-    public static final double rollerSpeed = 0.1;
+    public static final double intakeUpSpeed = 0.3;
+    public static final double intakeDownSpeed = -0.3;
+    public static final double rollerSpeedIntake = 0.5;
+    public static final double rollerSpeedOuttake = 1;
     public static final int IRport = 1;
   }
 
@@ -206,9 +207,9 @@ public final class Constants {
   public static class ShooterConstants{
     public static final int shooterLeftID = 11;
     public static final int shooterRightID = 12;
-    public static final double shooterLeftSpeedSpeaker = 0.1;
-    public static final double shooterRightSpeedSpeaker = 0.1;
-    public static final double shooterLeftSpeedAmp = 0.1;
-    public static final double shooterRightSpeedAmp = 0.1;
+    public static final double shooterLeftSpeedSpeaker = -0.5;
+    public static final double shooterRightSpeedSpeaker = 0.5;
+    public static final double shooterLeftSpeedAmp = -0.3;
+    public static final double shooterRightSpeedAmp = 0.3;
   }
 }

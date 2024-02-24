@@ -122,7 +122,8 @@ public class SwerveModule {
         (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.SwerveConstants.maxSpeed * 0.01))
             ? lastAngle
             : desiredState.angle;
-    
+    System.out.println(anglePosition.withPosition(desiredState.angle.getRotations()).Position);
+    // angleMotor.set(desiredState.angle.getRotations());
     angleMotor.setControl(anglePosition.withPosition(desiredState.angle.getRotations())); //degrees because of the conversion factor
     lastAngle = angle;
 
