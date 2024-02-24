@@ -29,21 +29,21 @@ public class Shooter extends SubsystemBase {
 
   // move shooter motors
   public void shoot(double rotateLeft, double rotateRight){
-    if(rotateLeft < DEADZONE) rotateLeft = 0;
-    if(rotateRight < DEADZONE) rotateRight = 0;
+    if(Math.abs(rotateLeft) < DEADZONE) rotateLeft = 0;
+    if(Math.abs(rotateRight) < DEADZONE) rotateRight = 0;
     moveLeftMotor(rotateLeft);
     moveRightMotor(rotateRight);
   }
 
   // move left motor
   public void moveLeftMotor(double rotateLeft){
-    if(rotateLeft < DEADZONE) rotateLeft = 0;
+    if(Math.abs(rotateLeft) < DEADZONE) rotateLeft = 0;
     m_ShooterMotorLeft.set(TalonSRXControlMode.PercentOutput, rotateLeft);
   }
 
   // move right motor
   public void moveRightMotor(double rotateRight){
-    if(rotateRight < DEADZONE) rotateRight = 0;
+    if(Math.abs(rotateRight) < DEADZONE) rotateRight = 0;
     m_ShooterMotorRight.set(TalonSRXControlMode.PercentOutput, rotateRight);
   }
 

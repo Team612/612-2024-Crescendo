@@ -19,7 +19,7 @@ public class Intake extends SubsystemBase {
   private static final double DEADZONE = 0.05;
   private CANSparkMax m_IntakePivotMotor;
   private TalonSRX m_IntakeRollerMotor;
-  private DigitalInput IRSensor = new DigitalInput(Constants.IntakeConstants.IRport);
+  // private DigitalInput IRSensor = new DigitalInput(Constants.IntakeConstants.IRport);
   static Intake instance = null;
   /** Creates a new Intake. */
   public Intake() {
@@ -53,9 +53,9 @@ public class Intake extends SubsystemBase {
     m_IntakeRollerMotor.set(TalonSRXControlMode.PercentOutput, rotate);
   }
 
-  public boolean getIRSensor(){
-    return IRSensor.get();
-  }
+  // public boolean getIRSensor(){
+  //   return IRSensor.get();
+  // }
 
   @Override
   public void periodic() {

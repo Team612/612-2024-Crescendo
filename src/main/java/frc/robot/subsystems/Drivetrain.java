@@ -58,13 +58,18 @@ public class Drivetrain extends SubsystemBase {
     return drivetrain;
   }
 
+  public void testTurn() {
+    for(SwerveModule mod : mSwerveMods) {
+      mod.setDriveVoltage(0.3);
+    }
+  }
+
   public void drive(
       Translation2d translation, double rotation, boolean isOpenLoop) {
     SwerveModuleState[] swerveModuleStates =
         Constants.SwerveConstants.swerveKinematics.toSwerveModuleStates(
           ChassisSpeeds.fromFieldRelativeSpeeds(
                     translation.getX(), translation.getY(), rotation, getNavxAngle()));
-    
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.SwerveConstants.maxSpeed);
 
     for (SwerveModule mod : mSwerveMods) {
@@ -190,10 +195,9 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // for (SwerveModule mod : mSwerveMods) {
-    //   SmartDashboard.putNumber(
-    //       "Mod " + mod.moduleNumber + " velocity", mod.getCharacterizationVelocity());
-    // }
+    for (SwerveModule mod : mSwerveMods) {
+      SmartDashboard.putNumber( "Mod " + mod.moduleNumber + " angle", mod.getCanCoder().getDegrees());
+    }
     SmartDashboard.putNumber("Current Angle", navx.getAngle());
     if (isCharacterizing) {
       // Run in characterization mode
