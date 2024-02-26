@@ -49,29 +49,28 @@ public class LED extends SubsystemBase {
   }
 
     public void setGreenAndPink(){
-    boolean pink = true;
-    int a = 0;
-    for (int i = 0; i < m_ledBuffer.getLength(); i++){
-      
-      if(pink = true){
-        a++;
-        m_ledBuffer.setRGB(i, 255,20,147);
-        m_led.setData(m_ledBuffer);
-        if(a == 10){
-          a=0;
-          pink = false;
+      boolean pink = true;
+      int a = 0;
+      for (int i = 0; i < m_ledBuffer.getLength(); i++){
+        if(pink == true){
+          a++;
+          m_ledBuffer.setRGB(i, 255,20,147);
+          m_led.setData(m_ledBuffer);
+          if(a == 10){
+            a=0;
+            pink = false;
+          }
+        }
+        else{
+          a++;
+          m_ledBuffer.setRGB(i, 0, 255, 0);
+          m_led.setData(m_ledBuffer);
+          if(a == 10){
+            a=0;
+            pink = true;
+          }
         }
       }
-      else{
-        a++;
-        m_ledBuffer.setRGB(i, 0, 255, 0);
-        m_led.setData(m_ledBuffer);
-        if(a == 10){
-          a=0;
-          pink = true;
-        }
-      }
-    }
     }
 
   public void setPurpleAndWhite(){
@@ -79,7 +78,7 @@ public class LED extends SubsystemBase {
     int a = 0;
     
     for (int i = 0; i < m_ledBuffer.getLength(); i++){
-      if(purple = true){
+      if(purple == true){
         a++;
         m_ledBuffer.setRGB(i,148,0,211);
         m_led.setData(m_ledBuffer);
@@ -99,6 +98,7 @@ public class LED extends SubsystemBase {
       }
     }
   }
+  
   // length
   public int getLength(){
     return m_ledBuffer.getLength();
@@ -113,13 +113,15 @@ public class LED extends SubsystemBase {
     }
   }
 
+  
+
   @Override
   public void periodic() {
         //Default (Not detecting anything):
           // 612 Colors/Chantilly Colors: Blue & Yellow, Purple & White
       
         
-
+        
         // When Detects Only April Tags:
             // Green
 
@@ -131,10 +133,6 @@ public class LED extends SubsystemBase {
 
 
         // When sees note & april tags:
-            // Green & Pink: Alternating green and pink around
-
-
-
-
+            // Green & Pink: Alternating green and pink around in increments of 3
   }
 }
