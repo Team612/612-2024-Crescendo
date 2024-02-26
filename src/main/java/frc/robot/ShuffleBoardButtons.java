@@ -5,7 +5,7 @@ package frc.robot;
 import org.photonvision.PhotonCamera;
 
 import com.ctre.phoenix6.StatusSignal;
-
+// import frc.robot.SwerveModule;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 // import edu.wpi.first.math.estimator.PoseEstimator;
@@ -25,15 +25,13 @@ import frc.robot.subsystems.Vision;
 import frc.robot.SwerveModule;
 // import frc.robot.subsystems.Graboloid Jr. XIV
 public class ShuffleBoardButtons {
-   PhotonCamera cam = new PhotonCamera("camName1"); // Whatever the camera 1 name is plug it in here
-   PhotonCamera camo = new PhotonCamera("camName2"); // Whatever the camera 2 name is plug it in here
-   Vision m_vision = new Vision(cam,camo);
-   SwerveModule m_swerve = new SwerveModule(0, null);
-   Drivetrain m_drivetrain = new Drivetrain();
-   Intake m_intake = new Intake();
-  //  Climb m_climb = new Climb();
-   PoseEstimator m_poseEstimator = new PoseEstimator();
-   Shooter m_shooter = new Shooter();
+   PhotonCamera cam = Vision.aprilTagCamReturn();
+   PhotonCamera camo = Vision.camObjReturn();
+   Vision m_vision = Vision.getVisionInstance();
+   Drivetrain m_drivetrain = Drivetrain.getInstance();
+   Intake m_intake = Intake.getInstance();
+   PoseEstimator m_poseEstimator = PoseEstimator.getPoseEstimatorInstance();
+   Shooter m_shooter = Shooter.getInstance();
    ShuffleboardTab m_driverTab;
    ShuffleboardTab m_encoderTab;
    ShuffleboardTab m_graphTab;
@@ -171,8 +169,8 @@ public class ShuffleBoardButtons {
        BooleanFunction isAprilTagDetectedO = () -> m_vision.hasTarget(); // Joel
       //  m_vision.setPipeline(1); // set the vision pipeline to whatever the note pipeline is
        BooleanFunction isNoteDetectedO = () -> m_vision.hasTarget();; // Srikar
-       StatusSignalFunction voltAngle1 = () -> m_swerve.getAngleVoltage(); // Achyut
-       StatusSignalFunction voltDrive1 = () -> m_swerve.getDriveVoltage(); // Achyut
+       StatusSignalFunction voltAngle1 = () -> SwerveModule.getAngleVoltage(); // Achyut
+       StatusSignalFunction voltDrive1 = () -> SwerveModule.getDriveVoltage(); // Achyut
 
 
        AprilDet = m_debugTab.add("climbPos", isAprilTagDetectedO.run()).getEntry();
