@@ -28,8 +28,10 @@ public class ShuffleBoardButtons {
    PhotonCamera cam = Vision.aprilTagCamReturn();
    PhotonCamera camo = Vision.camObjReturn();
    Vision m_vision = Vision.getVisionInstance();
+
    Drivetrain m_drivetrain = Drivetrain.getInstance();
    Intake m_intake = Intake.getInstance();
+    //  Climb m_climb = new Climb();
    PoseEstimator m_poseEstimator = PoseEstimator.getPoseEstimatorInstance();
    Shooter m_shooter = Shooter.getInstance();
    ShuffleboardTab m_driverTab;
