@@ -1,4 +1,6 @@
 package frc.robot;
+import javax.xml.transform.TransformerConfigurationException;
+
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -22,11 +24,15 @@ public class SwerveModule {
 
   private TalonFX angleMotor;
   private TalonFX driveMotor;
+    
+  private static TalonFX angleMotorO;
+  private static TalonFX driveMotorO;
   private CANcoder angleEncoder;
 
   private final VelocityVoltage driveVelocity = new VelocityVoltage(0);
   private final PositionVoltage anglePosition = new PositionVoltage(0);
 
+  static SwerveModule swerveInstance = null;
 
   private final PIDController regController = 
     new PIDController(Constants.SwerveConstants.angleKP,
@@ -56,11 +62,15 @@ public class SwerveModule {
 
     /* Drive Motor Config */
     driveMotor = new TalonFX(moduleConstants.driveMotorID);
+
     configDriveMotor();
 
     lastAngle = getState().angle;
 
     turnFeedback.enableContinuousInput(-Math.PI, Math.PI);
+        
+    angleMotorO = angleMotor;
+    driveMotorO = driveMotor;
   }
 
   /* Desired state for each swerve module. takes in speed and angle. If its openLoop, that means it is in teleop */
@@ -141,8 +151,8 @@ public class SwerveModule {
   }
 
   
-  private Rotation2d getAngle() {
-    return Rotation2d.fromDegrees(angleMotor.getPosition().getValueAsDouble() * Constants.SwerveConstants.angleConversionFactor);
+  private static Rotation2d getAngle() {
+    return Rotation2d.fromDegrees(angleMotorO.getPosition().getValueAsDouble() * Constants.SwerveConstants.angleConversionFactor);
   }
 
   public Rotation2d getCanCoder() {
@@ -172,11 +182,13 @@ public class SwerveModule {
     angleMotor.setVoltage(volts);
   }
 
-  public StatusSignal<Double> getAngleVoltage() {
-    return driveMotor.getMotorVoltage();
+  public static StatusSignal<Double> getAngleVoltage() {
+    return driveMotorO.getMotorVoltage();
   }
 
-  public StatusSignal<Double> getDriveVoltage() {
-    return angleMotor.getMotorVoltage();
+  public static StatusSignal<Double> getDriveVoltage() {
+    return angleMotorO.getMotorVoltage();
   }
+
+
 }

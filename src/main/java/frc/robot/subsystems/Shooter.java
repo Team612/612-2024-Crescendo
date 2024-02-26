@@ -41,6 +41,12 @@ public class Shooter extends SubsystemBase {
     m_ShooterMotorLeft.set(TalonSRXControlMode.PercentOutput, rotateLeft);
   }
 
+  public double[] get(){
+    double[] vals = {m_ShooterMotorLeft.getActiveTrajectoryVelocity(),m_ShooterMotorRight.getActiveTrajectoryVelocity()};
+    return vals;
+  }
+
+
   // move right motor
   public void moveRightMotor(double rotateRight){
     if(rotateRight < DEADZONE) rotateRight = 0;

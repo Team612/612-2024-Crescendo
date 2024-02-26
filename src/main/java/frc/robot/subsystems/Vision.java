@@ -36,6 +36,8 @@ public class Vision extends SubsystemBase {
   private static Transform3d robotToCamApril;
   private static Transform3d robotToCamObject;
   private Drivetrain m_drivetrain;
+  public static PhotonCamera aprilCam;
+  public static PhotonCamera camObj;
   public PhotonPoseEstimator m_PoseEstimator;
 
   static Vision visionInstance = null;
@@ -168,7 +170,13 @@ public class Vision extends SubsystemBase {
     robotInTagPose = new Pose2d();
     this.cameraApriltag = cameraA;
     this.cameraObject = cameraO;
+
+    aprilCam = cameraA;
+    camObj = cameraO;
+
     resetRobotPose();
+
+
 
     aprilTagFieldLayout = new AprilTagFieldLayout(atList, 16.451 , 8.211 );
 
@@ -183,6 +191,14 @@ public class Vision extends SubsystemBase {
     //m_PoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
     
 
+  }
+
+  public static PhotonCamera aprilTagCamReturn(){ 
+      return aprilCam;
+  }
+
+  public static PhotonCamera camObjReturn(){ 
+      return camObj;
   }
 
   public static Vision getVisionInstance() {
