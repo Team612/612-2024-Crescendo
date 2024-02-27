@@ -34,7 +34,13 @@ public class Shooter extends SubsystemBase {
     moveLeftMotor(rotateLeft);
     moveRightMotor(rotateRight);
   }
+  public double[] get(){
+    double left=m_ShooterMotorLeft.getActiveTrajectoryVelocity();
+    double right=m_ShooterMotorRight.getActiveTrajectoryVelocity();
+    double[] angles = {left, right};
+    return angles;
 
+  }
   // move left motor
   public void moveLeftMotor(double rotateLeft){
     if(Math.abs(rotateLeft) < DEADZONE) rotateLeft = 0;
