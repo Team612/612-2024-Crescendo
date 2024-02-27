@@ -36,6 +36,7 @@ public class IntakeUp extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_Intake.getIntakeLimitStateForward();
+    // return m_Intake.getIntakeLimitStateForward();
+    return false;
   }
 }

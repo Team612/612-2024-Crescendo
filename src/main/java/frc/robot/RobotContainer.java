@@ -14,6 +14,8 @@ import frc.robot.commands.IntakeCommands.IntakeDown;
 import frc.robot.commands.IntakeCommands.IntakeUp;
 import frc.robot.commands.IntakeCommands.MoveRollersIn;
 import frc.robot.commands.IntakeCommands.MoveRollersOut;
+import frc.robot.commands.ShooterCommands.AutoShootAmp;
+import frc.robot.commands.ShooterCommands.AutoShootSpeaker;
 import frc.robot.commands.ShooterCommands.ShootNoteAmp;
 import frc.robot.commands.ShooterCommands.ShootNoteSpeaker;
 import frc.robot.commands.ShooterCommands.ShooterLeftMotor;
@@ -68,15 +70,17 @@ public class RobotContainer {
   private final ShootNoteAmp m_shootAmp = new ShootNoteAmp(m_shooter);
   private final ShooterLeftMotor m_shootLeftMotor = new ShooterLeftMotor(m_shooter);
   private final ShooterRightMotor m_shootRightMotor = new ShooterRightMotor(m_shooter);
+  private final AutoShootSpeaker m_autoShootSpeaker = new AutoShootSpeaker(m_shooter, m_intake);
+  private final AutoShootAmp m_autoShootAmp = new AutoShootAmp(m_shooter, m_intake);
 
   //Drive subsystems declarations 
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   // Speaker auto command
-  //private final SequentialCommandGroup scoreSpeaker = new SequentialCommandGroup(m_alignSpeaker.andThen(m_shootSpeaker));
+  // private final SequentialCommandGroup scoreSpeaker = new SequentialCommandGroup(m_alignSpeaker.andThen(m_shootSpeaker));
 
-  // Amp auto command
-  //private final SequentialCommandGroup scoreAmp = new SequentialCommandGroup(m_alignAmp.andThen(m_shootAmp));
+  // // Amp auto command
+  // private final SequentialCommandGroup scoreAmp = new SequentialCommandGroup(m_alignAmp.andThen(m_shootAmp));
 
   // Intake auto command
   //private final SequentialCommandGroup intakeNote = new SequentialCommandGroup(m_justMove.andThen(m_moveRollers));
@@ -96,6 +100,8 @@ public class RobotContainer {
     //m_chooser.addOption("Score Speaker", scoreSpeaker);
     //m_chooser.addOption("Score Amp", scoreAmp);
     //m_chooser.addOption("Auto Intake", intakeNote);
+    m_chooser.addOption("auto speaker", m_autoShootSpeaker);
+    m_chooser.addOption("auto amp", m_autoShootAmp);
     m_chooser.addOption("tes turn", m_testTurn);
     m_chooser.addOption("Swerve Characterization", new FeedForwardCharacterization(
               m_drivetrain,

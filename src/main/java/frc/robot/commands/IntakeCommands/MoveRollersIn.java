@@ -25,7 +25,7 @@ public class MoveRollersIn extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(m_Intake.getIRSensor() > 0.5) {
+    if(m_Intake.getIRSensor() > 0.3) {
       count++;
     } else {
       count = 0;
@@ -43,6 +43,6 @@ public class MoveRollersIn extends Command {
   @Override
   public boolean isFinished() {
     // return m_Intake.getIRSensor();
-    return count >= 5;
+    return count >= 2;
   }
 }

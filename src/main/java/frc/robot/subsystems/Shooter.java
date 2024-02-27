@@ -48,6 +48,10 @@ public class Shooter extends SubsystemBase {
     m_ShooterMotorRight.set(TalonSRXControlMode.PercentOutput, rotateRight);
   }
 
+  public double getCurrent() {
+    return (m_ShooterMotorLeft.getSupplyCurrent() + m_ShooterMotorRight.getSupplyCurrent()) / 2;
+  }
+
   @Override
   public void periodic() {
     SmartDashboard.putNumber("current left", m_ShooterMotorLeft.getSupplyCurrent());
