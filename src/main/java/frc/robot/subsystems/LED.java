@@ -9,17 +9,26 @@ import java.util.Random;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.Vision;
 
 public class LED extends SubsystemBase {
-  private AddressableLED m_led;
+  private static AddressableLED m_led;
+  private static LED m_LED;
   private AddressableLEDBuffer m_ledBuffer;
+  public Vision m_Vis;
   Random rand = new Random();
   /** Creates a new Led_Colors. */
   public LED() {
+      m_Vis = new Vision(null, null);
       m_led = new AddressableLED(0);
+      m_LED = new LED();
       m_ledBuffer = new AddressableLEDBuffer(300); //300 should be the length
       m_led.setLength(m_ledBuffer.getLength());
-      m_led.start(); 
+      m_led.start();
+  }
+
+  public static LED getInstance(){
+    return m_LED;
   }
 
   public void setOneLed(int l, int r, int g, int b){
@@ -104,7 +113,7 @@ public class LED extends SubsystemBase {
     return m_ledBuffer.getLength();
   }
 
-  
+
   // Special Effects
   public void fireAnimation(){
     for (int i = 0; i < m_ledBuffer.getLength(); i++){
@@ -113,18 +122,18 @@ public class LED extends SubsystemBase {
     }
   }
 
-  
+
 
   @Override
   public void periodic() {
         //Default (Not detecting anything):
           // 612 Colors/Chantilly Colors: Blue & Yellow, Purple & White
-      
+        // In Robot Container
         
         
         // When Detects Only April Tags:
             // Green
-
+        
 
 
         // When Sees Only Note:

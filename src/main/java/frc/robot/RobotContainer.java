@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
+import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,6 +14,10 @@ import frc.robot.commands.DriveCommands.FieldOrientedDrive;
 import frc.robot.commands.IntakeCommands.IntakeDown;
 import frc.robot.commands.IntakeCommands.IntakeUp;
 import frc.robot.commands.IntakeCommands.MoveRollers;
+import frc.robot.commands.LEDCommands.GreenAndPinkBoth;
+import frc.robot.commands.LEDCommands.GreenAprilTag;
+import frc.robot.commands.LEDCommands.PinkNote;
+import frc.robot.commands.LEDCommands.PurpleAndWhiteDefault;
 import frc.robot.commands.ShooterCommands.ShootNoteAmp;
 import frc.robot.commands.ShooterCommands.ShootNoteSpeaker;
 import frc.robot.commands.ShooterCommands.ShooterLeftMotor;
@@ -32,6 +37,7 @@ import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.TrajectoryConfiguration;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.LED;
 
 public class RobotContainer {
   //Subsystem declerations
@@ -41,6 +47,7 @@ public class RobotContainer {
   private final Vision m_vision = Vision.getVisionInstance();
   private final Intake m_intake = Intake.getInstance();
   private final Shooter m_shooter = Shooter.getInstance();
+  public final LED m_LED = LED.getInstance();
 
   // Autonomous commands
   private final TrajectoryCreation m_traj = new TrajectoryCreation();
@@ -65,8 +72,15 @@ public class RobotContainer {
   private final ShooterLeftMotor m_shootLeftMotor = new ShooterLeftMotor(m_shooter);
   private final ShooterRightMotor m_shootRightMotor = new ShooterRightMotor(m_shooter);
 
+  // Gunner commands
+  private final GreenAndPinkBoth m_LEDGP = new GreenAndPinkBoth(m_LED);
+  private final GreenAprilTag m_LEDG = new GreenAprilTag(m_LED);
+  private final PinkNote m_LEDP = new PinkNote(m_LED);
+  private final PurpleAndWhiteDefault m_LEDPW = new PurpleAndWhiteDefault(m_LED);
+
   //Drive subsystems declarations 
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
+  // private final DeclareType m_delare = new // idk what to put here
 
   // Speaker auto command
   private final SequentialCommandGroup scoreSpeaker = new SequentialCommandGroup(m_alignSpeaker.andThen(m_shootSpeaker));
@@ -76,6 +90,8 @@ public class RobotContainer {
 
   // Intake auto command
   private final SequentialCommandGroup intakeNote = new SequentialCommandGroup(m_justMove.andThen(m_moveRollers));
+
+
 
   private boolean isFieldOriented = true;
 
@@ -122,6 +138,7 @@ public class RobotContainer {
 
 
   private void configureDefaultCommands(){
+    m_LED.setDefaultCommand(m_LEDPW);
     m_drivetrain.setDefaultCommand(
         new FieldOrientedDrive(
             m_drivetrain,

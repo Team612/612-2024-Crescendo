@@ -196,6 +196,10 @@ public class Vision extends SubsystemBase {
     return cameraApriltag;
   }
 
+  // public staticPhotonCamera getCamera2() {
+  //   return cameraApriltag;
+  // }
+
   // getting the vision pose from the april tags
   public Pose2d getTagPose() {
     PhotonPipelineResult result = cameraApriltag.getLatestResult();
