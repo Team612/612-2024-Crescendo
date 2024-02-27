@@ -36,6 +36,8 @@ public class Vision extends SubsystemBase {
   private static Transform3d robotToCamApril;
   private static Transform3d robotToCamObject;
   private Drivetrain m_drivetrain;
+  public static PhotonCamera aprilCam;
+  public static PhotonCamera camObj;
   public PhotonPoseEstimator m_PoseEstimator;
 
   static Vision visionInstance = null;
@@ -168,9 +170,15 @@ public class Vision extends SubsystemBase {
     robotInTagPose = new Pose2d();
     this.cameraApriltag = cameraA;
     this.cameraObject = cameraO;
+
+    aprilCam = cameraA;
+    camObj = cameraO;
+
     resetRobotPose();
 
-    aprilTagFieldLayout = new AprilTagFieldLayout(atList, 16.451 , 8.211 );
+
+
+    aprilTagFieldLayout = new AprilTagFieldLayout(atList, 16.451 , 8.211);
 
     robotToCamApril = new Transform3d(new Translation3d(0.20, 0.04, 0.46), new Rotation3d()); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
 
@@ -185,6 +193,14 @@ public class Vision extends SubsystemBase {
 
   }
 
+  public static PhotonCamera aprilTagCamReturn(){ 
+      return aprilCam;
+  }
+
+  public static PhotonCamera camObjReturn(){ 
+      return camObj;
+  }
+
   public static Vision getVisionInstance() {
     if (visionInstance == null) {
       visionInstance = new Vision(new PhotonCamera(Constants.VisionConstants.cameraNameObject), new PhotonCamera(Constants.VisionConstants.cameraNameAprilTag));
@@ -195,10 +211,6 @@ public class Vision extends SubsystemBase {
   public PhotonCamera getCamera() {
     return cameraApriltag;
   }
-
-  // public staticPhotonCamera getCamera2() {
-  //   return cameraApriltag;
-  // }
 
   // getting the vision pose from the april tags
   public Pose2d getTagPose() {
@@ -212,6 +224,19 @@ public class Vision extends SubsystemBase {
     }
     return new Pose2d();
   }
+
+  public Pose2d getTagPoseLEDS() {
+    PhotonPipelineResult result = cameraApriltag.getLatestResult();
+    if (result.hasTargets()) {
+      PhotonTrackedTarget bestTarget = result.getBestTarget();
+
+      Transform3d tagSpace = bestTarget.getBestCameraToTarget();
+
+      return new Pose2d(tagSpace.getX(), tagSpace.getY(), new Rotation2d( (bestTarget.getYaw()) * (Math.PI/180)) );
+    }
+    return null;
+  }
+
 
   public Pose2d getRobotPose(){
     Pose2d tagPose = robotInTagPose;

@@ -19,7 +19,7 @@ public class LED extends SubsystemBase {
   Random rand = new Random();
   /** Creates a new Led_Colors. */
   public LED() {
-      m_Vis = new Vision(null, null);
+      m_Vis = new Vision(Vision.aprilTagCamReturn(), Vision.camObjReturn());
       m_led = new AddressableLED(0);
       m_LED = new LED();
       m_ledBuffer = new AddressableLEDBuffer(300); //300 should be the length
@@ -134,14 +134,21 @@ public class LED extends SubsystemBase {
         // When Detects Only April Tags:
             // Green
         
+        if(m_Vis.getTagPoseLEDS()!=null){
+            setGreen();
+        }
 
 
         // When Sees Only Note:
             // Pink 
-
-
+        if(m_Vis.hasTarget()!=false){
+          setPink();
+        }
 
         // When sees note & april tags:
             // Green & Pink: Alternating green and pink around in increments of 3
+        if(m_Vis.hasTarget() && m_Vis.getTagPoseLEDS()!=null){
+            setGreenAndPink();
+        }
   }
 }
