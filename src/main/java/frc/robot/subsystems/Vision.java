@@ -172,9 +172,9 @@ public class Vision extends SubsystemBase {
 
     aprilTagFieldLayout = new AprilTagFieldLayout(atList, 16.451 , 8.211 );
 
-    robotToCamApril = new Transform3d(new Translation3d(0.20, 0.04, 0.46), new Rotation3d()); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
+    robotToCamApril = new Transform3d(new Translation3d(0, Units.inchesToMeters(2.5), Units.inchesToMeters(31)), new Rotation3d(0, 15, 180)); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
 
-    robotToCamObject = new Transform3d(new Translation3d(0,-0.22,0.485), new Rotation3d()); //0.20,-0.04
+    robotToCamObject = new Transform3d(new Translation3d(0,-Units.inchesToMeters(1.5), Units.inchesToMeters(31)), new Rotation3d()); //0.20,-0.04
     
     m_PoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, this.cameraApriltag, robotToCamApril);
 
@@ -288,10 +288,10 @@ public class Vision extends SubsystemBase {
     if (cameraApriltag.getDistCoeffs().equals(Optional.empty())){
       System.out.println("NO CALIBRATION");
     }
-    if (hasTarget()){
-      SmartDashboard.putNumber("note x", getNoteSpace().getX());
-      SmartDashboard.putNumber("note y", getNoteSpace().getY());
-    }
+    // if (hasTarget()){
+    //   SmartDashboard.putNumber("note x", getNoteSpace().getX());
+    //   SmartDashboard.putNumber("note y", getNoteSpace().getY());
+    // }
     SmartDashboard.putBoolean("Sees tag", cameraObject.getLatestResult().hasTargets());
 
   }

@@ -2,17 +2,19 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.ShooterCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.Constants;
+import frc.robot.subsystems.Shooter;
 
-public class TestTun extends Command {
-  /** Creates a new TestTun. */
-  private Drivetrain m_drivetrain;
-  public TestTun(Drivetrain d) {
-    m_drivetrain = d;
-    addRequirements(d);
+public class SpeedUpAmp extends Command {
+  /** Creates a new SpeedUpShooter. */
+  private Shooter m_shooter;
+  private boolean spikeDone;
+  public SpeedUpAmp(Shooter shooter) {
+    m_shooter = shooter;
+    addRequirements(shooter);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -23,7 +25,10 @@ public class TestTun extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drivetrain.testTurn();
+    if(m_shooter.getCurrent() > 10) {
+      spikeDone = true;
+    }
+    m_shooter.shoot(Constants.ShooterConstants.shooterLeftSpeedAmp, Constants.ShooterConstants.shooterRightSpeedAmp);
   }
 
   // Called once the command ends or is interrupted.
@@ -33,6 +38,6 @@ public class TestTun extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return m_shooter.getCurrent() < 6 && spikeDone;
   }
 }

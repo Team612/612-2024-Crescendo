@@ -42,7 +42,7 @@ public class AutoIntake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(m_intake.getIRSensor() > 0.5) {
+    if(m_intake.getIRSensor() > 0.3) {
       count++;
     } else {
       count = 0;
@@ -67,6 +67,6 @@ public class AutoIntake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return count >= 5;
+    return count >= 2;
   }
 }

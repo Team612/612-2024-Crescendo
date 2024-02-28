@@ -4,6 +4,7 @@
 
 package frc.robot.commands.ShooterCommands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Intake;
@@ -14,6 +15,7 @@ public class AutoShootAmp extends Command {
   private Intake m_intake;
 
   private boolean spikeDone;
+  private Timer time = new Timer();
   /** Creates a new AutoShootAmp. */
   public AutoShootAmp(Shooter s, Intake i) {
     m_shooter = s;
@@ -26,20 +28,25 @@ public class AutoShootAmp extends Command {
   @Override
   public void initialize() {
     spikeDone = false;
+    time.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(m_shooter.getCurrent() > 10) {
-      spikeDone = true;
-    }
-    if(m_shooter.getCurrent() < 6 && spikeDone) {
+    // if(m_shooter.getCurrent() > 10) {
+    //   spikeDone = true;
+    // }
+    // if(m_shooter.getCurrent() < 6 && spikeDone) {
+    if(time.get() >= 5) {
       m_shooter.shoot(Constants.ShooterConstants.shooterLeftSpeedAmp, Constants.ShooterConstants.shooterRightSpeedAmp);
       m_intake.moveRollers(Constants.IntakeConstants.rollerSpeedOuttake);
     } else {
       m_shooter.shoot(Constants.ShooterConstants.shooterLeftSpeedAmp, Constants.ShooterConstants.shooterRightSpeedAmp);
     }
+    // } else {
+    //   m_shooter.shoot(Constants.ShooterConstants.shooterLeftSpeedAmp, Constants.ShooterConstants.shooterRightSpeedAmp);
+    // }
   }
 
   // Called once the command ends or is interrupted.
@@ -52,6 +59,6 @@ public class AutoShootAmp extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return time.get() >= 7;
   }
 }

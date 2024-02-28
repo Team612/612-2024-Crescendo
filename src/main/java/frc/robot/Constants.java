@@ -75,8 +75,8 @@ public final class Constants {
     public static final double driveKFF = 0.0;
 
     /* Drive Motor Characterization Values */
-    public static final double driveKS = 0.22005;
-    public static final double driveKV = 2.74490;
+    public static final double driveKS = 0.17972;
+    public static final double driveKV = 7.50715; //2.74490
     public static final double driveKA = 0;
 
      //have to tune manually
@@ -159,8 +159,8 @@ public final class Constants {
   
 
   public static class VisionConstants{
-    public static String cameraNameAprilTag = "Apriltag";
-    public static String cameraNameObject = "Object";
+    public static String cameraNameAprilTag = "Apriltag2";
+    public static String cameraNameObject = "Apriltag";
 
     //constraints
     public static final TrapezoidProfile.Constraints ThetaControllerConstraints = 
@@ -199,7 +199,7 @@ public final class Constants {
     public static final double intakeUpSpeed = 0.3;
     public static final double intakeDownSpeed = -0.3;
     public static final double rollerSpeedIntake = 0.5;
-    public static final double rollerSpeedOuttake = 1;
+    public static final double rollerSpeedOuttake = 0.9;
     public static final int IRport = 0;
   }
 
@@ -208,7 +208,7 @@ public final class Constants {
     public static final int shooterLeftID = 11;
     public static final int shooterRightID = 12;
     public static final double shooterLeftSpeedSpeaker = -1;
-    public static final double shooterRightSpeedSpeaker = 1;
+    public static final double shooterRightSpeedSpeaker = 1; //0.9
     public static final double shooterLeftSpeedAmp = -0.3;
     public static final double shooterRightSpeedAmp = 0.3;
   }

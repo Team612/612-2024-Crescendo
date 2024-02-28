@@ -134,12 +134,12 @@ public class TrajectoryCreation {
         double yChange = 0;
        
         if(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-            tagX = vision.return_tag_pose(7).getX();
+            tagX = vision.return_tag_pose(7).getX() + Units.inchesToMeters(91);
             tagY = vision.return_tag_pose(7).getY();; 
             tagAngle = new Rotation2d(180);
             xChange = 1;
         } else {
-            tagX = vision.return_tag_pose(4).getX();
+            tagX = vision.return_tag_pose(4).getX() - Units.inchesToMeters(91);
             tagY = vision.return_tag_pose(4).getY();; 
             tagAngle = new Rotation2d(0);
             xChange = -1;

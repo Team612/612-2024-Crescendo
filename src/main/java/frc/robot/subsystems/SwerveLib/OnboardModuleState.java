@@ -24,6 +24,7 @@ public class OnboardModuleState {
       targetSpeed = -targetSpeed;
       targetAngle = delta > 90 ? (targetAngle -= 180) : (targetAngle += 180);
     }
+    System.out.println(targetAngle);
     return new SwerveModuleState(targetSpeed, Rotation2d.fromDegrees(targetAngle));
   }
 
