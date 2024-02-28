@@ -29,7 +29,7 @@ public final class Constants {
     public static final double stickDeadband = 0.1;
 
     public static final COTSTalonFXSwerveConstants chosenModule =  
-    COTSTalonFXSwerveConstants.WCP.SwerveXStandard.KrakenX60(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L2);    
+    COTSTalonFXSwerveConstants.SDS.MK4i.KrakenX60(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L2); 
 
     /* Drivetrain Constants */
     public static final double trackWidth = Units.inchesToMeters(18.596);
@@ -39,7 +39,7 @@ public final class Constants {
 
     public static final double driveGearRatio = chosenModule.driveGearRatio; // 6.75:1
     //NOTE: the angle gear ratio provided by the manufactor is different than the one we had down previously... might need to change it
-    public static final double angleGearRatio = 150.0 /7.0; // 12.8:1 (150.0 / 7.0);
+    public static final double angleGearRatio = chosenModule.angleGearRatio; // 12.8:1 (150.0 / 7.0);
 
     public static final SwerveDriveKinematics swerveKinematics =
         new SwerveDriveKinematics(
@@ -63,9 +63,9 @@ public final class Constants {
     public static final boolean driveEnableCurrentLimit = true;
 
     /* Angle Motor PID Values */
-    public static final double angleKP = 10;
-    public static final double angleKI = 0.0;
-    public static final double angleKD = 0.0;
+    public static final double angleKP = chosenModule.angleKP;
+    public static final double angleKI = chosenModule.angleKI;
+    public static final double angleKD = chosenModule.angleKD;
     public static final double angleKFF = 0.0;
 
     /* Drive Motor PID Values */
@@ -92,12 +92,12 @@ public final class Constants {
 
     /* Swerve Profiling Values */
     public static final double maxSpeed = 4.5; // meters per second
-    public static final double maxAngularVelocity = Math.PI;
+    public static final double maxAngularVelocity = 11.5;
     public static final double maxAcceleration = 1;
-    public static final double maxAngularAcceleration = Math.PI/6;
+    public static final double maxAngularAcceleration = Math.PI;
 
      /* Neutral Modes */
-    public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Coast;
+    public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Brake;
     public static final NeutralModeValue driveNeutralMode = NeutralModeValue.Brake;
 
     /* Motor Inverts */

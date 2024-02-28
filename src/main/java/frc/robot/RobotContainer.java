@@ -140,8 +140,8 @@ public class RobotContainer {
     ControlMap.m_driverController.b().toggleOnTrue(m_defaultDrive);
 
     // Gunner button bindings
-    ControlMap.m_gunnerController.a().onTrue(m_intakeDown);
-    ControlMap.m_gunnerController.b().onTrue(m_intakeUp);
+    ControlMap.m_gunnerController.a().whileTrue(m_intakeDown);
+    ControlMap.m_gunnerController.b().whileTrue(m_intakeUp);
     ControlMap.m_gunnerController.x().whileTrue(m_moveRollersOut);
     ControlMap.m_gunnerController.y().whileTrue(m_moveRollersIn);
     ControlMap.m_gunnerController.leftTrigger().whileTrue(m_shootAmp);

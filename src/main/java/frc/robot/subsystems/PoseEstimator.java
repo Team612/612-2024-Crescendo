@@ -12,6 +12,7 @@ import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
@@ -88,6 +89,8 @@ public class PoseEstimator extends SubsystemBase {
      
       m_PhotonPoseEstimator.update().ifPresent(estimatedRobotPose -> {
       var estimatedPose = estimatedRobotPose.estimatedPose;
+
+      // m_DrivePoseEstimator.addVisionMeasurement(estimatedPose.toPose2d(), FIELD_LENGTH_METERS);
      
       // Make sure we have a new measurement, and that it's on the field
       if (m_vision.getCamera().getLatestResult().getBestTarget().getFiducialId() >= 0){
@@ -100,7 +103,8 @@ public class PoseEstimator extends SubsystemBase {
           for (PhotonTrackedTarget target : estimatedRobotPose.targetsUsed) {
             Pose3d targetPose = m_vision.return_tag_pose(target.getFiducialId());
             Transform3d bestTarget = target.getBestCameraToTarget();
-            Pose3d camPose = targetPose.transformBy(bestTarget.inverse());            
+            Transform3d robotToCam = new Transform3d(bestTarget.getTranslation().plus(m_vision.getRobotToApril().getTranslation()), new Rotation3d(0, 0, 0));
+            Pose3d camPose = targetPose.transformBy(robotToCam.inverse());
 
       //       //checking from the camera to the tag is less than 4
             if (target.getPoseAmbiguity() <= .2) {
@@ -117,7 +121,7 @@ public class PoseEstimator extends SubsystemBase {
         }
       }
       });
-
+      
       
     }
     m_field.setRobotPose(getCurrentPose());
