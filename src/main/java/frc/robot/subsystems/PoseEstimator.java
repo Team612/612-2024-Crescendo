@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
+import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -30,7 +31,8 @@ import frc.robot.commands.TrajectoryCommands.FollowNote;
 public class PoseEstimator extends SubsystemBase {
   /** Creates a new PoseEstimator. */
   SwerveDrivePoseEstimator m_DrivePoseEstimator;
-  PhotonPoseEstimator m_PhotonPoseEstimator;
+  PhotonPoseEstimator m_PhotonPoseEstimatorFront;
+  PhotonPoseEstimator m_PhotonPoseEstimatorBack;
   Vision m_vision;
   Drivetrain m_drivetrain;
   private Field2d m_field;
@@ -65,7 +67,8 @@ public class PoseEstimator extends SubsystemBase {
       stateStdDevs,
       visionMeasurementStdDevs
     );
-    m_PhotonPoseEstimator = m_vision.getVisionPose();
+    m_PhotonPoseEstimatorBack = m_vision.getVisionPose();
+    m_PhotonPoseEstimatorFront = m_vision.getVisionPose2();
   }
 
   public static PoseEstimator getPoseEstimatorInstance() {
@@ -79,21 +82,15 @@ public class PoseEstimator extends SubsystemBase {
     updateWithAprilTags = b;
   }
 
-  private boolean once = true;
-
-  @Override
-  public void periodic() {
-    m_DrivePoseEstimator.update(m_drivetrain.getNavxAngle(), m_drivetrain.getPositions());
-
-    if(m_PhotonPoseEstimator != null && updateWithAprilTags){
-     
-      m_PhotonPoseEstimator.update().ifPresent(estimatedRobotPose -> {
+  public void updateEachPoseEstimator(PhotonPoseEstimator poseEstimator, int camID){
+     poseEstimator.update().ifPresent(estimatedRobotPose -> {
       var estimatedPose = estimatedRobotPose.estimatedPose;
 
       // m_DrivePoseEstimator.addVisionMeasurement(estimatedPose.toPose2d(), FIELD_LENGTH_METERS);
      
       // Make sure we have a new measurement, and that it's on the field
-      if (m_vision.getCamera().getLatestResult().getBestTarget().getFiducialId() >= 0){
+      if(m_vision.getApriltagCamera(camID).getLatestResult().hasTargets()){
+      if (m_vision.getApriltagCamera(camID).getLatestResult().getBestTarget().getFiducialId() >= 0){
       if (
         // estimatedRobotPose.timestampSeconds != previousPipelineTimestamp && 
       estimatedPose.getX() >= 0.0 && estimatedPose.getX() <= FIELD_LENGTH_METERS
@@ -103,8 +100,14 @@ public class PoseEstimator extends SubsystemBase {
           for (PhotonTrackedTarget target : estimatedRobotPose.targetsUsed) {
             Pose3d targetPose = m_vision.return_tag_pose(target.getFiducialId());
             Transform3d bestTarget = target.getBestCameraToTarget();
-            Transform3d robotToCam = new Transform3d(bestTarget.getTranslation().plus(m_vision.getRobotToApril().getTranslation()), new Rotation3d(0, 0, 0));
-            Pose3d camPose = targetPose.transformBy(robotToCam.inverse());
+            Pose3d camPose;
+            if (camID == 2){
+            Transform3d robotToCam = new Transform3d(bestTarget.getTranslation().plus(m_vision.getRobotToCam(camID).getTranslation()), new Rotation3d(0,0,0));
+            camPose = targetPose.transformBy(robotToCam.inverse()); 
+            }           
+            else {
+              camPose = targetPose.transformBy(bestTarget.inverse().plus(m_vision.getRobotToCam(camID)));  //.plus(new Transform3d(robotToCam, new Rotation3d(0,0,0))); 
+            }
 
       //       //checking from the camera to the tag is less than 4
             if (target.getPoseAmbiguity() <= .2) {
@@ -120,10 +123,25 @@ public class PoseEstimator extends SubsystemBase {
             m_DrivePoseEstimator.addVisionMeasurement(estimatedPose.toPose2d(), estimatedRobotPose.timestampSeconds);
         }
       }
+      }
       });
-      
-      
+
+  }
+
+  private boolean once = true;
+
+  @Override
+  public void periodic() {
+    m_DrivePoseEstimator.update(m_drivetrain.getNavxAngle(), m_drivetrain.getPositions());
+
+    if(m_PhotonPoseEstimatorBack != null){
+      updateEachPoseEstimator(m_PhotonPoseEstimatorBack, 2);
     }
+
+    else if (m_PhotonPoseEstimatorFront != null){
+      updateEachPoseEstimator(m_PhotonPoseEstimatorFront, 1);
+    }
+
     m_field.setRobotPose(getCurrentPose());
     SmartDashboard.putNumber("PoseEstimator X", getCurrentPose().getX());
      SmartDashboard.putNumber("PoseEstimator Y", getCurrentPose().getY());

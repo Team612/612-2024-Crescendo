@@ -6,6 +6,8 @@ package frc.robot;
 
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
+
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -29,7 +31,8 @@ public final class Constants {
     public static final double stickDeadband = 0.1;
 
     public static final COTSTalonFXSwerveConstants chosenModule =  
-    COTSTalonFXSwerveConstants.SDS.MK4i.KrakenX60(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L2); 
+    COTSTalonFXSwerveConstants.SDS.MK4i.KrakenX60(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L2);    
+  
 
     /* Drivetrain Constants */
     public static final double trackWidth = Units.inchesToMeters(18.596);
@@ -101,11 +104,11 @@ public final class Constants {
     public static final NeutralModeValue driveNeutralMode = NeutralModeValue.Brake;
 
     /* Motor Inverts */
-    public static final InvertedValue driveInvert = chosenModule.driveMotorInvert;
-    public static final InvertedValue angleInvert = chosenModule.angleMotorInvert;
+    public static final InvertedValue driveInvert = chosenModule.driveMotorInvert; //counterclockwise
+    public static final InvertedValue angleInvert = chosenModule.angleMotorInvert; //counterclockwise
 
     /* Angle Encoder Invert */
-    public static final boolean canCoderInvert = false;
+    public static final SensorDirectionValue cancoderInvert = chosenModule.cancoderInvert; //counterclockwise
 
     /* Module Specific Constants */
     /*
@@ -159,8 +162,8 @@ public final class Constants {
   
 
   public static class VisionConstants{
-    public static String cameraNameAprilTag = "Apriltag2";
-    public static String cameraNameObject = "Apriltag";
+    public static String cameraNameAprilTag = "Apriltag";
+    public static String cameraNameObject = "Apriltag2";
 
     //constraints
     public static final TrapezoidProfile.Constraints ThetaControllerConstraints = 
@@ -196,8 +199,8 @@ public final class Constants {
   public static class IntakeConstants{
     public static final int pivotID = 9;
     public static final int rollerID = 10;
-    public static final double intakeUpSpeed = 0.3;
-    public static final double intakeDownSpeed = -0.3;
+    public static final double intakeUpSpeed = 0.5;
+    public static final double intakeDownSpeed = -0.5;
     public static final double rollerSpeedIntake = 0.5;
     public static final double rollerSpeedOuttake = 0.9;
     public static final int IRport = 0;

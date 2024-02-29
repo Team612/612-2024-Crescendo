@@ -130,7 +130,7 @@ public class TrajectoryCreation {
         double tagX = 0;
         double tagY = 0;
         Rotation2d tagAngle = new Rotation2d();
-        double xChange = 0;
+        double xChange = -Units.inchesToMeters(91);
         double yChange = 0;
        
         if(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
@@ -265,14 +265,14 @@ public class TrajectoryCreation {
         double y = estimatedPose.getY();
         Rotation2d angle = estimatedPose.getRotation();
        
-        PhotonPipelineResult result = vision.getCamera().getLatestResult();
+        PhotonPipelineResult result = vision.getApriltagCamera(2).getLatestResult();
         int id;
         double tagX = 0;
         double tagY = 0; 
         Rotation2d tagAngle = new Rotation2d();
 
         if(result.hasTargets()){
-            id = vision.getCamera().getLatestResult().getBestTarget().getFiducialId();
+            id = vision.getApriltagCamera(2).getLatestResult().getBestTarget().getFiducialId();
 
 
             Pose2d tagPose = vision.return_tag_pose(id).toPose2d();
@@ -308,7 +308,7 @@ public class TrajectoryCreation {
         } else if(id == 3 || id == 4 || id == 13) {
             List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
                 new Pose2d(x, y, angle),
-                new Pose2d(tagX - 1, tagY + offset, tagAngle)
+                new Pose2d(tagX - 2, tagY + offset, tagAngle)
             );
 
             // Create the path using the bezier points created above

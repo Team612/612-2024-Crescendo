@@ -22,6 +22,7 @@ public final class CTREConfigs {
     //swerveCanCoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
     swerveCanCoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
 
+
     /* Drive Configs */
     swerveDriveFXConfig.MotorOutput.Inverted = Constants.SwerveConstants.driveInvert;
     swerveDriveFXConfig.MotorOutput.NeutralMode = Constants.SwerveConstants.driveNeutralMode;
