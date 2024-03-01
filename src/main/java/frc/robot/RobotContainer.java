@@ -28,6 +28,7 @@ import frc.robot.commands.ShooterCommands.SpeedUpAmp;
 import frc.robot.commands.ShooterCommands.SpeedUpSpeaker;
 import frc.robot.commands.TrajectoryCommands.AlignAmp;
 import frc.robot.commands.TrajectoryCommands.AlignSpeaker;
+import frc.robot.commands.TrajectoryCommands.DriveBackwards;
 import frc.robot.commands.TrajectoryCommands.FollowNote;
 import frc.robot.commands.TrajectoryCommands.MoveToNote;
 import frc.robot.commands.TrajectoryCommands.RunOnTheFly;
@@ -58,6 +59,7 @@ public class RobotContainer {
   private final AlignAmp m_alignAmp = new AlignAmp(m_poseEstimator, m_traj, m_vision);
   private final AlignSpeaker m_alignSpeaker = new AlignSpeaker(m_poseEstimator, m_traj, m_vision);
   private final MoveToNote m_justMove = new MoveToNote(m_drivetrain, m_vision);
+  private final DriveBackwards m_DriveBackwards = new DriveBackwards(m_drivetrain);
 
   // Drive command
   private final DefaultDrive m_defaultDrive = new DefaultDrive( m_drivetrain,
@@ -116,6 +118,7 @@ public class RobotContainer {
   private void configureShuffleBoardBindings(){
     m_chooser.addOption("Run on Fly", m_runOnTheFly);
     m_chooser.addOption("Move to Note", m_moveToNote);
+    m_chooser.addOption("drive backwards", m_DriveBackwards);
     //m_chooser.addOption("Score Speaker", scoreSpeaker);
     //m_chooser.addOption("Score Amp", scoreAmp);
     //m_chooser.addOption("Auto Intake", autoIntake);

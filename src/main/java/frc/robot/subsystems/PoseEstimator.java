@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -102,8 +103,14 @@ public class PoseEstimator extends SubsystemBase {
             Transform3d bestTarget = target.getBestCameraToTarget();
             Pose3d camPose;
             if (camID == 2){
-            Transform3d robotToCam = new Transform3d(bestTarget.getTranslation().plus(m_vision.getRobotToCam(camID).getTranslation()), new Rotation3d(0,0,0));
-            camPose = targetPose.transformBy(robotToCam.inverse()); 
+            // Transform3d robotToCam = new Transform3d(bestTarget.getTranslation().plus(m_vision.getRobotToCam(camID).getTranslation()), new Rotation3d(0,0,0));
+            // camPose = targetPose.transformBy(robotToCam.inverse()); 
+              camPose = targetPose.transformBy(bestTarget.inverse().plus(m_vision.getRobotToCam(camID)));  //.plus(new Transform3d(robotToCam, new Rotation3d(0,0,0))); 
+              if(camPose.getRotation().toRotation2d().getDegrees() < 180) {
+                camPose.plus(new Transform3d(new Translation3d(), new Rotation3d(0, 0, 180)));
+              } else {
+                camPose.plus(new Transform3d(new Translation3d(), new Rotation3d(0, 0, -180)));
+              }
             }           
             else {
               camPose = targetPose.transformBy(bestTarget.inverse().plus(m_vision.getRobotToCam(camID)));  //.plus(new Transform3d(robotToCam, new Rotation3d(0,0,0))); 

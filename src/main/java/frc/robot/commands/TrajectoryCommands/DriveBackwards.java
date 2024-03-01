@@ -26,12 +26,14 @@ public class DriveBackwards extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drivetrain.drive(new Translation2d(-1,0), 0, false);
+    m_drivetrain.driveRobotRelative(new Translation2d(0.3,0), 0, true);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+
+    m_drivetrain.driveRobotRelative(new Translation2d(), 0, true);
     timer.stop();
     timer.reset();
   }
