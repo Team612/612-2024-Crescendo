@@ -83,17 +83,22 @@ public class PoseEstimator extends SubsystemBase {
     updateWithAprilTags = b;
   }
 
-  public void updateEachPoseEstimator(PhotonPoseEstimator poseEstimator, int camID){
+  public void updateEachPoseEstimator(PhotonPoseEstimator poseEstimator, int camID){      
+
+    if(m_vision.getApriltagCamera(camID).getLatestResult().hasTargets()) {
      poseEstimator.update().ifPresent(estimatedRobotPose -> {
+      System.out.println(1);
       var estimatedPose = estimatedRobotPose.estimatedPose;
 
       // m_DrivePoseEstimator.addVisionMeasurement(estimatedPose.toPose2d(), FIELD_LENGTH_METERS);
      
       // Make sure we have a new measurement, and that it's on the field
-      if(m_vision.getApriltagCamera(camID).getLatestResult().hasTargets()){
+      //current issue: once the robot sees an apriltag, hasTarget returns false??????
+      // if(m_vision.getApriltagCamera(camID).getLatestResult().hasTargets()){
       if (m_vision.getApriltagCamera(camID).getLatestResult().getBestTarget().getFiducialId() >= 0){
+        
       if (
-        // estimatedRobotPose.timestampSeconds != previousPipelineTimestamp && 
+        estimatedRobotPose.timestampSeconds != previousPipelineTimestamp && 
       estimatedPose.getX() >= 0.0 && estimatedPose.getX() <= FIELD_LENGTH_METERS
       && estimatedPose.getY() >= 0.0 && estimatedPose.getY() <= FIELD_WIDTH_METERS) {
         if (estimatedRobotPose.targetsUsed.size() >= 1) {
@@ -107,15 +112,17 @@ public class PoseEstimator extends SubsystemBase {
             // camPose = targetPose.transformBy(robotToCam.inverse()); 
               camPose = targetPose.transformBy(bestTarget.inverse().plus(m_vision.getRobotToCam(camID)));  //.plus(new Transform3d(robotToCam, new Rotation3d(0,0,0))); 
               if(camPose.getRotation().toRotation2d().getDegrees() < 180) {
-                camPose.plus(new Transform3d(new Translation3d(), new Rotation3d(0, 0, 180)));
+                camPose.rotateBy( new Rotation3d(0, 0, 180));
+                //camPose.plus(new Transform3d(new Translation3d(0,0,0), new Rotation3d(0, 0, 180)));
               } else {
-                camPose.plus(new Transform3d(new Translation3d(), new Rotation3d(0, 0, -180)));
+                camPose.rotateBy( new Rotation3d(0, 0, -180));
+                //camPose.plus(new Transform3d(new Translation3d(0,0,0), new Rotation3d(0, 0, -180)));
               }
             }           
             else {
               camPose = targetPose.transformBy(bestTarget.inverse().plus(m_vision.getRobotToCam(camID)));  //.plus(new Transform3d(robotToCam, new Rotation3d(0,0,0))); 
             }
-
+            System.out.println(camPose.toPose2d());
       //       //checking from the camera to the tag is less than 4
             if (target.getPoseAmbiguity() <= .2) {
               previousPipelineTimestamp = estimatedRobotPose.timestampSeconds;
@@ -131,7 +138,8 @@ public class PoseEstimator extends SubsystemBase {
         }
       }
       }
-      });
+      );
+    }
 
   }
 
@@ -145,7 +153,7 @@ public class PoseEstimator extends SubsystemBase {
       updateEachPoseEstimator(m_PhotonPoseEstimatorBack, 2);
     }
 
-    else if (m_PhotonPoseEstimatorFront != null){
+    if (m_PhotonPoseEstimatorFront != null){
       updateEachPoseEstimator(m_PhotonPoseEstimatorFront, 1);
     }
 

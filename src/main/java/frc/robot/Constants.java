@@ -215,4 +215,11 @@ public final class Constants {
     public static final double shooterLeftSpeedAmp = -0.3;
     public static final double shooterRightSpeedAmp = 0.3;
   }
+
+  public static class ClimbConstants {
+    public static final int climbLeftID = 13;
+    public static final int climbRightID = 14;
+    public static final double climbLeftSpeed = -0.6;
+    public static final double climbRightSpeed = 0.6;
+  }
 }
