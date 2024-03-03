@@ -15,6 +15,7 @@ public class Shooter extends SubsystemBase {
   private static final double DEADZONE = 0.05;
   private TalonSRX m_ShooterMotorLeft;
   private TalonSRX m_ShooterMotorRight;
+  private double speed;
   static Shooter instance = null;
   /** Creates a new Shooter. */
   public Shooter() {
@@ -56,6 +57,18 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("current left", m_ShooterMotorLeft.getSupplyCurrent());
     SmartDashboard.putNumber("current right", m_ShooterMotorRight.getSupplyCurrent());
+
+    SmartDashboard.putNumber("Speed Left Speaker", Constants.ShooterConstants.shooterLeftSpeedSpeaker);
+    SmartDashboard.putNumber("Speed Right Speaker", Constants.ShooterConstants.shooterRightSpeedSpeaker);
+    SmartDashboard.putNumber("Speed Left Amp", Constants.ShooterConstants.shooterLeftSpeedAmp);
+    SmartDashboard.putNumber("Speed Right Amp", Constants.ShooterConstants.shooterRightSpeedAmp);
+    SmartDashboard.putNumber("Outtake speed", Constants.IntakeConstants.rollerSpeedOuttake);
+
+    Constants.ShooterConstants.shooterLeftSpeedSpeaker = SmartDashboard.getNumber("Speed Left Speaker", Constants.ShooterConstants.shooterLeftSpeedSpeaker);
+    Constants.ShooterConstants.shooterRightSpeedSpeaker = SmartDashboard.getNumber("Speed Right Speaker", Constants.ShooterConstants.shooterRightSpeedSpeaker);
+    Constants.ShooterConstants.shooterLeftSpeedAmp = SmartDashboard.getNumber("Speed Left Amp", Constants.ShooterConstants.shooterLeftSpeedAmp);
+    Constants.ShooterConstants.shooterRightSpeedAmp = SmartDashboard.getNumber("Speed Right Amp", Constants.ShooterConstants.shooterRightSpeedAmp);
+    Constants.IntakeConstants.rollerSpeedOuttake = SmartDashboard.getNumber("Outtake speed", Constants.IntakeConstants.rollerSpeedOuttake);
     // This method will be called once per scheduler run
   }
 }
