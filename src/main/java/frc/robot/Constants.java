@@ -150,7 +150,8 @@ public final class Constants {
   }
 
   public static class VisionConstants{
-    public static String cameraNameAprilTag = "Apriltag";
+    public static String cameraNameAprilTagFront = "Apriltag";
+    public static String cameraNameAprilTagBack = "";
     public static String cameraNameObject = "Object";
 
     //constraints

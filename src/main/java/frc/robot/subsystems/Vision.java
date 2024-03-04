@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.proto.Photon;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -34,14 +35,17 @@ import frc.robot.Constants;
 import frc.robot.ShuffleBoardButtons;
 public class Vision extends SubsystemBase {
   private static AprilTagFieldLayout aprilTagFieldLayout;
-  private static Transform3d robotToCamApril;
+  private static Transform3d robotToCamAprilFront;
+  private static Transform3d robotToCamAprilBack;
   private static Transform3d robotToCamObject;
   private Drivetrain m_drivetrain;
-  public PhotonPoseEstimator m_PoseEstimator;
+  public PhotonPoseEstimator m_PoseEstimatorFront;
+  public PhotonPoseEstimator m_PoseEstimatorBack;
 
   static Vision visionInstance = null;
 
-  PhotonCamera cameraApriltag;
+  PhotonCamera cameraApriltagFront;
+  PhotonCamera cameraApriltagBack;
   PhotonCamera cameraObject;
 
   private Pose2d robotInTagPose;
@@ -167,39 +171,43 @@ public class Vision extends SubsystemBase {
     atList.add(tag16);
 
     robotInTagPose = new Pose2d();
-    this.cameraApriltag = cameraA;
+    this.cameraApriltagFront = cameraA;
+    this.cameraApriltagBack = cameraO;
     this.cameraObject = cameraO;
     resetRobotPose();
 
     aprilTagFieldLayout = new AprilTagFieldLayout(atList, 16.451 , 8.211 );
 
-    robotToCamApril = new Transform3d(new Translation3d(0.20, 0.04, 0.46), new Rotation3d()); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
+    robotToCamAprilFront = new Transform3d(new Translation3d(0.20, 0.04, 0.46), new Rotation3d()); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
+
+    robotToCamAprilBack = new Transform3d(new Translation3d(0,-0.22,0.485), new Rotation3d());
 
     robotToCamObject = new Transform3d(new Translation3d(0,-0.22,0.485), new Rotation3d()); //0.20,-0.04
     
-    m_PoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, this.cameraApriltag, robotToCamApril);
+    m_PoseEstimatorFront = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, this.cameraApriltagFront, robotToCamAprilFront);
+    m_PoseEstimatorFront = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, this.cameraApriltagBack, robotToCamAprilBack);
 
     m_drivetrain = Drivetrain.getInstance();
 
-    //m_PoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+    //m_PoseEstimatorFront.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
     
 
   }
 
   public static Vision getVisionInstance() {
     if (visionInstance == null) {
-      visionInstance = new Vision(new PhotonCamera(Constants.VisionConstants.cameraNameObject), new PhotonCamera(Constants.VisionConstants.cameraNameAprilTag));
+      visionInstance = new Vision(new PhotonCamera(Constants.VisionConstants.cameraNameAprilTagBack), new PhotonCamera(Constants.VisionConstants.cameraNameAprilTagFront));
     }
     return visionInstance;
   }
 
   public PhotonCamera getCamera() {
-    return cameraApriltag;
+    return cameraApriltagFront;
   }
 
   // getting the vision pose from the april tags
   public Pose2d getTagPose() {
-    PhotonPipelineResult result = cameraApriltag.getLatestResult();
+    PhotonPipelineResult result = cameraApriltagFront.getLatestResult();
     if (result.hasTargets()) {
       PhotonTrackedTarget bestTarget = result.getBestTarget();
 
@@ -235,8 +243,8 @@ public class Vision extends SubsystemBase {
 
   // photonvision pose estimator
   public Optional<EstimatedRobotPose> return_photon_pose(Pose2d latestPose) {
-    m_PoseEstimator.setReferencePose(latestPose);
-    return m_PoseEstimator.update();
+    m_PoseEstimatorFront.setReferencePose(latestPose);
+    return m_PoseEstimatorFront.update();
   }
 
   public double getTargetPitch(){
@@ -276,13 +284,31 @@ public class Vision extends SubsystemBase {
   }
 
 
-  public PhotonPoseEstimator getVisionPose(){
-    return m_PoseEstimator;
+  public PhotonPoseEstimator getVisionPoseFront(){
+    return m_PoseEstimatorFront;
+  }
+
+  public PhotonPoseEstimator getVisionPoseBack(){
+    return m_PoseEstimatorBack;
+  }
+
+  public PhotonCamera getApriltagCamera(int camID){
+    if (camID == 1){
+      return cameraApriltagFront;
+    }
+    return cameraApriltagBack;
+  }
+
+  public Transform3d getRobotToCam(int camID){
+    if (camID == 1){
+      return robotToCamAprilFront;
+    }
+    return robotToCamAprilBack;
   }
 
   @Override
   public void periodic() {
-    if (cameraApriltag.getDistCoeffs().equals(Optional.empty())){
+    if (cameraApriltagFront.getDistCoeffs().equals(Optional.empty())){
       System.out.println("NO CALIBRATION");
     }
     if (hasTarget()){
