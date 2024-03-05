@@ -20,15 +20,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class TrajectoryConfiguration extends SubsystemBase {
   private static TrajectoryConfiguration trajectoryConfig;
 
-  private PoseEstimator m_PoseEstimator = PoseEstimator.getPoseEstimatorInstance();
-  private Drivetrain m_Drivetrain = Drivetrain.getInstance();
+  private PoseEstimator drivePoseEstimator = PoseEstimator.getPoseEstimatorInstance();
+  private Drivetrain driveSubsystem = Drivetrain.getInstance();
   /** Creates a new TrajectoryConfiguration. */
   public TrajectoryConfiguration() {
     AutoBuilder.configureHolonomic(
-                m_PoseEstimator::getCurrentPose, // Robot pose supplier
-                m_PoseEstimator::setCurrentPose, // Method to reset odometry (will be called if your auto has a starting pose)
-                m_Drivetrain::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                m_Drivetrain::autoDrive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+                drivePoseEstimator::getCurrentPose, // Robot pose supplier
+                drivePoseEstimator::setCurrentPose, // Method to reset odometry (will be called if your auto has a starting pose)
+                driveSubsystem::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                driveSubsystem::autoDrive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
                         new PIDConstants(5, 0.0, 0.0), // Translation PID constants
                         new PIDConstants(5, 0.0, 0.0), // Rotation PID constants
@@ -47,7 +47,7 @@ public class TrajectoryConfiguration extends SubsystemBase {
                     }
                     return false;
                 },
-                m_Drivetrain // Reference to this subsystem to set requirements
+                driveSubsystem // Reference to this subsystem to set requirements
         );
   }
 
@@ -56,9 +56,9 @@ public class TrajectoryConfiguration extends SubsystemBase {
         
         return new FollowPathHolonomic(
                 path,
-                m_PoseEstimator::getCurrentPose, // Robot pose supplier
-                m_Drivetrain::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                m_Drivetrain::autoDrive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+                drivePoseEstimator::getCurrentPose, // Robot pose supplier
+                driveSubsystem::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                driveSubsystem::autoDrive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
                         new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
                         new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
@@ -77,16 +77,16 @@ public class TrajectoryConfiguration extends SubsystemBase {
                     }
                     return false;
                 },
-                m_Drivetrain // Reference to this subsystem to set requirements
+                driveSubsystem // Reference to this subsystem to set requirements
         );
     }
 
     public Command followPathManual(PathPlannerPath path) {
         return new FollowPathHolonomic(
                 path,
-                m_PoseEstimator::getCurrentPose, // Robot pose supplier
-                m_Drivetrain::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                m_Drivetrain::autoDrive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+                drivePoseEstimator::getCurrentPose, // Robot pose supplier
+                driveSubsystem::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                driveSubsystem::autoDrive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
                         new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
                         new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
@@ -105,7 +105,7 @@ public class TrajectoryConfiguration extends SubsystemBase {
                     }
                     return false;
                 },
-                m_Drivetrain // Reference to this subsystem to set requirements
+                driveSubsystem // Reference to this subsystem to set requirements
         );
     }
 
@@ -119,6 +119,6 @@ public class TrajectoryConfiguration extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putString("Current Pose", m_PoseEstimator.getCurrentPose().getX() + ", " + m_PoseEstimator.getCurrentPose().getY());
+    SmartDashboard.putString("Current Pose", drivePoseEstimator.getCurrentPose().getX() + ", " + drivePoseEstimator.getCurrentPose().getY());
   }
 }

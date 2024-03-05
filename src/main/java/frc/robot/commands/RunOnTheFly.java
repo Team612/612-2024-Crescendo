@@ -14,9 +14,9 @@ import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.Vision;
 
 public class RunOnTheFly extends Command {
-  private final Drivetrain driveSystem;
-  private final Vision m_vision;
-  private final PoseEstimator poseEstimatorSystem;
+  private final Drivetrain driveSubsystem;
+  private final Vision visionSubsystem;
+  private final PoseEstimator poseSubsystem;
   private final TrajectoryCreation m_traj;
   private final double translation;
 
@@ -26,10 +26,10 @@ public class RunOnTheFly extends Command {
   public RunOnTheFly(Drivetrain d, PoseEstimator p, TrajectoryCreation traj, Vision v, 
                     double y) {
     // Use addRequirements() here to declare subsystem dependencies.
-    driveSystem = d;
-    poseEstimatorSystem = p;
+    driveSubsystem = d;
+    poseSubsystem = p;
     m_traj = traj;
-    m_vision = v;
+    visionSubsystem = v;
     translation = y;
 
 
@@ -40,7 +40,7 @@ public class RunOnTheFly extends Command {
   @Override
   public void initialize() {
 
-    PathPlannerPath path = m_traj.onthefly(poseEstimatorSystem, m_vision, translation);
+    PathPlannerPath path = m_traj.onthefly(poseSubsystem, visionSubsystem, translation);
 
     controllerCommand = AutoBuilder.followPath(path);
     controllerCommand.initialize();

@@ -29,14 +29,14 @@ import edu.wpi.first.wpilibj.I2C;
 import frc.robot.Constants;
 
 public class Drivetrain extends SubsystemBase {
-  private static Drivetrain drivetrain = null;
+  private static Drivetrain driveSubsystem = null;
 
   private SwerveModule[] mSwerveMods;
 
   private static AHRS navx;
   private Rotation2d navxAngleOffset;
 
-  private Field2d field;
+  private Field2d fieldLayout;
 
   private boolean isCharacterizing = false;
   private double characterizationVolts = 0.0;
@@ -54,18 +54,19 @@ public class Drivetrain extends SubsystemBase {
     navxAngleOffset = new Rotation2d();
     navx.reset();
 
-    field = new Field2d();
-    SmartDashboard.putData("Field", field);
+    fieldLayout = new Field2d();
+    SmartDashboard.putData("Field", fieldLayout);
 
   }
 
   public static Drivetrain getInstance(){
-    if (drivetrain == null){
-       drivetrain = new Drivetrain();
+    if (driveSubsystem == null){
+       driveSubsystem = new Drivetrain();
     }
-    return drivetrain;
+    return driveSubsystem;
   }
 
+  //Drives field relative
   public void drive(
       Translation2d translation, double rotation, boolean isOpenLoop) {
     SwerveModuleState[] swerveModuleStates =
@@ -80,6 +81,8 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
+
+  //drives robot relative
   public void driveRobotRelative(
       Translation2d translation, double rotation, boolean isOpenLoop) {
     SwerveModuleState[] swerveModuleStates = 
@@ -93,6 +96,7 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
+  //used for autonomous driving
   public void autoDrive(ChassisSpeeds speeds) {
     SwerveModuleState[] swerveModuleStates =
         Constants.Swerve.swerveKinematics.toSwerveModuleStates(speeds);

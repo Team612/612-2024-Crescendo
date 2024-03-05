@@ -10,7 +10,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class FieldOrientedDrive extends Command {
-  private Drivetrain s_Swerve;
+  private Drivetrain driveSubsystem;
   private DoubleSupplier translationSup;
   private DoubleSupplier strafeSup;
   private DoubleSupplier rotationSup;
@@ -24,7 +24,7 @@ public class FieldOrientedDrive extends Command {
       DoubleSupplier translationSup,
       DoubleSupplier strafeSup,
       DoubleSupplier rotationSup) {
-    this.s_Swerve = s_Swerve;
+    this.driveSubsystem = s_Swerve;
     addRequirements(s_Swerve);
 
     this.translationSup = translationSup;
@@ -46,7 +46,7 @@ public class FieldOrientedDrive extends Command {
             MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.Swerve.stickDeadband));
 
     /* Drive */
-    s_Swerve.drive(
+    driveSubsystem.drive(
         new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
         rotationVal * Constants.Swerve.maxAngularVelocity,
         true);

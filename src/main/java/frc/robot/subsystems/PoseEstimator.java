@@ -35,13 +35,12 @@ import frc.robot.commands.TrajectoryCreation;
 
 public class PoseEstimator extends SubsystemBase {
   /** Creates a new PoseEstimator. */
-  SwerveDrivePoseEstimator m_DrivePoseEstimator;
-  PhotonPoseEstimator m_PhotonPoseEstimatorFront;
-  PhotonPoseEstimator m_PhotonPoseEstimatorBack;
-  Vision m_Vision;
-  Drivetrain m_drivetrain;
-  private Field2d m_field;
-  private boolean updateWithAprilTags;
+  SwerveDrivePoseEstimator drivePoseEstimator;
+  PhotonPoseEstimator photonPoseEstimatorFront;
+  PhotonPoseEstimator photonPoseEstimatorBack;
+  Vision visionSubsystem;
+  Drivetrain driveSubsystem;
+  private Field2d fieldLayout;
 
   
   public static final double FIELD_LENGTH_METERS = Units.inchesToMeters(651.25);
@@ -57,23 +56,22 @@ public class PoseEstimator extends SubsystemBase {
   static PoseEstimator estimator = null;
   
   public PoseEstimator() {
-    m_drivetrain = Drivetrain.getInstance();
-    m_Vision = Vision.getVisionInstance();
-    m_field = new Field2d();
-    updateWithAprilTags = true;
-    SmartDashboard.putData("Field", m_field);
+    driveSubsystem = Drivetrain.getInstance();
+    visionSubsystem = Vision.getVisionInstance();
+    fieldLayout = new Field2d();
+    SmartDashboard.putData("Field", fieldLayout);
 
 
-    m_DrivePoseEstimator = new SwerveDrivePoseEstimator(
+    drivePoseEstimator = new SwerveDrivePoseEstimator(
       Constants.Swerve.swerveKinematics, 
-      m_drivetrain.getNavxAngle(), 
-      m_drivetrain.getPositions(), 
+      driveSubsystem.getNavxAngle(), 
+      driveSubsystem.getPositions(), 
       new Pose2d(),
       stateStdDevs,
       visionMeasurementStdDevs
     );
-    m_PhotonPoseEstimatorFront = m_Vision.getVisionPoseFront();
-    m_PhotonPoseEstimatorBack = m_Vision.getVisionPoseBack();
+    photonPoseEstimatorFront = visionSubsystem.getVisionPoseFront();
+    photonPoseEstimatorBack = visionSubsystem.getVisionPoseBack();
   }
 
   public static PoseEstimator getPoseEstimatorInstance() {
@@ -83,13 +81,15 @@ public class PoseEstimator extends SubsystemBase {
     return estimator;
   }
 
-  public void isUsingAprilTag(boolean b){
-    updateWithAprilTags = b;
-  }
 
+  /*
+   pre-condition: poseEstimator != null and camID == 1 or camID == 2
+   1 = FRONT APRILTAG CAMERA
+   2 = BACK APRILTAG CAMERA
+   */
 
   public void updateEachPoseEstimator(PhotonPoseEstimator poseEstimator, int camID){    
-    if(m_Vision.getApriltagCamera(camID).getLatestResult().hasTargets()) {
+    if(visionSubsystem.getApriltagCamera(camID).getLatestResult().hasTargets()) {
      poseEstimator.update().ifPresent(estimatedRobotPose -> {
       var estimatedPose = estimatedRobotPose.estimatedPose;
      
@@ -97,9 +97,7 @@ public class PoseEstimator extends SubsystemBase {
       // m_DrivePoseEstimator.addVisionMeasurement(estimatedPose.toPose2d(), FIELD_LENGTH_METERS);
      
       // Make sure we have a new measurement, and that it's on the field
-      //current issue: once the robot sees an apriltag, hasTarget returns false??????
-      // if(m_vision.getApriltagCamera(camID).getLatestResult().hasTargets()){
-      if (m_Vision.getApriltagCamera(camID).getLatestResult().getBestTarget().getFiducialId() >= 0){
+      if (visionSubsystem.getApriltagCamera(camID).getLatestResult().getBestTarget().getFiducialId() >= 0){
        
       if (
         estimatedRobotPose.timestampSeconds != previousPipelineTimestamp && 
@@ -108,30 +106,16 @@ public class PoseEstimator extends SubsystemBase {
         if (estimatedRobotPose.targetsUsed.size() >= 1) {
         
           for (PhotonTrackedTarget target : estimatedRobotPose.targetsUsed) {
-            Pose3d targetPose = m_Vision.return_tag_pose(target.getFiducialId());
+            Pose3d targetPose = visionSubsystem.return_tag_pose(target.getFiducialId());
             Transform3d bestTarget = target.getBestCameraToTarget();
             Pose3d camPose;
-            if (camID == 2){
-            // Transform3d robotToCam = new Transform3d(bestTarget.getTranslation().plus(m_vision.getRobotToCam(camID).getTranslation()), new Rotation3d(0,0,0));
-            // camPose = targetPose.transformBy(robotToCam.inverse()); 
-              camPose = targetPose.transformBy(bestTarget.inverse().plus(m_Vision.getRobotToCam(camID)));
-              // .plus(new Transform3d(new Translation3d(), new Rotation3d(0,0,Math.PI)));  
-              //camPose.rotateBy( new Rotation3d(0, 0, 180));//.plus(new Transform3d(robotToCam, new Rotation3d(0,0,0))); 
-              // if(camPose.getRotation().toRotation2d().getDegrees() < 180) {
-              //   camPose.rotateBy( new Rotation3d(0, 0, 180));
-              //   //camPose.plus(new Transform3d(new Translation3d(0,0,0), new Rotation3d(0, 0, 180)));
-              // } else {
-              //   camPose.rotateBy( new Rotation3d(0, 0, -180));
-              //   //camPose.plus(new Transform3d(new Translation3d(0,0,0), new Rotation3d(0, 0, -180)));
-              // }
-            }           
-            else {
-              camPose = targetPose.transformBy(bestTarget.inverse().plus(m_Vision.getRobotToCam(camID)));  //.plus(new Transform3d(robotToCam, new Rotation3d(0,0,0))); 
-            }
-      //       //checking from the camera to the tag is less than 4
+            //Adding vision measurements from the center of the robot to the apriltag. Back camera should already be inverted
+            camPose = targetPose.transformBy(bestTarget.inverse().plus(visionSubsystem.getRobotToCam(camID)));  //.plus(new Transform3d(robotToCam, new Rotation3d(0,0,0))); 
+            
+          //checking the tags ambiguity. The lower the ambiguity, the more accurate the pose is
             if (target.getPoseAmbiguity() <= .2) {
               previousPipelineTimestamp = estimatedRobotPose.timestampSeconds;
-              m_DrivePoseEstimator.addVisionMeasurement(camPose.toPose2d(), estimatedRobotPose.timestampSeconds);
+              drivePoseEstimator.addVisionMeasurement(camPose.toPose2d(), estimatedRobotPose.timestampSeconds);
             }
           }
         } 
@@ -139,7 +123,7 @@ public class PoseEstimator extends SubsystemBase {
 
         else {
             previousPipelineTimestamp = estimatedRobotPose.timestampSeconds;
-            m_DrivePoseEstimator.addVisionMeasurement(estimatedPose.toPose2d(), estimatedRobotPose.timestampSeconds);
+            drivePoseEstimator.addVisionMeasurement(estimatedPose.toPose2d(), estimatedRobotPose.timestampSeconds);
         }
       }
       }
@@ -152,19 +136,22 @@ public class PoseEstimator extends SubsystemBase {
 
   @Override
   public void periodic() {
-    m_DrivePoseEstimator.update(m_drivetrain.getNavxAngle(), m_drivetrain.getPositions());
+    //updates the drivePoseEstimator with with Navx angle and current wheel positions
+    drivePoseEstimator.update(driveSubsystem.getNavxAngle(), driveSubsystem.getPositions());
 
 
-    if (m_PhotonPoseEstimatorFront != null){
-      updateEachPoseEstimator(m_PhotonPoseEstimatorFront, 1);
+    //update each individual pose estimator
+    if (photonPoseEstimatorFront != null){
+      updateEachPoseEstimator(photonPoseEstimatorFront, 1);
     } 
-    if(m_PhotonPoseEstimatorBack != null){
-      updateEachPoseEstimator(m_PhotonPoseEstimatorBack, 2);
+    if(photonPoseEstimatorBack != null){
+      updateEachPoseEstimator(photonPoseEstimatorBack, 2);
     }
 
     
+    //updates the robot pose in the field simulation
+    fieldLayout.setRobotPose(getCurrentPose());
 
-    m_field.setRobotPose(getCurrentPose());
     SmartDashboard.putNumber("PoseEstimator X", getCurrentPose().getX());
      SmartDashboard.putNumber("PoseEstimator Y", getCurrentPose().getY());
      SmartDashboard.putNumber("PoseEstimator Angle", getCurrentPose().getRotation().getDegrees());
@@ -172,11 +159,11 @@ public class PoseEstimator extends SubsystemBase {
 
 
   public Pose2d getCurrentPose() {
-    return m_DrivePoseEstimator.getEstimatedPosition();
+    return drivePoseEstimator.getEstimatedPosition();
   }
 
   public void setCurrentPose(Pose2d newPose) {
-    m_DrivePoseEstimator.resetPosition(m_drivetrain.getNavxAngle(), m_drivetrain.getPositions(), newPose);
+    drivePoseEstimator.resetPosition(driveSubsystem.getNavxAngle(), driveSubsystem.getPositions(), newPose);
   }
 
 }

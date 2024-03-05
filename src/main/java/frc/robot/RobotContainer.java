@@ -34,14 +34,14 @@ import frc.robot.subsystems.Vision;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Drivetrain m_drivetrain = Drivetrain.getInstance();
-  private final PoseEstimator m_poseEstimator = PoseEstimator.getPoseEstimatorInstance();
-  private final TrajectoryConfiguration m_trajectoryConfig = TrajectoryConfiguration.getInstance();
-  private final Vision m_vision = Vision.getVisionInstance();
+  private final Drivetrain driveSubsystem = Drivetrain.getInstance();
+  private final PoseEstimator poseSubsystem = PoseEstimator.getPoseEstimatorInstance();
+  private final TrajectoryConfiguration trajConfigs = TrajectoryConfiguration.getInstance();
+  private final Vision visionSubsystem = Vision.getVisionInstance();
 
   private final TrajectoryCreation m_traj = new TrajectoryCreation();
-  private final RunOnTheFly m_runOnTheFly = new RunOnTheFly(m_drivetrain, m_poseEstimator, m_traj, m_vision, 0);
-  private final FollowNote m_moveToNote = new FollowNote(m_drivetrain, m_poseEstimator, m_traj, m_vision, 0);
+  private final RunOnTheFly m_runOnTheFly = new RunOnTheFly(driveSubsystem, poseSubsystem, m_traj, visionSubsystem, 0);
+  private final FollowNote m_moveToNote = new FollowNote(driveSubsystem, poseSubsystem, m_traj, visionSubsystem, 0);
               
   private final Joystick driver = new Joystick(0);
 
@@ -50,7 +50,7 @@ public class RobotContainer {
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
-  private final DefaultDrive m_defaultDrive = new DefaultDrive( m_drivetrain,
+  private final DefaultDrive m_defaultDrive = new DefaultDrive( driveSubsystem,
             () -> -driver.getRawAxis(translationAxis),
             () -> -driver.getRawAxis(strafeAxis),
             () -> -driver.getRawAxis(rotationAxis));
@@ -104,29 +104,29 @@ public class RobotContainer {
     // m_chooser.addOption("Red Bottom Leave And Dock", new ProxyCommand(() -> m_RedBottomLeaveAndDock));
     // m_chooser.addOption("Blue Bottom Leave and Dock", new ProxyCommand(() -> m_BlueBottomLeaveAndDock));
     m_chooser.addOption("Run on Fly", m_runOnTheFly);
-    m_chooser.addOption("Test Path", m_trajectoryConfig.followPathGui("Double Path"));
+    m_chooser.addOption("Test Path", trajConfigs.followPathGui("Double Path"));
     m_chooser.addOption("Move to Note", m_moveToNote);
     m_chooser.addOption("Swerve Characterization", new FeedForwardCharacterization(
-              m_drivetrain,
+              driveSubsystem,
               true,
               new FeedForwardCharacterizationData("drive"),
-              m_drivetrain::runCharacterizationVolts,
-              m_drivetrain::getCharacterizationVelocity));
+              driveSubsystem::runCharacterizationVolts,
+              driveSubsystem::getCharacterizationVelocity));
     SmartDashboard.putData(m_chooser);
     // SmartDashboard.putData("Slowmo (Toggle)", new SlowmoDrive(m_drivetrain));
   }
 
   private void configureButtonBindings() {
-    align.onTrue(new InstantCommand(() -> m_drivetrain.resetAlignment()));
-    fieldCentric.onTrue(new InstantCommand(() -> m_drivetrain.zeroGyro()));
+    align.onTrue(new InstantCommand(() -> driveSubsystem.resetAlignment()));
+    fieldCentric.onTrue(new InstantCommand(() -> driveSubsystem.zeroGyro()));
     robotToField.toggleOnTrue(m_defaultDrive);
   }
 
 
   private void configureDefaultCommands(){
-    m_drivetrain.setDefaultCommand(
+    driveSubsystem.setDefaultCommand(
         new FieldOrientedDrive(
-            m_drivetrain,
+            driveSubsystem,
             () -> -driver.getRawAxis(translationAxis),
             () -> -driver.getRawAxis(strafeAxis),
             () -> -driver.getRawAxis(rotationAxis)));

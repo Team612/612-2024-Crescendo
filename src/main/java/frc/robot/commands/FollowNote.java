@@ -22,10 +22,10 @@ import frc.robot.subsystems.TrajectoryConfiguration;
 import frc.robot.subsystems.Vision;
 
 public class FollowNote extends Command {
-  private final Drivetrain driveSystem;
-  private final PoseEstimator poseEstimatorSystem;
+  private final Drivetrain driveSubsystem;
+  private final PoseEstimator poseSubsystem;
   private final TrajectoryCreation m_traj;
-  private final Vision m_vision;
+  private final Vision visionSubsystem;
   private final double translation;
   private Transform2d notespace;
 
@@ -35,10 +35,10 @@ public class FollowNote extends Command {
   public FollowNote(Drivetrain d, PoseEstimator p, TrajectoryCreation traj, Vision v,
                     double y) {
     // Use addRequirements() here to declare subsystem dependencies.
-    driveSystem = d;
-    poseEstimatorSystem = p;
+    driveSubsystem = d;
+    poseSubsystem = p;
     m_traj = traj;
-    m_vision = v;
+    visionSubsystem = v;
     translation = y;
 
     addRequirements(d, p);
@@ -47,7 +47,7 @@ public class FollowNote extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    PathPlannerPath path = m_traj.noteOnTheFly(poseEstimatorSystem, m_vision,driveSystem);
+    PathPlannerPath path = m_traj.noteOnTheFly(poseSubsystem, visionSubsystem,driveSubsystem);
     if (path == null) {
       System.out.println("NO TARGETS");
       end(true);
@@ -57,7 +57,6 @@ public class FollowNote extends Command {
     controllerCommand.initialize();
     }
     //we dont want to update using apriltag during the trajectory
-    poseEstimatorSystem.isUsingAprilTag(false);
     
   
   }
@@ -66,7 +65,7 @@ public class FollowNote extends Command {
   @Override
   public void execute() {
     controllerCommand.execute();
-    System.out.println(" Current Pose: " + poseEstimatorSystem.getCurrentPose().getY() + " Speed, " + driveSystem.getStates()[1].speedMetersPerSecond);
+    System.out.println(" Current Pose: " + poseSubsystem.getCurrentPose().getY() + " Speed, " + driveSubsystem.getStates()[1].speedMetersPerSecond);
   }
 
   // Called once the command ends or is interrupted.
@@ -74,9 +73,8 @@ public class FollowNote extends Command {
   public void end(boolean interrupted) {
     System.out.println("--------------------DONE------------------");
     controllerCommand.end(interrupted);
-    poseEstimatorSystem.isUsingAprilTag(true);
-    System.out.println(poseEstimatorSystem.getCurrentPose().getX());
-    System.out.println(poseEstimatorSystem.getCurrentPose().getY());
+    System.out.println(poseSubsystem.getCurrentPose().getX());
+    System.out.println(poseSubsystem.getCurrentPose().getY());
 
   }
 
