@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -87,12 +88,12 @@ public class PoseEstimator extends SubsystemBase {
   }
 
 
-  public void updateEachPoseEstimator(PhotonPoseEstimator poseEstimator, int camID){      
-
+  public void updateEachPoseEstimator(PhotonPoseEstimator poseEstimator, int camID){    
+    System.out.println(m_Vision.getApriltagCamera(camID).getName());  
     if(m_Vision.getApriltagCamera(camID).getLatestResult().hasTargets()) {
      poseEstimator.update().ifPresent(estimatedRobotPose -> {
-      System.out.println(1);
       var estimatedPose = estimatedRobotPose.estimatedPose;
+     
 
       // m_DrivePoseEstimator.addVisionMeasurement(estimatedPose.toPose2d(), FIELD_LENGTH_METERS);
      
@@ -100,7 +101,7 @@ public class PoseEstimator extends SubsystemBase {
       //current issue: once the robot sees an apriltag, hasTarget returns false??????
       // if(m_vision.getApriltagCamera(camID).getLatestResult().hasTargets()){
       if (m_Vision.getApriltagCamera(camID).getLatestResult().getBestTarget().getFiducialId() >= 0){
-        
+       
       if (
         estimatedRobotPose.timestampSeconds != previousPipelineTimestamp && 
       estimatedPose.getX() >= 0.0 && estimatedPose.getX() <= FIELD_LENGTH_METERS
@@ -112,16 +113,19 @@ public class PoseEstimator extends SubsystemBase {
             Transform3d bestTarget = target.getBestCameraToTarget();
             Pose3d camPose;
             if (camID == 2){
+              System.out.println("test");
             // Transform3d robotToCam = new Transform3d(bestTarget.getTranslation().plus(m_vision.getRobotToCam(camID).getTranslation()), new Rotation3d(0,0,0));
             // camPose = targetPose.transformBy(robotToCam.inverse()); 
-              camPose = targetPose.transformBy(bestTarget.inverse().plus(m_Vision.getRobotToCam(camID)));  //.plus(new Transform3d(robotToCam, new Rotation3d(0,0,0))); 
-              if(camPose.getRotation().toRotation2d().getDegrees() < 180) {
-                camPose.rotateBy( new Rotation3d(0, 0, 180));
-                //camPose.plus(new Transform3d(new Translation3d(0,0,0), new Rotation3d(0, 0, 180)));
-              } else {
-                camPose.rotateBy( new Rotation3d(0, 0, -180));
-                //camPose.plus(new Transform3d(new Translation3d(0,0,0), new Rotation3d(0, 0, -180)));
-              }
+              camPose = targetPose.transformBy(bestTarget.inverse().plus(m_Vision.getRobotToCam(camID)))
+              .plus(new Transform3d(new Translation3d(), new Rotation3d(0,0,Math.PI)));  
+              //camPose.rotateBy( new Rotation3d(0, 0, 180));//.plus(new Transform3d(robotToCam, new Rotation3d(0,0,0))); 
+              // if(camPose.getRotation().toRotation2d().getDegrees() < 180) {
+              //   camPose.rotateBy( new Rotation3d(0, 0, 180));
+              //   //camPose.plus(new Transform3d(new Translation3d(0,0,0), new Rotation3d(0, 0, 180)));
+              // } else {
+              //   camPose.rotateBy( new Rotation3d(0, 0, -180));
+              //   //camPose.plus(new Transform3d(new Translation3d(0,0,0), new Rotation3d(0, 0, -180)));
+              // }
             }           
             else {
               camPose = targetPose.transformBy(bestTarget.inverse().plus(m_Vision.getRobotToCam(camID)));  //.plus(new Transform3d(robotToCam, new Rotation3d(0,0,0))); 
@@ -137,6 +141,7 @@ public class PoseEstimator extends SubsystemBase {
       }
 
         else {
+            System.out.println("test2");
             previousPipelineTimestamp = estimatedRobotPose.timestampSeconds;
             m_DrivePoseEstimator.addVisionMeasurement(estimatedPose.toPose2d(), estimatedRobotPose.timestampSeconds);
         }
@@ -153,13 +158,15 @@ public class PoseEstimator extends SubsystemBase {
   public void periodic() {
     m_DrivePoseEstimator.update(m_drivetrain.getNavxAngle(), m_drivetrain.getPositions());
 
+
+    if (m_PhotonPoseEstimatorFront != null){
+      updateEachPoseEstimator(m_PhotonPoseEstimatorFront, 1);
+    } 
     if(m_PhotonPoseEstimatorBack != null){
       updateEachPoseEstimator(m_PhotonPoseEstimatorBack, 2);
     }
 
-    if (m_PhotonPoseEstimatorFront != null){
-      updateEachPoseEstimator(m_PhotonPoseEstimatorFront, 1);
-    }
+    
 
     m_field.setRobotPose(getCurrentPose());
     SmartDashboard.putNumber("PoseEstimator X", getCurrentPose().getX());

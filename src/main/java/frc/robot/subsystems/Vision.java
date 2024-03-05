@@ -178,14 +178,14 @@ public class Vision extends SubsystemBase {
 
     aprilTagFieldLayout = new AprilTagFieldLayout(atList, 16.451 , 8.211 );
 
-    robotToCamAprilFront = new Transform3d(new Translation3d(0.20, 0.04, 0.46), new Rotation3d()); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
+    robotToCamAprilFront = new Transform3d(new Translation3d(0.17, 0.1, 0.25), new Rotation3d()); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
 
-    robotToCamAprilBack = new Transform3d(new Translation3d(0,-0.22,0.485), new Rotation3d());
+    robotToCamAprilBack = new Transform3d(new Translation3d(0.18,-0.1,0.36), new Rotation3d());
 
     robotToCamObject = new Transform3d(new Translation3d(0,-0.22,0.485), new Rotation3d()); //0.20,-0.04
     
     m_PoseEstimatorFront = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, this.cameraApriltagFront, robotToCamAprilFront);
-    m_PoseEstimatorFront = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, this.cameraApriltagBack, robotToCamAprilBack);
+    m_PoseEstimatorBack = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, this.cameraApriltagBack, robotToCamAprilBack);
 
     m_drivetrain = Drivetrain.getInstance();
 
