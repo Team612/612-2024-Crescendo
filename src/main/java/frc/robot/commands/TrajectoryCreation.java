@@ -181,32 +181,34 @@ public class TrajectoryCreation {
     //         return path;
     // }
 
-    public PathPlannerPath onthefly(PoseEstimator estimation, Vision vision, double y_translation){
+    public PathPlannerPath onthefly(PoseEstimator estimation, Vision vision, double camID){
         Pose2d estimatedPose = estimation.getCurrentPose();
         double x = estimatedPose.getX();
         double y = estimatedPose.getY();
         Rotation2d angle = estimatedPose.getRotation();
        
-        PhotonPipelineResult result = vision.getCamera().getLatestResult();
+        PhotonPipelineResult result = vision.getApriltagCamera(2).getLatestResult();
+        
         int id;
         double tagX = 0;
         double tagY = 0; 
         Rotation2d tagAngle = new Rotation2d();
 
         if(result.hasTargets()){
-            id = vision.getCamera().getLatestResult().getBestTarget().getFiducialId();
+            id = vision.getApriltagCamera(2).getLatestResult().getBestTarget().getFiducialId();
 
 
             Pose2d tagPose = vision.return_tag_pose(id).toPose2d();
             tagX = tagPose.getX();
             tagY = tagPose.getY();
-            tagAngle = new Rotation2d(-Units.degreesToRadians(180 - tagPose.getRotation().getDegrees()));
+            tagAngle = new Rotation2d(-Units.degreesToRadians(-tagPose.getRotation().getDegrees()));
         }
         else{
             id = -1;
         }
 
-        double offset = Constants.Swerve.trackWidth / 2;
+
+        double offset = -Constants.Swerve.trackWidth / 2;
         
         if(id == 1 || id == 2 || id == 15) {
             List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(

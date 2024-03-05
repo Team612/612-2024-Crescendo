@@ -89,7 +89,6 @@ public class PoseEstimator extends SubsystemBase {
 
 
   public void updateEachPoseEstimator(PhotonPoseEstimator poseEstimator, int camID){    
-    System.out.println(m_Vision.getApriltagCamera(camID).getName());  
     if(m_Vision.getApriltagCamera(camID).getLatestResult().hasTargets()) {
      poseEstimator.update().ifPresent(estimatedRobotPose -> {
       var estimatedPose = estimatedRobotPose.estimatedPose;
@@ -113,11 +112,10 @@ public class PoseEstimator extends SubsystemBase {
             Transform3d bestTarget = target.getBestCameraToTarget();
             Pose3d camPose;
             if (camID == 2){
-              System.out.println("test");
             // Transform3d robotToCam = new Transform3d(bestTarget.getTranslation().plus(m_vision.getRobotToCam(camID).getTranslation()), new Rotation3d(0,0,0));
             // camPose = targetPose.transformBy(robotToCam.inverse()); 
-              camPose = targetPose.transformBy(bestTarget.inverse().plus(m_Vision.getRobotToCam(camID)))
-              .plus(new Transform3d(new Translation3d(), new Rotation3d(0,0,Math.PI)));  
+              camPose = targetPose.transformBy(bestTarget.inverse().plus(m_Vision.getRobotToCam(camID)));
+              // .plus(new Transform3d(new Translation3d(), new Rotation3d(0,0,Math.PI)));  
               //camPose.rotateBy( new Rotation3d(0, 0, 180));//.plus(new Transform3d(robotToCam, new Rotation3d(0,0,0))); 
               // if(camPose.getRotation().toRotation2d().getDegrees() < 180) {
               //   camPose.rotateBy( new Rotation3d(0, 0, 180));
@@ -130,7 +128,6 @@ public class PoseEstimator extends SubsystemBase {
             else {
               camPose = targetPose.transformBy(bestTarget.inverse().plus(m_Vision.getRobotToCam(camID)));  //.plus(new Transform3d(robotToCam, new Rotation3d(0,0,0))); 
             }
-            System.out.println(camPose.toPose2d());
       //       //checking from the camera to the tag is less than 4
             if (target.getPoseAmbiguity() <= .2) {
               previousPipelineTimestamp = estimatedRobotPose.timestampSeconds;
@@ -141,7 +138,6 @@ public class PoseEstimator extends SubsystemBase {
       }
 
         else {
-            System.out.println("test2");
             previousPipelineTimestamp = estimatedRobotPose.timestampSeconds;
             m_DrivePoseEstimator.addVisionMeasurement(estimatedPose.toPose2d(), estimatedRobotPose.timestampSeconds);
         }
