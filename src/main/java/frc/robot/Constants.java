@@ -6,6 +6,8 @@ package frc.robot;
 
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
+
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -29,7 +31,8 @@ public final class Constants {
     public static final double stickDeadband = 0.1;
 
     public static final COTSTalonFXSwerveConstants chosenModule =  
-    COTSTalonFXSwerveConstants.WCP.SwerveXStandard.KrakenX60(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L2);    
+    COTSTalonFXSwerveConstants.SDS.MK4i.KrakenX60(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L2);    
+  
 
     /* Drivetrain Constants */
     public static final double trackWidth = Units.inchesToMeters(18.596);
@@ -39,7 +42,7 @@ public final class Constants {
 
     public static final double driveGearRatio = chosenModule.driveGearRatio; // 6.75:1
     //NOTE: the angle gear ratio provided by the manufactor is different than the one we had down previously... might need to change it
-    public static final double angleGearRatio = 150.0 /7.0; // 12.8:1 (150.0 / 7.0);
+    public static final double angleGearRatio = chosenModule.angleGearRatio; // 12.8:1 (150.0 / 7.0);
 
     public static final SwerveDriveKinematics swerveKinematics =
         new SwerveDriveKinematics(
@@ -52,7 +55,7 @@ public final class Constants {
     public static final double voltageComp = 12.0;
 
     /* Swerve Current Limiting */
-    public static final int angleContinuousCurrentLimit = 20;
+    public static final int angleContinuousCurrentLimit = 35;
     public static final int angleCurrentThreshold = 40;
     public static final double angleCurrentThresholdTime = 0.1;
      public static final boolean angleEnableCurrentLimit = true;
@@ -63,9 +66,9 @@ public final class Constants {
     public static final boolean driveEnableCurrentLimit = true;
 
     /* Angle Motor PID Values */
-    public static final double angleKP = 10;
-    public static final double angleKI = 0.0;
-    public static final double angleKD = 0.0;
+    public static final double angleKP = chosenModule.angleKP;
+    public static final double angleKI = chosenModule.angleKI;
+    public static final double angleKD = chosenModule.angleKD;
     public static final double angleKFF = 0.0;
 
     /* Drive Motor PID Values */
@@ -75,8 +78,8 @@ public final class Constants {
     public static final double driveKFF = 0.0;
 
     /* Drive Motor Characterization Values */
-    public static final double driveKS = 0.22005;
-    public static final double driveKV = 2.74490;
+    public static final double driveKS = 0.17972;
+    public static final double driveKV = 7.50715; //2.74490
     public static final double driveKA = 0;
 
      //have to tune manually
@@ -92,20 +95,23 @@ public final class Constants {
 
     /* Swerve Profiling Values */
     public static final double maxSpeed = 4.5; // meters per second
-    public static final double maxAngularVelocity = Math.PI;
+    public static final double maxAngularVelocity = 11.5;
     public static final double maxAcceleration = 1;
-    public static final double maxAngularAcceleration = Math.PI/6;
+    public static final double maxAngularAcceleration = Math.PI;
+
+    public static final double openLoopRamp = 0.25;
+    public static final double closedLoopRamp = 0.0;
 
      /* Neutral Modes */
-    public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Coast;
+    public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Brake;
     public static final NeutralModeValue driveNeutralMode = NeutralModeValue.Brake;
 
     /* Motor Inverts */
-    public static final InvertedValue driveInvert = chosenModule.driveMotorInvert;
-    public static final InvertedValue angleInvert = chosenModule.angleMotorInvert;
+    public static final InvertedValue driveInvert = chosenModule.driveMotorInvert; //counterclockwise
+    public static final InvertedValue angleInvert = chosenModule.angleMotorInvert; //counterclockwise
 
     /* Angle Encoder Invert */
-    public static final boolean canCoderInvert = false;
+    public static final SensorDirectionValue cancoderInvert = chosenModule.cancoderInvert; //counterclockwise
 
     /* Module Specific Constants */
     /*
@@ -120,7 +126,7 @@ public final class Constants {
       public static final int driveMotorID = 2;
       public static final int angleMotorID = 3;
       public static final int canCoderID = 0;
-      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(96); //43
+      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(143 - 45); //43
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, desiredAngle);
     }
@@ -140,7 +146,7 @@ public final class Constants {
       public static final int driveMotorID = 4;
       public static final int angleMotorID = 5;
       public static final int canCoderID = 2;
-      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(326);
+      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(324); //282
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, desiredAngle);
     }
@@ -150,7 +156,7 @@ public final class Constants {
       public static final int driveMotorID = 6;
       public static final int angleMotorID = 7;
       public static final int canCoderID = 3;
-      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(299);
+      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(298);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, desiredAngle);
     }
@@ -159,8 +165,8 @@ public final class Constants {
   
 
   public static class VisionConstants{
-    public static String cameraNameAprilTag = "Apriltag";
-    public static String cameraNameObject = "Object";
+    public static String cameraNameAprilTag = "Back";
+    public static String cameraNameObject = "Front";
 
     //constraints
     public static final TrapezoidProfile.Constraints ThetaControllerConstraints = 
@@ -196,20 +202,30 @@ public final class Constants {
   public static class IntakeConstants{
     public static final int pivotID = 9;
     public static final int rollerID = 10;
-    public static final double intakeUpSpeed = 0.3;
-    public static final double intakeDownSpeed = -0.3;
+    public static final double intakeUpSpeed = 0.5;
+    public static final double intakeDownSpeed = -0.5;
     public static final double rollerSpeedIntake = 0.5;
-    public static final double rollerSpeedOuttake = 1;
-    public static final int IRport = 1;
+    public static double rollerSpeedOuttake = 0.4;
+    public static final int IRport = 0;
   }
 
   // Shooter constants
   public static class ShooterConstants{
+    public static final String leftSpeedKey = "Left Speed";
+    public static final String rightSpeedKey = "Right Speed";
+
     public static final int shooterLeftID = 11;
     public static final int shooterRightID = 12;
-    public static final double shooterLeftSpeedSpeaker = -0.5;
-    public static final double shooterRightSpeedSpeaker = 0.5;
-    public static final double shooterLeftSpeedAmp = -0.3;
-    public static final double shooterRightSpeedAmp = 0.3;
+    public static double shooterLeftSpeedSpeaker = -.65;
+    public static double shooterRightSpeedSpeaker = .70; //0.9
+    public static double shooterLeftSpeedAmp = -0.3;
+    public static double shooterRightSpeedAmp = 0.3;
+  }
+
+  public static class ClimbConstants {
+    public static final int climbLeftID = 13;
+    public static final int climbRightID = 14;
+    public static final double climbLeftSpeed = -0.6;
+    public static final double climbRightSpeed = 0.6;
   }
 }

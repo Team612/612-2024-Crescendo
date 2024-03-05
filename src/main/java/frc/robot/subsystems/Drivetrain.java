@@ -58,9 +58,9 @@ public class Drivetrain extends SubsystemBase {
     return drivetrain;
   }
 
-  public void testTurn() {
+  public void setDriveVoltage(double volts) {
     for(SwerveModule mod : mSwerveMods) {
-      mod.setDriveVoltage(0.3);
+      mod.setDriveVoltage(volts);
     }
   }
 

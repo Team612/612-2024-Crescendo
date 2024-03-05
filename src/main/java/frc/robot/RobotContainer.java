@@ -3,21 +3,32 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
+import javax.swing.SpinnerDateModel;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.DriveCommands.DefaultDrive;
 import frc.robot.commands.DriveCommands.FieldOrientedDrive;
+import frc.robot.commands.DriveCommands.LeaveZone;
+import frc.robot.commands.DriveCommands.TurnWhenLeft;
+import frc.robot.commands.DriveCommands.TurnWhenRight;
+import frc.robot.commands.IntakeCommands.AutoIntake;
 import frc.robot.commands.IntakeCommands.IntakeDown;
 import frc.robot.commands.IntakeCommands.IntakeUp;
 import frc.robot.commands.IntakeCommands.MoveRollersIn;
 import frc.robot.commands.IntakeCommands.MoveRollersOut;
+import frc.robot.commands.ShooterCommands.AutoShootAmp;
+import frc.robot.commands.ShooterCommands.AutoShootSpeaker;
 import frc.robot.commands.ShooterCommands.ShootNoteAmp;
 import frc.robot.commands.ShooterCommands.ShootNoteSpeaker;
 import frc.robot.commands.ShooterCommands.ShooterLeftMotor;
 import frc.robot.commands.ShooterCommands.ShooterRightMotor;
+import frc.robot.commands.ShooterCommands.SpeedUpAmp;
+import frc.robot.commands.ShooterCommands.SpeedUpSpeaker;
 import frc.robot.commands.TrajectoryCommands.AlignAmp;
 import frc.robot.commands.TrajectoryCommands.AlignSpeaker;
 import frc.robot.commands.TrajectoryCommands.FollowNote;
@@ -25,9 +36,11 @@ import frc.robot.commands.TrajectoryCommands.MoveToNote;
 import frc.robot.commands.TrajectoryCommands.RunOnTheFly;
 import frc.robot.commands.TrajectoryCommands.TrajectoryCreation;
 import frc.robot.Controls.ControlMap;
-import frc.robot.commands.TestTun;
 import frc.robot.commands.CharacterizationCommands.FeedForwardCharacterization;
 import frc.robot.commands.CharacterizationCommands.FeedForwardCharacterization.FeedForwardCharacterizationData;
+import frc.robot.commands.ClimbCommands.CilmbDown;
+import frc.robot.commands.ClimbCommands.ClimbUp;
+import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.PoseEstimator;
@@ -43,6 +56,7 @@ public class RobotContainer {
   private final Vision m_vision = Vision.getVisionInstance();
   private final Intake m_intake = Intake.getInstance();
   private final Shooter m_shooter = Shooter.getInstance();
+  private final Climb m_climb = Climb.getInstance();
 
   // Autonomous commands
   private final TrajectoryCreation m_traj = new TrajectoryCreation();
@@ -51,7 +65,9 @@ public class RobotContainer {
   private final AlignAmp m_alignAmp = new AlignAmp(m_poseEstimator, m_traj, m_vision);
   private final AlignSpeaker m_alignSpeaker = new AlignSpeaker(m_poseEstimator, m_traj, m_vision);
   private final MoveToNote m_justMove = new MoveToNote(m_drivetrain, m_vision);
-  private final TestTun m_testTurn = new TestTun(m_drivetrain);
+  private final LeaveZone m_leaveZone = new LeaveZone(m_drivetrain);
+  private final TurnWhenLeft m_TurnWhenLeft = new TurnWhenLeft(m_drivetrain);
+  private final TurnWhenRight m_TurnWhenRight = new TurnWhenRight(m_drivetrain);
 
   // Drive command
   private final DefaultDrive m_defaultDrive = new DefaultDrive( m_drivetrain,
@@ -68,18 +84,50 @@ public class RobotContainer {
   private final ShootNoteAmp m_shootAmp = new ShootNoteAmp(m_shooter);
   private final ShooterLeftMotor m_shootLeftMotor = new ShooterLeftMotor(m_shooter);
   private final ShooterRightMotor m_shootRightMotor = new ShooterRightMotor(m_shooter);
+  private final AutoShootSpeaker m_autoShootSpeaker = new AutoShootSpeaker(m_shooter, m_intake);
+  private final AutoShootAmp m_autoShootAmp = new AutoShootAmp(m_shooter, m_intake);
+  private final SpeedUpSpeaker m_speedUpSpeaker = new SpeedUpSpeaker(m_shooter);
+  private final SpeedUpAmp m_speedUpAmp = new SpeedUpAmp(m_shooter);
+  private final AutoIntake autoIntake = new AutoIntake(m_drivetrain, m_vision, m_intake);
+  private final ClimbUp m_climbUp = new ClimbUp(m_climb);
+  private final CilmbDown m_climbDown = new CilmbDown(m_climb);
 
   //Drive subsystems declarations 
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   // Speaker auto command
-  //private final SequentialCommandGroup scoreSpeaker = new SequentialCommandGroup(m_alignSpeaker.andThen(m_shootSpeaker));
+  // private final Command scoreSpeaker = new SequentialCommandGroup(
+  //   new ParallelCommandGroup(m_alignSpeaker).alongWith(m_speedUpSpeaker)
+  //   .andThen(m_moveRollersOut)
+  // ).until(() -> ControlMap.m_gunnerController.getRawAxis(1) >= 0.1);
 
-  // Amp auto command
-  //private final SequentialCommandGroup scoreAmp = new SequentialCommandGroup(m_alignAmp.andThen(m_shootAmp));
+  // // Amp auto command
+  // private final Command scoreAmp = new SequentialCommandGroup(
+  //   new ParallelCommandGroup(m_alignAmp).alongWith(m_speedUpAmp)
+  //   .andThen(m_moveRollersOut)
+  // ).until(() -> ControlMap.m_gunnerController.getRawAxis(1) >= 0.1);
 
   // Intake auto command
-  //private final SequentialCommandGroup intakeNote = new SequentialCommandGroup(m_justMove.andThen(m_moveRollers));
+  // private final SequentialCommandGroup intakeNote = new SequentialCommandGroup(m_justMove.andThen(m_moveRollersIn));
+
+  //Auto Commands
+  // private final SequentialCommandGroup scoreAndLeave = new SequentialCommandGroup(
+  //   m_autoShootSpeaker
+  //   .andThen(m_trajectoryConfig.followPathGui("Leave Zone Subwoofer"))
+  // );
+  // private final SequentialCommandGroup shootandTurnLeft = new SequentialCommandGroup(
+  //   m_autoShootSpeaker
+  //   .andThen(m_TurnWhenLeft)
+  //   .andThen(m_leaveZone)
+  // );
+
+  //  private final SequentialCommandGroup shootAndTurnRight = new SequentialCommandGroup(
+  //   m_autoShootSpeaker
+  //   .andThen(m_TurnWhenRight)
+  //   .andThen(m_leaveZone)
+  // );
+
+
 
   private boolean isFieldOriented = true;
 
@@ -93,10 +141,17 @@ public class RobotContainer {
   private void configureShuffleBoardBindings(){
     m_chooser.addOption("Run on Fly", m_runOnTheFly);
     m_chooser.addOption("Move to Note", m_moveToNote);
+    m_chooser.addOption("Leave Zone", m_leaveZone);
+    m_chooser.addOption("Turn when Left (TESTING ONLY)", m_TurnWhenLeft);
+ 
     //m_chooser.addOption("Score Speaker", scoreSpeaker);
     //m_chooser.addOption("Score Amp", scoreAmp);
-    //m_chooser.addOption("Auto Intake", intakeNote);
-    m_chooser.addOption("tes turn", m_testTurn);
+    //m_chooser.addOption("Auto Intake", autoIntake);
+    m_chooser.addOption("auto speaker", m_autoShootSpeaker);
+    m_chooser.addOption("auto amp", m_autoShootAmp);
+    m_chooser.addOption("align speaker", m_alignSpeaker);
+    // m_chooser.addOption("Leave Starting Zone Subwoofer", m_trajectoryConfig.followPathGui("Leave Zone Subwoofer"));
+    // m_chooser.addOption("Score and Leave", scoreAndLeave);
     m_chooser.addOption("Swerve Characterization", new FeedForwardCharacterization(
               m_drivetrain,
               true,
@@ -104,7 +159,6 @@ public class RobotContainer {
               m_drivetrain::runCharacterizationVolts,
               m_drivetrain::getCharacterizationVelocity));
     SmartDashboard.putData(m_chooser);
-    // SmartDashboard.putData("Slowmo (Toggle)", new SlowmoDrive(m_drivetrain));
   }
 
   private void configureButtonBindings() {
@@ -112,18 +166,21 @@ public class RobotContainer {
     ControlMap.m_driverController.y().onTrue(new InstantCommand(() -> m_drivetrain.resetAlignment()));
     ControlMap.m_driverController.leftBumper().onTrue(new InstantCommand(() -> m_drivetrain.zeroGyro()));
     ControlMap.m_driverController.b().toggleOnTrue(m_defaultDrive);
+    ControlMap.m_driverController.a().onTrue(m_alignSpeaker);
 
     // Gunner button bindings
     ControlMap.m_gunnerController.a().whileTrue(m_intakeDown);
     ControlMap.m_gunnerController.b().whileTrue(m_intakeUp);
-    ControlMap.m_gunnerController.x().whileTrue(m_moveRollersOut);
-    ControlMap.m_gunnerController.y().whileTrue(m_moveRollersIn);
+    ControlMap.m_gunnerController.leftBumper().whileTrue(m_moveRollersOut);
+    ControlMap.m_gunnerController.rightBumper().whileTrue(m_moveRollersIn);
     ControlMap.m_gunnerController.leftTrigger().whileTrue(m_shootAmp);
     ControlMap.m_gunnerController.rightTrigger().whileTrue(m_shootSpeaker);
+    ControlMap.m_gunnerController.y().whileTrue(m_climbDown);
+    ControlMap.m_gunnerController.x().whileTrue(m_climbUp);
 
-    // FOR TESTING, REMOVE FOR COMP
-    ControlMap.m_gunnerController.leftBumper().whileTrue(m_shootLeftMotor);
-    ControlMap.m_gunnerController.rightBumper().whileTrue(m_shootRightMotor);
+    // // FOR TESTING, REMOVE FOR COMP
+    // ControlMap.m_gunnerController.leftBumper().whileTrue(m_shootLeftMotor);
+    // ControlMap.m_gunnerController.rightBumper().whileTrue(m_shootRightMotor);
   }
 
 

@@ -10,6 +10,7 @@ import frc.robot.subsystems.Intake;
 
 public class MoveRollersOut extends Command {
   private final Intake m_Intake;
+  private double count = 0;
   /** Creates a new MoveRollers. */
   public MoveRollersOut(Intake intake) {
     // Use addRequirements() here to declare subsystem dependencies.

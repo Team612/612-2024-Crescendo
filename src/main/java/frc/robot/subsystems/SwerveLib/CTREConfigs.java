@@ -22,6 +22,7 @@ public final class CTREConfigs {
     //swerveCanCoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
     swerveCanCoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
 
+
     /* Drive Configs */
     swerveDriveFXConfig.MotorOutput.Inverted = Constants.SwerveConstants.driveInvert;
     swerveDriveFXConfig.MotorOutput.NeutralMode = Constants.SwerveConstants.driveNeutralMode;
@@ -56,5 +57,69 @@ public final class CTREConfigs {
     swerveAngleFXConfig.Slot0.kP = Constants.SwerveConstants.angleKP;
     swerveAngleFXConfig.Slot0.kI = Constants.SwerveConstants.angleKI;
     swerveAngleFXConfig.Slot0.kD = Constants.SwerveConstants.angleKD;
+
+    swerveDriveFXConfig.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = Constants.SwerveConstants.openLoopRamp;
+    swerveDriveFXConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = Constants.SwerveConstants.openLoopRamp;
+
+    swerveDriveFXConfig.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = Constants.SwerveConstants.closedLoopRamp;
+    swerveDriveFXConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = Constants.SwerveConstants.closedLoopRamp;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
