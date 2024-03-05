@@ -55,13 +55,13 @@ public final class Constants {
     public static final double voltageComp = 12.0;
 
     /* Swerve Current Limiting */
-    public static final int angleContinuousCurrentLimit = 32;
-    public static final int angleCurrentThreshold = 25;
+    public static final int angleContinuousCurrentLimit = 35;
+    public static final int angleCurrentThreshold = 40;
     public static final double angleCurrentThresholdTime = 0.1;
      public static final boolean angleEnableCurrentLimit = true;
 
-    public static final int driveContinuousCurrentLimit = 32; //original threshold: 80
-    public static final int driveCurrentThreshold = 25;
+    public static final int driveContinuousCurrentLimit = 35; //original threshold: 80
+    public static final int driveCurrentThreshold = 60;
     public static final double driveCurrentThresholdTime = 0.1;
     public static final boolean driveEnableCurrentLimit = true;
 
@@ -211,6 +211,9 @@ public final class Constants {
 
   // Shooter constants
   public static class ShooterConstants{
+    public static final String leftSpeedKey = "Left Speed";
+    public static final String rightSpeedKey = "Right Speed";
+
     public static final int shooterLeftID = 11;
     public static final int shooterRightID = 12;
     public static double shooterLeftSpeedSpeaker = -.65;

@@ -111,9 +111,10 @@ public class SwerveModule {
   /* Sets the speed of the swerve module. If it's openLoop, then it takes in a percentage, otherwise, it calculates and runs a PID */
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
     if (isOpenLoop) {
-      //driveDutyCycle.Output = desiredState.speedMetersPerSecond / Constants.SwerveConstants.maxSpeed;
-      double percentOutput = desiredState.speedMetersPerSecond / Constants.SwerveConstants.maxSpeed;
-      driveMotor.set(percentOutput);
+      driveDutyCycle.Output = desiredState.speedMetersPerSecond / Constants.SwerveConstants.maxSpeed;
+      driveMotor.setControl(driveDutyCycle);
+      //double percentOutput = desiredState.speedMetersPerSecond / Constants.SwerveConstants.maxSpeed;
+      //driveMotor.set(percentOutput);
     } else {
       //creating a feedforwad with a desired velocity
       driveVelocity.Velocity = Conversions.MPSToRPS(desiredState.speedMetersPerSecond, Constants.SwerveConstants.wheelCircumference);

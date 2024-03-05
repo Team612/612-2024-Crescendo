@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.DriveCommands.DefaultDrive;
 import frc.robot.commands.DriveCommands.FieldOrientedDrive;
 import frc.robot.commands.DriveCommands.LeaveZone;
+import frc.robot.commands.DriveCommands.TurnWhenLeft;
+import frc.robot.commands.DriveCommands.TurnWhenRight;
 import frc.robot.commands.IntakeCommands.AutoIntake;
 import frc.robot.commands.IntakeCommands.IntakeDown;
 import frc.robot.commands.IntakeCommands.IntakeUp;
@@ -64,6 +66,8 @@ public class RobotContainer {
   private final AlignSpeaker m_alignSpeaker = new AlignSpeaker(m_poseEstimator, m_traj, m_vision);
   private final MoveToNote m_justMove = new MoveToNote(m_drivetrain, m_vision);
   private final LeaveZone m_leaveZone = new LeaveZone(m_drivetrain);
+  private final TurnWhenLeft m_TurnWhenLeft = new TurnWhenLeft(m_drivetrain);
+  private final TurnWhenRight m_TurnWhenRight = new TurnWhenRight(m_drivetrain);
 
   // Drive command
   private final DefaultDrive m_defaultDrive = new DefaultDrive( m_drivetrain,
@@ -111,6 +115,19 @@ public class RobotContainer {
   //   m_autoShootSpeaker
   //   .andThen(m_trajectoryConfig.followPathGui("Leave Zone Subwoofer"))
   // );
+  // private final SequentialCommandGroup shootandTurnLeft = new SequentialCommandGroup(
+  //   m_autoShootSpeaker
+  //   .andThen(m_TurnWhenLeft)
+  //   .andThen(m_leaveZone)
+  // );
+
+  //  private final SequentialCommandGroup shootAndTurnRight = new SequentialCommandGroup(
+  //   m_autoShootSpeaker
+  //   .andThen(m_TurnWhenRight)
+  //   .andThen(m_leaveZone)
+  // );
+
+
 
   private boolean isFieldOriented = true;
 
@@ -125,6 +142,8 @@ public class RobotContainer {
     m_chooser.addOption("Run on Fly", m_runOnTheFly);
     m_chooser.addOption("Move to Note", m_moveToNote);
     m_chooser.addOption("Leave Zone", m_leaveZone);
+    m_chooser.addOption("Turn when Left (TESTING ONLY)", m_TurnWhenLeft);
+ 
     //m_chooser.addOption("Score Speaker", scoreSpeaker);
     //m_chooser.addOption("Score Amp", scoreAmp);
     //m_chooser.addOption("Auto Intake", autoIntake);

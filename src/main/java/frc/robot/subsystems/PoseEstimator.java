@@ -89,6 +89,7 @@ public class PoseEstimator extends SubsystemBase {
      poseEstimator.update().ifPresent(estimatedRobotPose -> {
       System.out.println(1);
       var estimatedPose = estimatedRobotPose.estimatedPose;
+      System.out.println(estimatedRobotPose.targetsUsed.size());
 
       // m_DrivePoseEstimator.addVisionMeasurement(estimatedPose.toPose2d(), FIELD_LENGTH_METERS);
      
