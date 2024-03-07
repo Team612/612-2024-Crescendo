@@ -9,6 +9,7 @@ import frc.robot.subsystems.LED;
 
 public class PinkNote extends CommandBase {
   public LED m_LED;
+  int counter = 0;
   /** Creates a new GreenAndPinkBoth. */
   public PinkNote(LED led) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -24,6 +25,7 @@ public class PinkNote extends CommandBase {
   @Override
   public void execute() {
     m_LED.setPink();
+    counter++;
   }
   // Called once the command ends or is interrupted.
   @Override
@@ -32,6 +34,6 @@ public class PinkNote extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return counter>=100;
   }
 }

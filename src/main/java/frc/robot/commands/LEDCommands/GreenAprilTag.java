@@ -9,6 +9,7 @@ import frc.robot.subsystems.LED;
 
 public class GreenAprilTag extends CommandBase {
   public LED m_LED;
+  int counter=0;
   /** Creates a new GreenAndPinkBoth. */
   public GreenAprilTag(LED led) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -23,6 +24,7 @@ public class GreenAprilTag extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    counter++;
     m_LED.setGreen();
   }
   // Called once the command ends or is interrupted.
@@ -32,6 +34,6 @@ public class GreenAprilTag extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return counter>=100;
   }
 }

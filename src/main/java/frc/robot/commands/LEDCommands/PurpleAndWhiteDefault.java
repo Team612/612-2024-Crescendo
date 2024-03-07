@@ -9,6 +9,7 @@ import frc.robot.subsystems.LED;
 
 public class PurpleAndWhiteDefault extends CommandBase {
   public LED m_LED;
+  int counter;
   /** Creates a new GreenAndPinkBoth. */
   public PurpleAndWhiteDefault(LED led) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -24,6 +25,7 @@ public class PurpleAndWhiteDefault extends CommandBase {
   @Override
   public void execute() {
     m_LED.setPurpleAndWhite();
+    counter++;
   }
 
   // Called once the command ends or is interrupted.
@@ -33,6 +35,6 @@ public class PurpleAndWhiteDefault extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return counter>=100;
   }
 }

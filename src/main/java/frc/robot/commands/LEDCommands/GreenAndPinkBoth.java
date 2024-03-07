@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class GreenAndPinkBoth extends CommandBase {
   public LED m_LED;
+  int counter = 0;
   /** Creates a new GreenAndPinkBoth. */
   public GreenAndPinkBoth(LED led) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -22,7 +23,9 @@ public class GreenAndPinkBoth extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+  
     m_LED.setGreenAndPink();
+    counter++;
   }
 
   // Called once the command ends or is interrupted.
@@ -32,6 +35,7 @@ public class GreenAndPinkBoth extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return counter>=100;
   }
+  
 }

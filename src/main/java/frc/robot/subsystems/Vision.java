@@ -225,6 +225,16 @@ public class Vision extends SubsystemBase {
     return new Pose2d();
   }
 
+  public boolean hasTagPose() {
+    PhotonPipelineResult result = cameraApriltag.getLatestResult();
+    if (result.hasTargets()) {
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
   public Pose2d getTagPoseLEDS() {
     PhotonPipelineResult result = cameraApriltag.getLatestResult();
     if (result.hasTargets()) {
@@ -274,6 +284,11 @@ public class Vision extends SubsystemBase {
 
   public double getTargetYaw(){
     PhotonPipelineResult result = cameraObject.getLatestResult();
+    return result.getBestTarget().getYaw();
+  }
+
+  public double getTagYaw(){
+    PhotonPipelineResult result = cameraApriltag.getLatestResult();
     return result.getBestTarget().getYaw();
   }
 
