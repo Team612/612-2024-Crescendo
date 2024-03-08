@@ -75,11 +75,11 @@ public class Shooter extends SubsystemBase {
     // SmartDashboard.putNumber("Speed Right Amp", Constants.ShooterConstants.shooterRightSpeedAmp);
     // SmartDashboard.putNumber("Outtake speed", Constants.IntakeConstants.rollerSpeedOuttake);
 
-    Constants.ShooterConstants.shooterLeftSpeedSpeaker = SmartDashboard.getNumber("Speed Left Speaker", Constants.ShooterConstants.shooterLeftSpeedSpeaker);
-    Constants.ShooterConstants.shooterRightSpeedSpeaker = SmartDashboard.getNumber("Speed Right Speaker", Constants.ShooterConstants.shooterRightSpeedSpeaker);
-    Constants.ShooterConstants.shooterLeftSpeedAmp = SmartDashboard.getNumber("Speed Left Amp", Constants.ShooterConstants.shooterLeftSpeedAmp);
-    Constants.ShooterConstants.shooterRightSpeedAmp = SmartDashboard.getNumber("Speed Right Amp", Constants.ShooterConstants.shooterRightSpeedAmp);
-    Constants.IntakeConstants.rollerSpeedOuttake = SmartDashboard.getNumber("Outtake speed", Constants.IntakeConstants.rollerSpeedOuttake);
+    // Constants.ShooterConstants.shooterLeftSpeedSpeaker = SmartDashboard.getNumber("Speed Left Speaker", Constants.ShooterConstants.shooterLeftSpeedSpeaker);
+    // Constants.ShooterConstants.shooterRightSpeedSpeaker = SmartDashboard.getNumber("Speed Right Speaker", Constants.ShooterConstants.shooterRightSpeedSpeaker);
+    // Constants.ShooterConstants.shooterLeftSpeedAmp = SmartDashboard.getNumber("Speed Left Amp", Constants.ShooterConstants.shooterLeftSpeedAmp);
+    // Constants.ShooterConstants.shooterRightSpeedAmp = SmartDashboard.getNumber("Speed Right Amp", Constants.ShooterConstants.shooterRightSpeedAmp);
+    // Constants.IntakeConstants.rollerSpeedOuttake = SmartDashboard.getNumber("Outtake speed", Constants.IntakeConstants.rollerSpeedOuttake);
     // This method will be called once per scheduler run
   }
 }

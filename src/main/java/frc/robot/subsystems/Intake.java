@@ -68,9 +68,9 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("limit forward", getIntakeLimitStateForward());
-    SmartDashboard.putBoolean("limit reverse", getIntakeLimitStateReverse());
-    SmartDashboard.putNumber("IR Sensor", getIRSensor());
+    // SmartDashboard.putBoolean("limit forward", getIntakeLimitStateForward());
+    // SmartDashboard.putBoolean("limit reverse", getIntakeLimitStateReverse());
+    // SmartDashboard.putNumber("IR Sensor", getIRSensor());
     // This method will be called once per scheduler run
   }
 }

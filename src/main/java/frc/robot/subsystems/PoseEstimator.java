@@ -159,9 +159,9 @@ public class PoseEstimator extends SubsystemBase {
     }
 
     m_field.setRobotPose(getCurrentPose());
-    SmartDashboard.putNumber("PoseEstimator X", getCurrentPose().getX());
-     SmartDashboard.putNumber("PoseEstimator Y", getCurrentPose().getY());
-     SmartDashboard.putNumber("PoseEstimator Angle", getCurrentPose().getRotation().getDegrees());
+    //  SmartDashboard.putNumber("PoseEstimator X", getCurrentPose().getX());
+    //  SmartDashboard.putNumber("PoseEstimator Y", getCurrentPose().getY());
+    //  SmartDashboard.putNumber("PoseEstimator Angle", getCurrentPose().getRotation().getDegrees());
   }
 
 

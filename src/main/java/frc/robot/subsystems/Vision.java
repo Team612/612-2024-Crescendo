@@ -318,16 +318,44 @@ public class Vision extends SubsystemBase {
     return m_PoseEstimator2;
   }
 
+  /* Shuffleboard stuff */
+
+  public boolean hasCalibrationFront(){
+    if (cameraApriltagFront.getDistCoeffs().equals(Optional.empty()))
+      return true;
+    return false;
+  }
+
+  public boolean hasCalibrationBack(){
+    if (cameraApriltagBack.getDistCoeffs().equals(Optional.empty()))
+      return true;
+    return false;
+
+  }
+
+  public boolean hasTag(){
+    if (cameraApriltagBack.getLatestResult().hasTargets())
+      return true;
+    return false;
+  }
+
+  public int getTagID(){
+    if (cameraApriltagBack.getLatestResult().hasTargets()){
+      return cameraApriltagBack.getLatestResult().getBestTarget().getFiducialId();
+    }
+    return -1;
+  }
+
   @Override
   public void periodic() {
-    if (cameraApriltagFront.getDistCoeffs().equals(Optional.empty())){
-      System.out.println("NO CALIBRATION");
-    }
-    // if (hasTarget()){
-    //   SmartDashboard.putNumber("note x", getNoteSpace().getX());
-    //   SmartDashboard.putNumber("note y", getNoteSpace().getY());
+    // if (cameraApriltagFront.getDistCoeffs().equals(Optional.empty())){
+    //   System.out.println("NO CALIBRATION");
     // }
-    SmartDashboard.putBoolean("Sees tag", cameraObject.getLatestResult().hasTargets());
+    // // if (hasTarget()){
+    // //   SmartDashboard.putNumber("note x", getNoteSpace().getX());
+    // //   SmartDashboard.putNumber("note y", getNoteSpace().getY());
+    // // }
+    // SmartDashboard.putBoolean("Sees tag", cameraObject.getLatestResult().hasTargets());
 
   }
 

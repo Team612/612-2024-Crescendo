@@ -138,6 +138,10 @@ public class Drivetrain extends SubsystemBase {
     }
     return positions;
   }
+  
+  public SwerveModule[] getModules(){
+    return mSwerveMods;
+  }
 
   public double getEncoderMeters() {
     double sum = 0.0;
@@ -195,15 +199,11 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-    for (SwerveModule mod : mSwerveMods) {
-      SmartDashboard.putNumber( "Mod " + mod.moduleNumber + " angle", mod.getCanCoder().getDegrees());
-    }
-    SmartDashboard.putNumber("Current Angle", navx.getAngle());
-    if (isCharacterizing) {
-      // Run in characterization mode
-      for (SwerveModule mod : mSwerveMods) {
-        mod.runCharacterization(characterizationVolts);
-      }
-    }
+    // SmartDashboard.putNumber("Current Angle", navx.getAngle());
+    // if (isCharacterizing) {
+    //   // Run in characterization mode
+    //   for (SwerveModule mod : mSwerveMods) {
+    //     mod.runCharacterization(characterizationVolts);
+    //   }
   }
 }
