@@ -265,23 +265,18 @@ public class Vision extends SubsystemBase {
     return m_PoseEstimator1.update();
   }
 
-  public double getTargetPitch(){
-    PhotonPipelineResult result = cameraObject.getLatestResult();
-    return result.getBestTarget().getPitch();
+
+
+  public PhotonPoseEstimator getVisionPose(){
+    return m_PoseEstimator1;
   }
 
-  public double getTargetYaw(){
-    PhotonPipelineResult result = cameraObject.getLatestResult();
-    return result.getBestTarget().getYaw();
+  public PhotonPoseEstimator getVisionPose2(){
+    return m_PoseEstimator2;
   }
 
-  public boolean hasTarget(){
-    PhotonPipelineResult result = cameraObject.getLatestResult();
-    if (result.hasTargets())
-      return true;
-    return false;
-  }
 
+  /* Object */
   public double getNoteRange() {
     return PhotonUtils.calculateDistanceToTargetMeters(
             robotToCamObject.getZ(),
@@ -307,16 +302,24 @@ public class Vision extends SubsystemBase {
       return new Transform2d(translation, new Rotation2d()); //translation.getAngle().plus(m_drivetrain.getNavxAngle()
   }
 
-
-
-
-  public PhotonPoseEstimator getVisionPose(){
-    return m_PoseEstimator1;
+    public double getTargetPitch(){
+    PhotonPipelineResult result = cameraObject.getLatestResult();
+    return result.getBestTarget().getPitch();
   }
 
-  public PhotonPoseEstimator getVisionPose2(){
-    return m_PoseEstimator2;
+  public double getTargetYaw(){
+    PhotonPipelineResult result = cameraObject.getLatestResult();
+    return result.getBestTarget().getYaw();
   }
+
+  public boolean hasTarget(){
+    PhotonPipelineResult result = cameraObject.getLatestResult();
+    if (result.hasTargets())
+      return true;
+    return false;
+  }
+
+
 
   /* Shuffleboard stuff */
 
