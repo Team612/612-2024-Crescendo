@@ -16,60 +16,60 @@ import frc.robot.subsystems.Vision;
 
 /** Add your docs here. */
 public class ShuffleboardTabs {
-    ShuffleboardTab driverTab;
-    ShuffleboardTab drivetrainTab;
-    ShuffleboardTab intakeTab;
-    ShuffleboardTab poseEstimatorTab;
-    ShuffleboardTab shooterTab;
-    ShuffleboardTab visionTab;
+    private ShuffleboardTab driverTab;
+    private ShuffleboardTab drivetrainTab;
+    private ShuffleboardTab intakeTab;
+    private ShuffleboardTab poseEstimatorTab;
+    private ShuffleboardTab shooterTab;
+    private ShuffleboardTab visionTab;
 
     /* Driver Entries */
 
     /* Debug Entries */
-    GenericEntry mod1_velocity;
-    GenericEntry mod2_velocity;
-    GenericEntry mod3_velocity;
-    GenericEntry mod4_velocity;
+    private GenericEntry mod1_velocity;
+    private GenericEntry mod2_velocity;
+    private GenericEntry mod3_velocity;
+    private GenericEntry mod4_velocity;
 
-    GenericEntry mod1_angle;
-    GenericEntry mod2_angle;
-    GenericEntry mod3_angle;
-    GenericEntry mod4_angle;
+    private GenericEntry mod1_angle;
+    private GenericEntry mod2_angle;
+    private GenericEntry mod3_angle;
+    private GenericEntry mod4_angle;
 
 
-    GenericEntry cancoder1_angle;
-    GenericEntry cancoder2_angle;
-    GenericEntry cancoder3_angle;
-    GenericEntry cancoder4_angle;
+    private GenericEntry cancoder1_angle;
+    private GenericEntry cancoder2_angle;
+    private GenericEntry cancoder3_angle;
+    private GenericEntry cancoder4_angle;
 
-    GenericEntry navxAngle;
+    private GenericEntry navxAngle;
 
-    GenericEntry limitForward;
-    GenericEntry limitBackward;
-    GenericEntry irSensor;
+    private GenericEntry limitForward;
+    private GenericEntry limitBackward;
+    private GenericEntry irSensor;
 
-    GenericEntry poseEstimatorX;
-    GenericEntry poseEstimatorY;
-    GenericEntry poseEstimatorAngle;
+    private GenericEntry poseEstimatorX;
+    private GenericEntry poseEstimatorY;
+    private GenericEntry poseEstimatorAngle;
 
-    GenericEntry shooterLeftCurrent;
-    GenericEntry shooterRightCurrent;
+    private GenericEntry shooterLeftCurrent;
+    private GenericEntry shooterRightCurrent;
 
-    GenericEntry hasCalibrationFront;
-    GenericEntry hasCalibrationBack;
-    GenericEntry hasTag;
-    GenericEntry tagInSight;
+    private GenericEntry hasCalibrationFront;
+    private GenericEntry hasCalibrationBack;
+    private GenericEntry hasTag;
+    private GenericEntry tagInSight;
     
     
 
     /* Subsystems */
-    Drivetrain driveSubsystem;
-    Intake intakeSubsystem;
-    Shooter shooterSubsystem;
-    Vision visionSubsystem;
-    frc.robot.subsystems.PoseEstimator poseEstimatorSubsystem;
-    SwerveModuleState[] states;
-    SwerveModule[] mods;
+    private Drivetrain driveSubsystem;
+    private Intake intakeSubsystem;
+    private Shooter shooterSubsystem;
+    private Vision visionSubsystem;
+    private frc.robot.subsystems.PoseEstimator poseEstimatorSubsystem;
+    private SwerveModuleState[] states;
+    private SwerveModule[] mods;
 
 
     public void initButton(){

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.SwerveLib.CTREConfigs;
+import frc.robot.ShuffleboardTabs;
 
 /*
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -22,6 +23,7 @@ public class Robot extends TimedRobot {
   public static CTREConfigs ctreConfigs;
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
+  private ShuffleboardTabs shuffleboard_tabs;
 
   public static Alliance initAllianceColor = Alliance.Blue;
 
@@ -42,6 +44,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     checkDSUpdate();
     ctreConfigs = new CTREConfigs();
+    shuffleboard_tabs.initButton();
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
@@ -62,6 +65,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    shuffleboard_tabs.updateButtons();
     checkDSUpdate();
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
