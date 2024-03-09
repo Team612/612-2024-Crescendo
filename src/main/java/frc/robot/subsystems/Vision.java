@@ -173,7 +173,7 @@ public class Vision extends SubsystemBase {
     robotInTagPose = new Pose2d();
     this.cameraApriltagFront = cameraApriltagFront;
     this.cameraApriltagBack = cameraApriltagBack;
-    this.cameraObject = cameraObject;
+    this.cameraObject = cameraApriltagFront;
     resetRobotPose();
 
     aprilTagFieldLayout = new AprilTagFieldLayout(atList, 16.451 , 8.211 );
@@ -182,7 +182,7 @@ public class Vision extends SubsystemBase {
 
     robotToCamAprilBack = new Transform3d(new Translation3d(0.18,-0.1,0.36), new Rotation3d(0,0,Math.PI));
 
-    robotToCamObject = new Transform3d(new Translation3d(0,-0.22,0.485), new Rotation3d()); //0.20,-0.04
+    robotToCamObject = new Transform3d(new Translation3d(0.17,0.1,0.25), new Rotation3d()); //0.20,-0.04
     
     poseEstimatorFront = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, this.cameraApriltagFront, robotToCamAprilFront);
     poseEstimatorBack = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, this.cameraApriltagBack, robotToCamAprilBack);
@@ -209,6 +209,7 @@ public class Vision extends SubsystemBase {
 
   public PhotonPoseEstimator getVisionPoseBack(){
     return poseEstimatorBack;
+    
   }
 
   public PhotonCamera getApriltagCamera(int camID){
@@ -222,8 +223,13 @@ public class Vision extends SubsystemBase {
     if (camID == 1){
       return robotToCamAprilFront;
     }
+    else if (camID == 3){
+      return robotToCamObject;
+    }
     return robotToCamAprilBack;
   }
+
+  
 
   
   // getting the vision pose from the april tags
@@ -270,13 +276,20 @@ public class Vision extends SubsystemBase {
 
   //Object detection methods
   public double getTargetPitch(){
+
+    if (cameraObject.getLatestResult().hasTargets()){
     PhotonPipelineResult result = cameraObject.getLatestResult();
     return result.getBestTarget().getPitch();
+    }
+    return -1;
   }
 
   public double getTargetYaw(){
+    if (cameraObject.getLatestResult().hasTargets()){
     PhotonPipelineResult result = cameraObject.getLatestResult();
     return result.getBestTarget().getYaw();
+    }
+    return -1;
   }
 
   public boolean hasTarget(){
@@ -291,18 +304,21 @@ public class Vision extends SubsystemBase {
   // }
 
 
-  public Transform2d getNoteSpace(){ //
+  public Transform3d getNoteSpace(){ //
     //
-    double range =
-    //note, the algorithm photonvision uses is the exact same as the limelight one, commented out below
-    PhotonUtils.calculateDistanceToTargetMeters(
-            robotToCamObject.getZ(),
-            Units.inchesToMeters(0),
-            0,
-            Units.degreesToRadians(getTargetPitch()));
-      //return new Pose2d(PhotonUtils.estimateCameraToTargetTranslation(range, new Rotation2d(Units.degreesToRadians(getTargetYaw()))), new Rotation2d(Units.degreesToRadians(getTargetYaw())));
-      Translation2d translation = PhotonUtils.estimateCameraToTargetTranslation(range, new Rotation2d(Units.degreesToRadians(-getTargetYaw())));
-      return new Transform2d(translation, new Rotation2d()); //translation.getAngle().plus(m_drivetrain.getNavxAngle()
+    Transform3d camPose = cameraObject.getLatestResult().getBestTarget().getBestCameraToTarget();
+    System.out.println("x " + camPose.getX() + "y " + camPose.getY());
+    return camPose;
+    // double range =
+    // //note, the algorithm photonvision uses is the exact same as the limelight one, commented out below
+    // PhotonUtils.calculateDistanceToTargetMeters(
+    //         robotToCamObject.getZ(),
+    //         Units.inchesToMeters(0),
+    //         0,
+    //         Units.degreesToRadians(getTargetPitch()));
+    //   //return new Pose2d(PhotonUtils.estimateCameraToTargetTranslation(range, new Rotation2d(Units.degreesToRadians(getTargetYaw()))), new Rotation2d(Units.degreesToRadians(getTargetYaw())));
+    //   Translation2d translation = PhotonUtils.estimateCameraToTargetTranslation(range, new Rotation2d(Units.degreesToRadians(getTargetYaw())));
+    //   return new Transform2d(translation, new Rotation2d()); //translation.getAngle().plus(m_drivetrain.getNavxAngle()
   }
 
 
@@ -318,6 +334,10 @@ public class Vision extends SubsystemBase {
       SmartDashboard.putNumber("note y", getNoteSpace().getY());
     }
     SmartDashboard.putBoolean("Sees tag", cameraObject.getLatestResult().hasTargets());
+
+    if (cameraObject != null && cameraObject.getLatestResult().hasTargets()){
+      SmartDashboard.putBoolean("has Object", cameraObject.getLatestResult().hasTargets());
+    }
 
   }
 

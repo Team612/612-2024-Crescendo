@@ -20,6 +20,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -41,7 +44,10 @@ public class PoseEstimator extends SubsystemBase {
   Vision visionSubsystem;
   Drivetrain driveSubsystem;
   private Field2d fieldLayout;
-
+  Pose2d poseA = new Pose2d();
+  Pose2d poseB = new Pose2d();
+StructPublisher<Pose2d> publisher;
+StructArrayPublisher<Pose2d> arrayPublisher;
   
   public static final double FIELD_LENGTH_METERS = Units.inchesToMeters(651.25);
   public static final double FIELD_WIDTH_METERS = Units.inchesToMeters(323.25);
@@ -72,6 +78,12 @@ public class PoseEstimator extends SubsystemBase {
     );
     photonPoseEstimatorFront = visionSubsystem.getVisionPoseFront();
     photonPoseEstimatorBack = visionSubsystem.getVisionPoseBack();
+
+ publisher = NetworkTableInstance.getDefault()
+    .getStructTopic("MyPose", Pose2d.struct).publish();
+arrayPublisher = NetworkTableInstance.getDefault()
+    .getStructArrayTopic("MyPoseArray", Pose2d.struct).publish();
+
   }
 
   public static PoseEstimator getPoseEstimatorInstance() {
@@ -136,6 +148,7 @@ public class PoseEstimator extends SubsystemBase {
 
   @Override
   public void periodic() {
+    
     //updates the drivePoseEstimator with with Navx angle and current wheel positions
     drivePoseEstimator.update(driveSubsystem.getNavxAngle(), driveSubsystem.getPositions());
 
@@ -148,13 +161,16 @@ public class PoseEstimator extends SubsystemBase {
       updateEachPoseEstimator(photonPoseEstimatorBack, 2);
     }
 
+    publisher.set(drivePoseEstimator.getEstimatedPosition());
+    //arrayPublisher.set(new Pose3d[] {poseA, poseB});
     
     //updates the robot pose in the field simulation
     fieldLayout.setRobotPose(getCurrentPose());
 
     SmartDashboard.putNumber("PoseEstimator X", getCurrentPose().getX());
-     SmartDashboard.putNumber("PoseEstimator Y", getCurrentPose().getY());
-     SmartDashboard.putNumber("PoseEstimator Angle", getCurrentPose().getRotation().getDegrees());
+    SmartDashboard.putNumber("PoseEstimator Y", getCurrentPose().getY());
+    SmartDashboard.putNumber("PoseEstimator Angle", getCurrentPose().getRotation().getDegrees());
+    SmartDashboard.putNumber("PoseEstimator Radians", getCurrentPose().getRotation().getRadians());
   }
 
 

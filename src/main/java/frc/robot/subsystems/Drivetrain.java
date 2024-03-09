@@ -19,6 +19,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -40,6 +42,7 @@ public class Drivetrain extends SubsystemBase {
 
   private boolean isCharacterizing = false;
   private double characterizationVolts = 0.0;
+  private StructArrayPublisher<SwerveModuleState> publisher;
 
   public Drivetrain() {
     mSwerveMods =
@@ -49,6 +52,9 @@ public class Drivetrain extends SubsystemBase {
           new SwerveModule(2, Constants.Swerve.Mod2.constants),
           new SwerveModule(3, Constants.Swerve.Mod3.constants)
         };
+
+    publisher = NetworkTableInstance.getDefault()
+    .getStructArrayTopic("MyStates", SwerveModuleState.struct).publish();
     
     navx = new AHRS(I2C.Port.kMXP); 
     navxAngleOffset = new Rotation2d();
@@ -180,6 +186,7 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
+    publisher.set(getStates());
     // for (SwerveModule mod : mSwerveMods) {
     //   SmartDashboard.putNumber(
     //       "Mod " + mod.moduleNumber + " velocity", mod.getCharacterizationVelocity());

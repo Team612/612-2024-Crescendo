@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.FieldOrientedDrive;
@@ -62,11 +63,15 @@ public class RobotContainer {
       new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
   private final JoystickButton robotToField =
       new JoystickButton(driver, XboxController.Button.kB.value);
+  private final JoystickButton autoNote =
+    new JoystickButton(driver, XboxController.Button.kA.value);
 
   //Drive subsystems declarations 
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
  
   private boolean isFieldOriented = true;
+
+  //private final SequentialCommandGroup m_autoNote = new SequentialCommandGroup(m_moveToNote);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
