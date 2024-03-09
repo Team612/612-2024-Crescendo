@@ -320,14 +320,14 @@ public class Vision extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (cameraApriltagFront.getDistCoeffs().equals(Optional.empty())){
-      System.out.println("NO CALIBRATION");
-    }
+    // if (cameraApriltagFront.getDistCoeffs().equals(Optional.empty())){
+    //   System.out.println("NO CALIBRATION");
+    // }
     // if (hasTarget()){
     //   SmartDashboard.putNumber("note x", getNoteSpace().getX());
     //   SmartDashboard.putNumber("note y", getNoteSpace().getY());
     // }
-    SmartDashboard.putBoolean("Sees tag", cameraObject.getLatestResult().hasTargets());
+    //SmartDashboard.putBoolean("Sees tag", cameraObject.getLatestResult().hasTargets());
 
   }
 

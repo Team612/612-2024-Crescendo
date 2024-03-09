@@ -210,8 +210,8 @@ public final class Constants {
   public static class ShooterConstants{
     public static final int shooterLeftID = 11;
     public static final int shooterRightID = 12;
-    public static final double shooterLeftSpeedSpeaker = -1;
-    public static final double shooterRightSpeedSpeaker = 1; //0.9
+    public static final double shooterLeftSpeedSpeaker = -0.25;
+    public static final double shooterRightSpeedSpeaker = 0.3; //0.9
     public static final double shooterLeftSpeedAmp = -0.3;
     public static final double shooterRightSpeedAmp = 0.3;
   }
