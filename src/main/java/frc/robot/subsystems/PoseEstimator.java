@@ -18,6 +18,8 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,6 +40,9 @@ public class PoseEstimator extends SubsystemBase {
   Drivetrain m_drivetrain;
   private Field2d m_field;
   private boolean updateWithAprilTags;
+
+  //advantage scope
+  StructPublisher<Pose2d> publisher;
 
   
   public static final double FIELD_LENGTH_METERS = Units.inchesToMeters(651.25);
@@ -70,6 +75,9 @@ public class PoseEstimator extends SubsystemBase {
     );
     m_PhotonPoseEstimatorBack = m_vision.getVisionPose();
     m_PhotonPoseEstimatorFront = m_vision.getVisionPose2();
+
+    publisher = NetworkTableInstance.getDefault()
+    .getStructTopic("MyPose", Pose2d.struct).publish();
   }
 
   public static PoseEstimator getPoseEstimatorInstance() {
@@ -159,9 +167,12 @@ public class PoseEstimator extends SubsystemBase {
     }
 
     m_field.setRobotPose(getCurrentPose());
+    publisher.set(getCurrentPose());
     //  SmartDashboard.putNumber("PoseEstimator X", getCurrentPose().getX());
     //  SmartDashboard.putNumber("PoseEstimator Y", getCurrentPose().getY());
     //  SmartDashboard.putNumber("PoseEstimator Angle", getCurrentPose().getRotation().getDegrees());
+
+
   }
 
 

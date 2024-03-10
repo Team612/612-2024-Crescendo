@@ -51,6 +51,7 @@ public class ShuffleboardTabs {
     private GenericEntry poseEstimatorX;
     private GenericEntry poseEstimatorY;
     private GenericEntry poseEstimatorAngle;
+    private GenericEntry poseEstimatorRadians;
 
     private GenericEntry shooterLeftCurrent;
     private GenericEntry shooterRightCurrent;
@@ -86,6 +87,8 @@ public class ShuffleboardTabs {
         driverTab = Shuffleboard.getTab("Driver Tab");
         drivetrainTab = Shuffleboard.getTab("Drivetrain Tab");
         intakeTab = Shuffleboard.getTab("Intake Tab");
+        shooterTab = Shuffleboard.getTab("Shooter Tab");
+        visionTab = Shuffleboard.getTab("vision");
         
         poseEstimatorTab = Shuffleboard.getTab("Pose Estimator Tab");
 
@@ -115,14 +118,15 @@ public class ShuffleboardTabs {
         poseEstimatorX = poseEstimatorTab.add("Pose Estimator X", 0.0).getEntry();
         poseEstimatorY = poseEstimatorTab.add("Pose Estimator Y", 0.0).getEntry();
         poseEstimatorAngle = poseEstimatorTab.add("Pose Estimator Angle",0.0).getEntry();
+        poseEstimatorRadians = poseEstimatorTab.add("Pose Estimator Radians",0.0).getEntry();
 
         shooterLeftCurrent = shooterTab.add("Shooter Left Current", 0.0).getEntry();
         shooterRightCurrent = shooterTab.add("Shooter Right Current", 0.0).getEntry();
 
-        hasCalibrationFront = visionTab.add("Front Camera Calibrated?", false).getEntry();
-        hasCalibrationBack = visionTab.add("Back Camera Calibrated?", false).getEntry();
-        hasTag = visionTab.add("Tag in sight?", false).getEntry();
-        tagInSight = visionTab.add("Tag ID (currently in sight)", -1).getEntry();
+        // hasCalibrationFront = visionTab.add("Front Camera Calibrated?", false).getEntry();
+        // hasCalibrationBack = visionTab.add("Back Camera Calibrated?", false).getEntry();
+        // hasTag = visionTab.add("Tag in sight?", false).getEntry();
+        // tagInSight = visionTab.add("Tag ID (currently in sight)", -1).getEntry();
 
         
     }
@@ -152,14 +156,15 @@ public class ShuffleboardTabs {
         poseEstimatorX.setDouble(poseEstimatorSubsystem.getCurrentPose().getX());
         poseEstimatorY.setDouble(poseEstimatorSubsystem.getCurrentPose().getY());
         poseEstimatorAngle.setDouble(poseEstimatorSubsystem.getCurrentPose().getRotation().getDegrees());
+        poseEstimatorRadians.setDouble(poseEstimatorSubsystem.getCurrentPose().getRotation().getRadians());
 
         shooterLeftCurrent.setDouble(shooterSubsystem.getCurrent());
         shooterRightCurrent.setDouble(shooterSubsystem.getCurrent());
 
-        hasCalibrationFront.setBoolean(visionSubsystem.hasCalibrationFront());
-        hasCalibrationBack.setBoolean(visionSubsystem.hasCalibrationBack());
-        hasTag.setBoolean(visionSubsystem.hasTag());
-        tagInSight.setInteger(visionSubsystem.getTagID());
+        // hasCalibrationFront.setBoolean(visionSubsystem.hasCalibrationFront());
+        // hasCalibrationBack.setBoolean(visionSubsystem.hasCalibrationBack());
+        // hasTag.setBoolean(visionSubsystem.hasTag());
+        // tagInSight.setInteger(visionSubsystem.getTagID());
 
 
 
@@ -173,5 +178,9 @@ public class ShuffleboardTabs {
 
 
 
+
+
 }
+
+
 

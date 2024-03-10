@@ -202,8 +202,8 @@ public final class Constants {
   public static class IntakeConstants{
     public static final int pivotID = 9;
     public static final int rollerID = 10;
-    public static final double intakeUpSpeed = 0.5;
-    public static final double intakeDownSpeed = -0.5;
+    public static final double intakeUpSpeed = 0.7;
+    public static final double intakeDownSpeed = -0.7;
     public static final double rollerSpeedIntake = 0.5;
     public static double rollerSpeedOuttake = 0.4;
     public static final int IRport = 0;
@@ -216,8 +216,8 @@ public final class Constants {
 
     public static final int shooterLeftID = 11;
     public static final int shooterRightID = 12;
-    public static double shooterLeftSpeedSpeaker = -.65;
-    public static double shooterRightSpeedSpeaker = .70; //0.9
+    public static double shooterLeftSpeedSpeaker = -.3;
+    public static double shooterRightSpeedSpeaker = .35; //0.9
     public static double shooterLeftSpeedAmp = -0.3;
     public static double shooterRightSpeedAmp = 0.3;
   }
