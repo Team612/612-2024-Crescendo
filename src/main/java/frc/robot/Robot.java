@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -44,6 +45,12 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    if (!Preferences.containsKey(Constants.ShooterConstants.leftSpeedKey)){
+      Preferences.setDouble(Constants.ShooterConstants.leftSpeedKey, Constants.ShooterConstants.shooterLeftSpeedSpeaker);
+    }
+      if (!Preferences.containsKey(Constants.ShooterConstants.rightSpeedKey)){
+      Preferences.setDouble(Constants.ShooterConstants.rightSpeedKey, Constants.ShooterConstants.shooterRightSpeedSpeaker);
+    }
   }
 
   /**

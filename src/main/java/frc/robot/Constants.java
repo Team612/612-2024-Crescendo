@@ -56,7 +56,7 @@ public final class Constants {
 
     /* Swerve Current Limiting */
     public static final int angleContinuousCurrentLimit = 35;
-    public static final int angleCurrentThreshold = 60;
+    public static final int angleCurrentThreshold = 40;
     public static final double angleCurrentThresholdTime = 0.1;
      public static final boolean angleEnableCurrentLimit = true;
 
@@ -98,6 +98,9 @@ public final class Constants {
     public static final double maxAngularVelocity = 11.5;
     public static final double maxAcceleration = 1;
     public static final double maxAngularAcceleration = Math.PI;
+
+    public static final double openLoopRamp = 0.25;
+    public static final double closedLoopRamp = 0.0;
 
      /* Neutral Modes */
     public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Brake;
@@ -143,7 +146,7 @@ public final class Constants {
       public static final int driveMotorID = 4;
       public static final int angleMotorID = 5;
       public static final int canCoderID = 2;
-      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(282 + 45);
+      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(324); //282
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, desiredAngle);
     }
@@ -153,7 +156,7 @@ public final class Constants {
       public static final int driveMotorID = 6;
       public static final int angleMotorID = 7;
       public static final int canCoderID = 3;
-      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(347 - 45);
+      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(298);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, desiredAngle);
     }
@@ -202,18 +205,21 @@ public final class Constants {
     public static final double intakeUpSpeed = 0.5;
     public static final double intakeDownSpeed = -0.5;
     public static final double rollerSpeedIntake = 0.5;
-    public static final double rollerSpeedOuttake = 0.9;
+    public static double rollerSpeedOuttake = 0.4;
     public static final int IRport = 0;
   }
 
   // Shooter constants
   public static class ShooterConstants{
+    public static final String leftSpeedKey = "Left Speed";
+    public static final String rightSpeedKey = "Right Speed";
+
     public static final int shooterLeftID = 11;
     public static final int shooterRightID = 12;
-    public static final double shooterLeftSpeedSpeaker = -0.25;
+    public static final double shooterLeftSpeedSpeaker = -0.35;
     public static final double shooterRightSpeedSpeaker = 0.3; //0.9
-    public static final double shooterLeftSpeedAmp = -0.3;
-    public static final double shooterRightSpeedAmp = 0.3;
+    public static double shooterLeftSpeedAmp = -0.3;
+    public static double shooterRightSpeedAmp = 0.3;
   }
 
   public static class ClimbConstants {

@@ -89,6 +89,7 @@ public class PoseEstimator extends SubsystemBase {
      poseEstimator.update().ifPresent(estimatedRobotPose -> {
       System.out.println(1);
       var estimatedPose = estimatedRobotPose.estimatedPose;
+      System.out.println(estimatedRobotPose.targetsUsed.size());
 
       // m_DrivePoseEstimator.addVisionMeasurement(estimatedPose.toPose2d(), FIELD_LENGTH_METERS);
      
@@ -161,6 +162,7 @@ public class PoseEstimator extends SubsystemBase {
     SmartDashboard.putNumber("PoseEstimator X", getCurrentPose().getX());
      SmartDashboard.putNumber("PoseEstimator Y", getCurrentPose().getY());
      SmartDashboard.putNumber("PoseEstimator Angle", getCurrentPose().getRotation().getDegrees());
+    SmartDashboard.putNumber("PoseEstimator Radians", getCurrentPose().getRotation().getRadians());
   }
 
 

@@ -1,4 +1,5 @@
 package frc.robot;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -9,6 +10,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DutyCycle;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.subsystems.SwerveLib.OnboardModuleState;
@@ -25,6 +27,7 @@ public class SwerveModule {
 
   private final VelocityVoltage driveVelocity = new VelocityVoltage(0);
   private final PositionVoltage anglePosition = new PositionVoltage(0);
+  private final DutyCycleOut driveDutyCycle = new DutyCycleOut(0);
 
 
   private final PIDController regController = 
@@ -108,8 +111,10 @@ public class SwerveModule {
   /* Sets the speed of the swerve module. If it's openLoop, then it takes in a percentage, otherwise, it calculates and runs a PID */
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
     if (isOpenLoop) {
-      double percentOutput = desiredState.speedMetersPerSecond / Constants.SwerveConstants.maxSpeed;
-      driveMotor.set(percentOutput);
+      driveDutyCycle.Output = desiredState.speedMetersPerSecond / Constants.SwerveConstants.maxSpeed;
+      driveMotor.setControl(driveDutyCycle);
+      //double percentOutput = desiredState.speedMetersPerSecond / Constants.SwerveConstants.maxSpeed;
+      //driveMotor.set(percentOutput);
     } else {
       //creating a feedforwad with a desired velocity
       driveVelocity.Velocity = Conversions.MPSToRPS(desiredState.speedMetersPerSecond, Constants.SwerveConstants.wheelCircumference);
@@ -153,7 +158,7 @@ public class SwerveModule {
 
   public SwerveModuleState getState() {
     return new SwerveModuleState(
-      Conversions.RPSToMPS(driveMotor.getVelocity().getValueAsDouble(), Constants.SwerveConstants.wheelCircumference), getAngle());
+      Conversions.RPSToMPS(driveMotor.getVelocity().getValueAsDouble(), Constants.SwerveConstants.wheelCircumference), Rotation2d.fromRotations(angleMotor.getPosition().getValueAsDouble()));
   }
 
   /** Returns the drive velocity in radians/sec. */

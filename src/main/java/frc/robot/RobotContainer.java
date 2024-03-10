@@ -154,8 +154,8 @@ public class RobotContainer {
     ControlMap.m_gunnerController.b().whileTrue(m_intakeUp);
     ControlMap.m_gunnerController.leftBumper().whileTrue(m_moveRollersOut);
     ControlMap.m_gunnerController.rightBumper().whileTrue(m_moveRollersIn);
-    ControlMap.m_gunnerController.leftTrigger().whileTrue(m_shootAmp);
-    ControlMap.m_gunnerController.rightTrigger().whileTrue(m_shootSpeaker);
+    ControlMap.m_gunnerController.leftTrigger().onTrue(m_autoShootSpeaker);
+    ControlMap.m_gunnerController.rightTrigger().toggleOnTrue(m_shootSpeaker);
     ControlMap.m_gunnerController.y().whileTrue(m_climbDown);
     ControlMap.m_gunnerController.x().whileTrue(m_climbUp);
 
