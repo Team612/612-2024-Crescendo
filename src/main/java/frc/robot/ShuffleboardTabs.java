@@ -88,7 +88,7 @@ public class ShuffleboardTabs {
         drivetrainTab = Shuffleboard.getTab("Drivetrain Tab");
         intakeTab = Shuffleboard.getTab("Intake Tab");
         shooterTab = Shuffleboard.getTab("Shooter Tab");
-        visionTab = Shuffleboard.getTab("vision");
+        visionTab = Shuffleboard.getTab("Vision Tab");
         
         poseEstimatorTab = Shuffleboard.getTab("Pose Estimator Tab");
 

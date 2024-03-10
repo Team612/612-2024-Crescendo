@@ -29,7 +29,6 @@ public class Robot extends TimedRobot {
 
   private void checkDSUpdate() {
     Alliance currentAlliance = DriverStation.getAlliance().orElse(Alliance.Blue);
-    shuffleboard_tabs = new ShuffleboardTabs();
     // If we have data, and have a new alliance from last time
     if (DriverStation.isDSAttached() && currentAlliance != Alliance.Blue) {
       initAllianceColor = currentAlliance;
@@ -45,10 +44,11 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     checkDSUpdate();
     ctreConfigs = new CTREConfigs();
-    shuffleboard_tabs.initButton();
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    shuffleboard_tabs = new ShuffleboardTabs();
+    shuffleboard_tabs.initButton();
     if (!Preferences.containsKey(Constants.ShooterConstants.leftSpeedKey)){
       Preferences.setDouble(Constants.ShooterConstants.leftSpeedKey, Constants.ShooterConstants.shooterLeftSpeedSpeaker);
     }
