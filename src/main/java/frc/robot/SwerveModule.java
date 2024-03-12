@@ -91,6 +91,7 @@ public class SwerveModule {
   /* Settings for Angle Motor */
   private void configAngleMotor() {
     angleMotor.getConfigurator().apply(Robot.ctreConfigs.swerveAngleFXConfig, 0.1);
+    anglePosition.Slot = 0;
     resetToAbsolute();
   }
 

@@ -42,6 +42,7 @@ public final class CTREConfigs {
     /* Angle Configs */
     swerveAngleFXConfig.MotorOutput.Inverted = Constants.SwerveConstants.angleInvert;
     swerveAngleFXConfig.MotorOutput.NeutralMode = Constants.SwerveConstants.angleNeutralMode;
+    
 
     /* Gear Ratio and Wrapping Config */
     swerveAngleFXConfig.Feedback.SensorToMechanismRatio = Constants.SwerveConstants.angleGearRatio;
@@ -49,9 +50,13 @@ public final class CTREConfigs {
     
     /* Current Limiting */
     swerveAngleFXConfig.CurrentLimits.SupplyCurrentLimitEnable = Constants.SwerveConstants.angleEnableCurrentLimit;
+    //swerveAngleFXConfig.CurrentLimits.StatorCurrentLimit = 0;
     swerveAngleFXConfig.CurrentLimits.SupplyCurrentLimit = Constants.SwerveConstants.angleContinuousCurrentLimit;
     swerveAngleFXConfig.CurrentLimits.SupplyCurrentThreshold = Constants.SwerveConstants.angleCurrentThreshold;
     swerveAngleFXConfig.CurrentLimits.SupplyTimeThreshold = Constants.SwerveConstants.angleCurrentThresholdTime;
+    //swerveAngleFXConfig.MotorOutput.DutyCycleNeutralDeadband
+    //swerveAngleFXConfig.TorqueCurrent.TorqueNeutralDeadband = 0.05
+    // swerveAngleFXConfig.Voltage.SupplyVoltageTimeConstant
 
     /* PID Config */
     swerveAngleFXConfig.Slot0.kP = Constants.SwerveConstants.angleKP;
