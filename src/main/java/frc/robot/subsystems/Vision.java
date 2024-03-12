@@ -294,6 +294,9 @@ public class Vision extends SubsystemBase {
     if (cameraApriltag.getDistCoeffs().equals(Optional.empty())){
       System.out.println("NO CALIBRATION");
     }
+    if(hasTarget()) {
+      SmartDashboard.putNumber("note angle", getTargetYaw());
+    }
     // if (hasTarget() && cameraObject.getLatestResult().getBestTarget().getFiducialId() == -1){
     //   SmartDashboard.putNumber("note x", getNoteSpace().getX());
     //   SmartDashboard.putNumber("note y", getNoteSpace().getY());

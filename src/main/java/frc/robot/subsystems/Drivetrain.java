@@ -34,7 +34,7 @@ public class Drivetrain extends SubsystemBase {
   private static Drivetrain drivetrain = null;
 
   private SwerveModule[] mSwerveMods;
-
+  
   private static AHRS navx;
   private Rotation2d navxAngleOffset;
 
@@ -134,10 +134,8 @@ public class Drivetrain extends SubsystemBase {
   public double getEncoderMeters() {
     double sum = 0.0;
     SwerveModulePosition[] positions = getPositions();
-    for (SwerveModulePosition pos : positions) {
-      sum += pos.distanceMeters;
-    }
-    return sum / 4.0;
+    sum += positions[0].distanceMeters;
+    return sum;
   }
 
   public ChassisSpeeds getChassisSpeeds() {

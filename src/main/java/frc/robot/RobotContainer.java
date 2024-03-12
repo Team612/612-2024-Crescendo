@@ -81,6 +81,11 @@ public class RobotContainer {
 
   private final PathfindToSpeaker m_pathfindToSpeaker = new PathfindToSpeaker(m_drivetrain, m_poseEstimator, m_vision);
 
+  private final Command m_autoalign = new SequentialCommandGroup(
+    m_turnPID
+    .andThen(m_justMove)
+  );
+
   public RobotContainer() {
     // Configure the trigger bindings
     configureButtonBindings();
@@ -93,7 +98,7 @@ public class RobotContainer {
     m_chooser.addOption("Test Path", m_trajectoryConfig.followPathGui("Double Path"));
     m_chooser.addOption("Move to Note", m_moveToNote);
     m_chooser.addOption("Pathfind to Speaker", m_pathfindToSpeaker);
-    m_chooser.addOption("Combined turn and go", m_turnPID);
+    m_chooser.addOption("Combined turn and go", m_autoalign);
     m_chooser.addOption("just turn", m_justTurn);
     m_chooser.addOption("just move", m_justMove);
     m_chooser.addOption("Turn move note", m_turnNote);

@@ -119,6 +119,7 @@ public class SwerveModule {
     driveMotor.setSmartCurrentLimit(Constants.Swerve.driveContinuousCurrentLimit);
     driveMotor.setInverted(Constants.Swerve.driveInvert);
     driveMotor.setIdleMode(Constants.Swerve.driveNeutralMode);
+    driveMotor.setOpenLoopRampRate(0.25);
     driveEncoder.setVelocityConversionFactor(Constants.Swerve.driveConversionVelocityFactor);
     driveEncoder.setPositionConversionFactor(Constants.Swerve.driveConversionPositionFactor);
     driveController.setP(Constants.Swerve.angleKP);

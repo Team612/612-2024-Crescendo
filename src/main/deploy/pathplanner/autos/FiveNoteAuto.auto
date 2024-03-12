@@ -1,0 +1,309 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.1,
+      "y": 5.55
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "ShootFirstNote"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpeedUpSpeaker"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "RollerOuttake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpeedUpSpeaker"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "ToSecondNote"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpeedUpSpeaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RollerIntake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "ShootSecondNote"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpeedUpSpeaker"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpeedUpSpeaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RollerOuttake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "ToThirdNote"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RollerIntake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpeedUpSpeaker"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "ShootThirdNote"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpeedUpSpeaker"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpeedUpSpeaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RollerOuttake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "ToFourthNote"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RollerIntake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpeedUpSpeaker"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "ShootFourthNote"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpeedUpSpeaker"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpeedUpSpeaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RollerOuttake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "ToFifthNote"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RollerIntake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpeedUpSpeaker"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "ShootFifthNote"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpeedUpSpeaker"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpeedUpSpeaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RollerOuttake"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
