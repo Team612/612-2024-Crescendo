@@ -5,6 +5,7 @@
 package frc.robot;
 import javax.swing.SpinnerDateModel;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -91,6 +92,10 @@ public class RobotContainer {
   //Drive subsystems declarations 
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
+  private final int translationAxis = XboxController.Axis.kLeftY.value;
+  private final int strafeAxis = XboxController.Axis.kLeftX.value;
+  private final int rotationAxis = XboxController.Axis.kRightX.value;
+
   // Speaker auto command
   // private final Command scoreSpeaker = new SequentialCommandGroup(
   //   new ParallelCommandGroup(m_alignSpeaker).alongWith(m_speedUpSpeaker)
@@ -166,12 +171,20 @@ public class RobotContainer {
 
 
   private void configureDefaultCommands(){
+    // m_drivetrain.setDefaultCommand(
+    //     new FieldOrientedDrive(
+    //         m_drivetrain,
+    //         () -> -ControlMap.m_driverController.getLeftY(),
+    //         () -> -ControlMap.m_driverController.getLeftX(),
+    //         () -> -ControlMap.m_driverController.getRightX()));
     m_drivetrain.setDefaultCommand(
-        new FieldOrientedDrive(
-            m_drivetrain,
-            () -> -ControlMap.m_driverController.getLeftY(),
-            () -> -ControlMap.m_driverController.getLeftX(),
-            () -> -ControlMap.m_driverController.getRightX()));
+            new FieldOrientedDrive(
+                m_drivetrain, 
+                () -> -ControlMap.m_driverController.getRawAxis(translationAxis), 
+                () -> -ControlMap.m_driverController.getRawAxis(strafeAxis), 
+                () -> -ControlMap.m_driverController.getRawAxis(rotationAxis)
+            )
+        );
   }
   
   public Command getAutonomousCommand() {

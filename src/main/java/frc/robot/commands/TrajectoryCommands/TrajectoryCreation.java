@@ -21,10 +21,10 @@ import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.Vision;
 
 public class TrajectoryCreation {
-    private PathConstraints constraints = new PathConstraints(Constants.SwerveConstants.maxSpeed,
-     Constants.SwerveConstants.maxAcceleration,
-      Constants.SwerveConstants.maxAngularVelocity,
-       Constants.SwerveConstants.maxAngularAcceleration);
+    private PathConstraints constraints = new PathConstraints(Constants.Swerve.maxSpeed,
+     Constants.Swerve.maxAcceleration,
+      Constants.Swerve.maxAngularVelocity,
+       Constants.Swerve.maxAngularAcceleration);
 
     public PathPlannerPath StrafeRightMeter(PoseEstimator estimation){ 
         Pose2d estimatedPose = estimation.getCurrentPose();
@@ -145,7 +145,7 @@ public class TrajectoryCreation {
             xChange = -1;
         }
 
-        double offset = Constants.SwerveConstants.trackWidth / 2;
+        double offset = Constants.Swerve.trackWidth / 2;
 
         List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
                 new Pose2d(x, y, angle),
@@ -186,7 +186,7 @@ public class TrajectoryCreation {
             tagAngle = new Rotation2d(90);
         }
 
-        double offset = Constants.SwerveConstants.trackWidth / 2;
+        double offset = Constants.Swerve.trackWidth / 2;
 
         List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
                 new Pose2d(x, y, angle),
@@ -284,7 +284,7 @@ public class TrajectoryCreation {
             id = -1;
         }
 
-        double offset = Constants.SwerveConstants.trackWidth / 2;
+        double offset = Constants.Swerve.trackWidth / 2;
         
         if(id == 1 || id == 2 || id == 15) {
             List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(

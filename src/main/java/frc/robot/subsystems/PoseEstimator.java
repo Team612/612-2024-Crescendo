@@ -61,7 +61,7 @@ public class PoseEstimator extends SubsystemBase {
 
 
     m_DrivePoseEstimator = new SwerveDrivePoseEstimator(
-      Constants.SwerveConstants.swerveKinematics, 
+      Constants.Swerve.swerveKinematics, 
       m_drivetrain.getNavxAngle(), 
       m_drivetrain.getPositions(), 
       new Pose2d(),

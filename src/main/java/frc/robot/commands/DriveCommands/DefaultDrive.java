@@ -36,18 +36,18 @@ public class DefaultDrive extends Command {
     /* Get Values, Deadband*/
     double translationVal =
         translationLimiter.calculate(
-            MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.SwerveConstants.stickDeadband));
+            MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.Swerve.stickDeadband));
     double strafeVal =
         strafeLimiter.calculate(
-            MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.SwerveConstants.stickDeadband));
+            MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Swerve.stickDeadband));
     double rotationVal =
         rotationLimiter.calculate(
-            MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.SwerveConstants.stickDeadband));
+            MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.Swerve.stickDeadband));
 
     /* Drive */
     s_Swerve.driveRobotRelative(
-        new Translation2d(translationVal, strafeVal).times(Constants.SwerveConstants.maxSpeed),
-        rotationVal * Constants.SwerveConstants.maxAngularVelocity,
+        new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
+        rotationVal * Constants.Swerve.maxAngularVelocity,
         true);
   }
 }
