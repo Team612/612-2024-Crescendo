@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.DriveCommands.DefaultDrive;
 import frc.robot.commands.DriveCommands.FieldOrientedDrive;
 import frc.robot.commands.DriveCommands.LeaveZone;
+import frc.robot.commands.DriveCommands.TestStrafe;
 import frc.robot.commands.IntakeCommands.AutoIntake;
 import frc.robot.commands.IntakeCommands.IntakeDown;
 import frc.robot.commands.IntakeCommands.IntakeUp;
@@ -88,6 +89,7 @@ public class RobotContainer {
   private final AutoIntake autoIntake = new AutoIntake(m_drivetrain, m_vision, m_intake);
   private final ClimbUp m_climbUp = new ClimbUp(m_climb);
   private final CilmbDown m_climbDown = new CilmbDown(m_climb);
+  private final TestStrafe m_strafe = new TestStrafe(m_drivetrain);
 
   //Drive subsystems declarations 
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -136,6 +138,7 @@ public class RobotContainer {
     m_chooser.addOption("auto speaker", m_autoShootSpeaker);
     m_chooser.addOption("auto amp", m_autoShootAmp);
     m_chooser.addOption("align speaker", m_alignSpeaker);
+    m_chooser.addOption("Test Strafe", m_strafe);
     // m_chooser.addOption("Leave Starting Zone Subwoofer", m_trajectoryConfig.followPathGui("Leave Zone Subwoofer"));
     // m_chooser.addOption("Score and Leave", scoreAndLeave);
     m_chooser.addOption("Swerve Characterization", new FeedForwardCharacterization(
