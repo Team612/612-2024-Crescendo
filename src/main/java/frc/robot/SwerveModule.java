@@ -17,6 +17,9 @@ public class SwerveModule {
     public int moduleNumber;
     private Rotation2d angleOffset;
 
+    private double lastAngle = 0;
+    private double lastSpeed = 0;
+
     private TalonFX mAngleMotor;
     private TalonFX mDriveMotor;
     private CANcoder angleEncoder;
@@ -50,13 +53,19 @@ public class SwerveModule {
     }
 
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop){
+        int angle = (int) Math.abs(getState().angle.getDegrees())/180;
+        double normalizedAngle = Math.abs(getState().angle.getDegrees()) - 180 * angle;
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle); 
-        mAngleMotor.setControl(anglePosition.withPosition(desiredState.angle.getRotations()));
-        setSpeed(desiredState, isOpenLoop);
+            mAngleMotor.setControl(anglePosition.withPosition(desiredState.angle.getRotations()));
+      
+            setSpeed(desiredState, isOpenLoop);
     }
 
     private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop){
         if(isOpenLoop){
+            // if (desiredState.speedMetersPerSecond < 0.5 && desiredState.speedMetersPerSecond > 0.05){
+            //     desiredState.speedMetersPerSecond = 0.8;
+            // }
             driveDutyCycle.Output = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed;
             mDriveMotor.setControl(driveDutyCycle);
         }
@@ -97,8 +106,21 @@ public class SwerveModule {
     public void runCharacterization(double volts) {
       setDriveVoltage(volts);
     }
+
+    public double getModVoltageDrive(){
+        return mDriveMotor.getMotorVoltage().getValueAsDouble();
+    }
+
+    public double getModVoltageAngle(){
+        return mAngleMotor.getMotorVoltage().getValueAsDouble();
+    }
   
     public void setDriveVoltage(double volts) {
       mDriveMotor.setVoltage(volts);
+    }
+
+    public void stopMotor() {
+        mAngleMotor.setVoltage(0);
+        //mAngleMotor.stopMotor();
     }
 }

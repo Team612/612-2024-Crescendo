@@ -60,13 +60,18 @@ public final class Constants {
     /* Swerve Current Limiting */
     public static final int angleCurrentLimit = 25;
     public static final int angleCurrentThreshold = 40;
+    public static final int angleStatorLimit = 25;
     public static final double angleCurrentThresholdTime = 0.1;
     public static final boolean angleEnableCurrentLimit = true;
+    public static final boolean angleEnableStatorLimit = true;
 
     public static final int driveCurrentLimit = 35;
     public static final int driveCurrentThreshold = 60;
+    public static final int driveStatorLimit = 35;
     public static final double driveCurrentThresholdTime = 0.1;
     public static final boolean driveEnableCurrentLimit = true;
+    public static final boolean driveEnableStatorLimit = true;
+  
 
     /* These values are used by the drive falcon to ramp in open loop and closed loop driving.
      * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc */
@@ -118,7 +123,7 @@ public final class Constants {
         public static final int driveMotorID = 8;
         public static final int angleMotorID = 1; 
         public static final int canCoderID = 1;
-        public static final Rotation2d angleOffset = Rotation2d.fromDegrees(88); //-94.042969 //-2.988281 // 2.9
+        public static final Rotation2d angleOffset = Rotation2d.fromDegrees(88 + 180 ); //-94.042969 //-2.988281 // 2.9
         public static final SwerveModuleConstants constants = 
             new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
     }

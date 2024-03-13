@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import frc.robot.SwerveModule;
+import frc.robot.Controls.ControlMap;
 import frc.robot.Constants;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -21,6 +22,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -35,6 +37,8 @@ public class Drivetrain extends SubsystemBase {
     private boolean isCharacterizing = false;
   private double characterizationVolts = 0.0;
 
+  private StructArrayPublisher<SwerveModuleState> publisher;
+
     static Drivetrain drivetrain;
 
     public Drivetrain() {
@@ -47,6 +51,9 @@ public class Drivetrain extends SubsystemBase {
             new SwerveModule(2, Constants.Swerve.Mod2.constants), // back left
             new SwerveModule(3, Constants.Swerve.Mod3.constants)  // back right
         };
+
+        publisher = NetworkTableInstance.getDefault()
+    .getStructArrayTopic("MyStates", SwerveModuleState.struct).publish();
     }
 
     public static Drivetrain getInstance(){
@@ -206,11 +213,25 @@ public class Drivetrain extends SubsystemBase {
     }
 
     @Override
-    public void periodic(){;
+    public void periodic(){
+      publisher.set(getStates());
         for(SwerveModule mod : mSwerveMods){
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
+            // SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
+            // SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
+            SmartDashboard.putNumber("Voltage Drive" + mod.moduleNumber, mod.getModVoltageDrive() );
+            SmartDashboard.putNumber("Voltage Angle" + mod.moduleNumber, mod.getModVoltageAngle() );
+
+        if(ControlMap.m_driverController.getLeftX() < Constants.Swerve.stickDeadband){
+        mod.stopMotor();
+      }
+      if(ControlMap.m_driverController.getLeftY() < Constants.Swerve.stickDeadband){
+         mod.stopMotor();
+      }
+
+        if(ControlMap.m_driverController.getRightX() < Constants.Swerve.stickDeadband){
+         mod.stopMotor();
+      }
         }
         if (isCharacterizing) {
           // Run in characterization mode
@@ -218,6 +239,7 @@ public class Drivetrain extends SubsystemBase {
             mod.runCharacterization(characterizationVolts);
           }
         }
+      
     }
 }
 
