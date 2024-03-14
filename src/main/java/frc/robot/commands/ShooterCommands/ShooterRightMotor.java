@@ -13,7 +13,7 @@ public class ShooterRightMotor extends Command {
   /** Creates a new ShooterRightMotor. */
   public ShooterRightMotor(Shooter shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_shooter = shooter; 
+    m_shooter = shooter;
     addRequirements(shooter);
   }
 
