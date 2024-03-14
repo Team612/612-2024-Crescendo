@@ -13,6 +13,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.SwerveLib.SwerveModule;
 
 /** Add your docs here. */
 public class ShuffleboardTabs {

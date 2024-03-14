@@ -7,6 +7,7 @@ package frc.robot;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -15,7 +16,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import frc.robot.subsystems.SwerveLib.COTSTalonFXSwerveConstants;
 import frc.robot.subsystems.SwerveLib.SwerveModuleConstants;
 
 /**
@@ -30,19 +30,14 @@ public final class Constants {
   public static final class SwerveConstants {
     public static final double stickDeadband = 0.1;
 
-    public static final COTSTalonFXSwerveConstants chosenModule =  
-    COTSTalonFXSwerveConstants.SDS.MK4i.KrakenX60(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L2);    
-  
-
     /* Drivetrain Constants */
-    public static final double trackWidth = Units.inchesToMeters(18.596);
-    public static final double wheelBase = Units.inchesToMeters(18.234);
+    public static final double trackWidth = Units.inchesToMeters(27);
+    public static final double wheelBase = Units.inchesToMeters(27);
     public static final double wheelDiameter = Units.inchesToMeters(4.0);
     public static final double wheelCircumference = wheelDiameter * Math.PI;
 
-    public static final double driveGearRatio = chosenModule.driveGearRatio; // 6.75:1
-    //NOTE: the angle gear ratio provided by the manufactor is different than the one we had down previously... might need to change it
-    public static final double angleGearRatio = chosenModule.angleGearRatio; // 12.8:1 (150.0 / 7.0);
+    public static final double driveGearRatio = (6.75 / 1.0); // 6.75:1
+    public static final double angleGearRatio = (150.0 / 7.0); // 12.8:1
 
     public static final SwerveDriveKinematics swerveKinematics =
         new SwerveDriveKinematics(
@@ -55,20 +50,13 @@ public final class Constants {
     public static final double voltageComp = 12.0;
 
     /* Swerve Current Limiting */
-    public static final int angleContinuousCurrentLimit = 35;
-    public static final int angleCurrentThreshold = 40;
-    public static final double angleCurrentThresholdTime = 0.1;
-     public static final boolean angleEnableCurrentLimit = true;
-
-    public static final int driveContinuousCurrentLimit = 35; //original threshold: 80
-    public static final int driveCurrentThreshold = 60;
-    public static final double driveCurrentThresholdTime = 0.1;
-    public static final boolean driveEnableCurrentLimit = true;
+    public static final int angleContinuousCurrentLimit = 20;
+    public static final int driveContinuousCurrentLimit = 80;
 
     /* Angle Motor PID Values */
-    public static final double angleKP = chosenModule.angleKP;
-    public static final double angleKI = chosenModule.angleKI;
-    public static final double angleKD = chosenModule.angleKD;
+    public static final double angleKP = 0.01;
+    public static final double angleKI = 0.0;
+    public static final double angleKD = 0.0;
     public static final double angleKFF = 0.0;
 
     /* Drive Motor PID Values */
@@ -78,8 +66,8 @@ public final class Constants {
     public static final double driveKFF = 0.0;
 
     /* Drive Motor Characterization Values */
-    public static final double driveKS = 0.17972;
-    public static final double driveKV = 7.50715; //2.74490
+    public static final double driveKS = 0.22005;
+    public static final double driveKV = 2.74490;
     public static final double driveKA = 0;
 
      //have to tune manually
@@ -95,23 +83,20 @@ public final class Constants {
 
     /* Swerve Profiling Values */
     public static final double maxSpeed = 4.5; // meters per second
-    public static final double maxAngularVelocity = 11.5;
+    public static final double maxAngularVelocity = Math.PI;
     public static final double maxAcceleration = 1;
-    public static final double maxAngularAcceleration = Math.PI;
+    public static final double maxAngularAcceleration = Math.PI/6;
 
-    public static final double openLoopRamp = 0.25;
-    public static final double closedLoopRamp = 0.0;
-
-     /* Neutral Modes */
-    public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Brake;
-    public static final NeutralModeValue driveNeutralMode = NeutralModeValue.Brake;
+    /* Neutral Modes */
+    public static final IdleMode angleNeutralMode = IdleMode.kBrake;
+    public static final IdleMode driveNeutralMode = IdleMode.kBrake;
 
     /* Motor Inverts */
-    public static final InvertedValue driveInvert = chosenModule.driveMotorInvert; //counterclockwise
-    public static final InvertedValue angleInvert = chosenModule.angleMotorInvert; //counterclockwise
+    public static final boolean driveInvert = false;
+    public static final boolean angleInvert = true;
 
     /* Angle Encoder Invert */
-    public static final SensorDirectionValue cancoderInvert = chosenModule.cancoderInvert; //counterclockwise
+    public static final boolean canCoderInvert = false;
 
     /* Module Specific Constants */
     /*
@@ -126,7 +111,7 @@ public final class Constants {
       public static final int driveMotorID = 2;
       public static final int angleMotorID = 3;
       public static final int canCoderID = 0;
-      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(143 - 45); //43
+      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(223); //43
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, desiredAngle);
     }
@@ -136,7 +121,7 @@ public final class Constants {
       public static final int driveMotorID = 8;
       public static final int angleMotorID = 1;
       public static final int canCoderID = 1;
-      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(84); //344
+      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(344); //344
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, desiredAngle);
     }
@@ -146,7 +131,7 @@ public final class Constants {
       public static final int driveMotorID = 4;
       public static final int angleMotorID = 5;
       public static final int canCoderID = 2;
-      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(324); //282
+      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(87);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, desiredAngle);
     }
@@ -156,16 +141,20 @@ public final class Constants {
       public static final int driveMotorID = 6;
       public static final int angleMotorID = 7;
       public static final int canCoderID = 3;
-      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(298);
+      public static final Rotation2d desiredAngle = Rotation2d.fromDegrees(73.5);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, desiredAngle);
     }
-
   }
-  
+
+  public static class OperatorConstants {
+    public static final int kDriverControllerPort = 0;
+    public static int kGunnerControllerPort = 1;
+  }
 
   public static class VisionConstants{
-    public static String cameraNameAprilTag = "Back";
+    public static String cameraNameAprilTagFront = "Front";
+    public static String cameraNameAprilTagBack = "Back";
     public static String cameraNameObject = "Front";
 
     //constraints
@@ -191,11 +180,6 @@ public final class Constants {
     public static final double GOAL_RANGE_METERS = 1;
     
     public static final Transform3d CAMERA_TO_Robot = new Transform3d();
-  }
-
-  public static class OperatorConstants {
-    public static final int kGunnerControllerPort = 1;
-    public static final int kDriverControllerPort = 0;
   }
   
   // Intake constants
