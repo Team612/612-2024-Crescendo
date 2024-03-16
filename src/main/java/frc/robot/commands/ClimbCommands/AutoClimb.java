@@ -25,10 +25,10 @@ public class AutoClimb extends Command {
     //Retract pivot arm to pull robot to the rung
     @Override
     public void execute(){
-            if (m_drivetrain.getRoll() > 10){
+            if (m_drivetrain.getRoll() > 10.0){
                 m_climb.setSpeed(1,0);
             }
-            else if (m_drivetrain.getRoll() < -10){
+            else if (m_drivetrain.getRoll() < -10.0){
                 m_climb.setSpeed(0,1);
             }
             else{
@@ -44,6 +44,6 @@ public class AutoClimb extends Command {
 
     @Override
     public boolean isFinished(){
-        return false;
+        return false; // don't know when isF
     }
 }
