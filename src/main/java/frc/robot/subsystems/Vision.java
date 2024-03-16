@@ -177,13 +177,11 @@ public class Vision extends SubsystemBase {
 
     aprilTagFieldLayout = new AprilTagFieldLayout(atList, 16.451 , 8.211 );
 
-    robotToCamAprilFront = new Transform3d(new Translation3d(0.17, 0.1, 0.25), new Rotation3d()); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
+    robotToCamAprilBack = new Transform3d(new Translation3d(0.0,0.07,0.787), new Rotation3d(0,Units.degreesToRadians(35),Math.PI));
 
-    robotToCamAprilBack = new Transform3d(new Translation3d(0.18,-0.1,0.36), new Rotation3d(0,0,Math.PI));
-
-    robotToCamObject = new Transform3d(new Translation3d(0.17,0.1,0.25), new Rotation3d()); //0.20,-0.04
+    robotToCamObject = new Transform3d(new Translation3d(0.0,-0.07,0.77), new Rotation3d(0, Units.degreesToRadians(-12), 0)); //0.20,-0.04
     
-    poseEstimatorFront = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, this.cameraApriltagFront, robotToCamAprilFront);
+    //poseEstimatorFront = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, this.cameraApriltagFront, robotToCamAprilFront);
     poseEstimatorBack = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, this.cameraApriltagBack, robotToCamAprilBack);
 
     driveSubsystem = Drivetrain.getInstance();
@@ -217,10 +215,7 @@ public class Vision extends SubsystemBase {
     return cameraApriltagBack; //BACK CAMERA
   }
 
-  public Transform3d getRobotToCam(int camID){
-    if (camID == 1){
-      return robotToCamObject;
-    }
+  public Transform3d getRobotToCam(){
     return robotToCamAprilBack;
   }
 

@@ -131,27 +131,26 @@ public class TrajectoryCreation {
         double tagX = 0;
         double tagY = 0;
         Rotation2d tagAngle = new Rotation2d();
-        double xChange = -Units.inchesToMeters(91);
+        double xChange = Units.inchesToMeters(52);
         double yChange = 0;
-       
-        if(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-            tagX = vision.return_tag_pose(7).getX() + Units.inchesToMeters(91);
-            tagY = vision.return_tag_pose(7).getY();; 
-            tagAngle = new Rotation2d(180);
-            xChange = 1;
-        } else {
-            tagX = vision.return_tag_pose(4).getX() - Units.inchesToMeters(91);
-            tagY = vision.return_tag_pose(4).getY();; 
-            tagAngle = new Rotation2d(0);
-            xChange = -1;
-        }
+        
+        tagX = vision.return_tag_pose(7).getX();
+        tagY = vision.return_tag_pose(7).getY();
+        tagAngle = new Rotation2d(0);
 
-        double offset = Constants.SwerveConstants.trackWidth / 2;
+        // double offset = Constants.SwerveConstants.trackWidth / 2;
+
+        // List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
+        //         new Pose2d(x, y, angle),
+        //         new Pose2d(tagX + xChange, tagY + yChange, tagAngle)
+        //     );
+
+        System.out.println(tagX + xChange);
 
         List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
-                new Pose2d(x, y, angle),
-                new Pose2d(tagX + xChange, tagY + yChange, tagAngle)
-            );
+            new Pose2d(x, y, angle),
+            new Pose2d(tagX + xChange, tagY, tagAngle)
+        );
 
         // Create the path using the bezier points created above
         PathPlannerPath path = new PathPlannerPath(
@@ -430,7 +429,7 @@ public class TrajectoryCreation {
         
         if (hasTargets){
             //get the current RELATIVE notespace
-            Transform3d notespace = vision.getNoteSpace().plus(vision.getRobotToCam(3));
+            Transform3d notespace = vision.getNoteSpace().plus(vision.getRobotToCam());
             Transform2d notespace2d = new Transform2d(new Translation2d(notespace.getX(), notespace.getY()), new Rotation2d());
             Pose2d camPose = estimatedPose.transformBy(notespace2d);
             // Transform2d notespace2d;

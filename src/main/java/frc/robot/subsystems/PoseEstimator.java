@@ -120,8 +120,9 @@ arrayPublisher = NetworkTableInstance.getDefault()
             Transform3d bestTarget = target.getBestCameraToTarget();
             Pose3d camPose;
             //Adding vision measurements from the center of the robot to the apriltag. Back camera should already be inverted
-            camPose = targetPose.transformBy(bestTarget.inverse().plus(visionSubsystem.getRobotToCam(camID)));  //.plus(new Transform3d(robotToCam, new Rotation3d(0,0,0))); 
-            
+            // camPose = targetPose.transformBy(bestTarget.inverse().plus(visionSubsystem.getRobotToCam().inverse()));  //.plus(new Transform3d(robotToCam, new Rotation3d(0,0,0))); 
+            camPose = targetPose.transformBy(bestTarget.inverse().plus(new Transform3d(new Translation3d(0.0,0.0,0.0), new Rotation3d(0,Units.degreesToRadians(35),Math.PI))));  //.plus(new Transform3d(robotToCam, new Rotation3d(0,0,0))); 
+
           //checking the tags ambiguity. The lower the ambiguity, the more accurate the pose is
             if (target.getPoseAmbiguity() <= .2) {
               previousPipelineTimestamp = estimatedRobotPose.timestampSeconds;
@@ -152,9 +153,9 @@ arrayPublisher = NetworkTableInstance.getDefault()
 
 
     //update each individual pose estimator
-    if (photonPoseEstimatorFront != null){
-      updateEachPoseEstimator(photonPoseEstimatorFront, 1);
-    } 
+    // if (photonPoseEstimatorFront != null){
+    //   updateEachPoseEstimator(photonPoseEstimatorFront, 1);
+    // } 
     if(photonPoseEstimatorBack != null){
       updateEachPoseEstimator(photonPoseEstimatorBack, 2);
     }

@@ -44,7 +44,7 @@ public class AutoShootSpeaker extends Command {
     //   time.start();
     // }
     // if(m_shooter.getCurrent() < 16 && spikeDone) {
-      if(time.get() >= 2) {
+      if(time.get() >= 5) {
         m_shooter.shoot(Constants.ShooterConstants.shooterLeftSpeedSpeaker, Constants.ShooterConstants.shooterRightSpeedSpeaker);
         m_intake.moveRollers(Constants.IntakeConstants.rollerSpeedOuttake);
       } else {
@@ -68,6 +68,6 @@ public class AutoShootSpeaker extends Command {
   @Override
   public boolean isFinished() {
     // return count >= 10;
-    return time.get() >= 3;
+    return time.get() >= 7;
   }
 }

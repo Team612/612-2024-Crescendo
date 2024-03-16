@@ -30,7 +30,7 @@ public class LeaveZone extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drivetrain.driveRobotRelative(new Translation2d(0.5, 0), 0, true);
+    m_drivetrain.driveRobotRelative(new Translation2d(1, 0), 0, true);
   }
 
   // Called once the command ends or is interrupted.

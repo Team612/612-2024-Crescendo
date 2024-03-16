@@ -9,6 +9,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -23,6 +24,7 @@ public class ShuffleboardTabs {
     private ShuffleboardTab poseEstimatorTab;
     private ShuffleboardTab shooterTab;
     private ShuffleboardTab visionTab;
+    private ShuffleboardTab climbTab;
 
     /* Driver Entries */
 
@@ -62,13 +64,17 @@ public class ShuffleboardTabs {
     private GenericEntry hasTag;
     private GenericEntry tagInSight;
     
-    
+    private GenericEntry limitLeftClimbUp;
+    private GenericEntry limitLeftClimbDown;
+    private GenericEntry limitRightClimbUp;
+    private GenericEntry limitRightClimbDown;
 
     /* Subsystems */
     private Drivetrain driveSubsystem;
     private Intake intakeSubsystem;
     private Shooter shooterSubsystem;
     private Vision visionSubsystem;
+    private Climb climbSubsystem;
     private frc.robot.subsystems.PoseEstimator poseEstimatorSubsystem;
     private SwerveModuleState[] states;
     private SwerveModule[] mods;
@@ -80,6 +86,7 @@ public class ShuffleboardTabs {
         intakeSubsystem = Intake.getInstance();
         shooterSubsystem = Shooter.getInstance();
         visionSubsystem = Vision.getVisionInstance();
+        climbSubsystem = Climb.getInstance();
         poseEstimatorSubsystem = frc.robot.subsystems.PoseEstimator.getPoseEstimatorInstance();
         states = driveSubsystem.getStates();
         mods = driveSubsystem.getModules();
@@ -90,6 +97,7 @@ public class ShuffleboardTabs {
         intakeTab = Shuffleboard.getTab("Intake Tab");
         shooterTab = Shuffleboard.getTab("Shooter Tab");
         visionTab = Shuffleboard.getTab("Vision Tab");
+        climbTab = Shuffleboard.getTab("Climb Tab");
         
         poseEstimatorTab = Shuffleboard.getTab("Pose Estimator Tab");
 
@@ -123,6 +131,13 @@ public class ShuffleboardTabs {
 
         shooterLeftCurrent = shooterTab.add("Shooter Left Current", 0.0).getEntry();
         shooterRightCurrent = shooterTab.add("Shooter Right Current", 0.0).getEntry();
+
+        limitLeftClimbUp = climbTab.add("Climb Left Up", false).getEntry();
+        limitLeftClimbDown = climbTab.add("Climb Left Down", false).getEntry();
+
+        limitRightClimbUp = climbTab.add("Climb Right Up", false).getEntry();
+        limitRightClimbDown = climbTab.add("Climb Right Down", false).getEntry();
+
 
         // hasCalibrationFront = visionTab.add("Front Camera Calibrated?", false).getEntry();
         // hasCalibrationBack = visionTab.add("Back Camera Calibrated?", false).getEntry();
@@ -167,12 +182,10 @@ public class ShuffleboardTabs {
         // hasTag.setBoolean(visionSubsystem.hasTag());
         // tagInSight.setInteger(visionSubsystem.getTagID());
 
-
-
-
-        
-
-        
+        limitLeftClimbUp.setBoolean(climbSubsystem.getLeftLimitStateUp());
+        limitLeftClimbDown.setBoolean(climbSubsystem.getLeftLimitStateDown());
+        limitRightClimbUp.setBoolean(climbSubsystem.getRightLimitStateUp());
+        limitRightClimbDown.setBoolean(climbSubsystem.getRightLimitStateUp());
     }
 
 

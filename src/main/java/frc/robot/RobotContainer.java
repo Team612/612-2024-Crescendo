@@ -37,8 +37,7 @@ import frc.robot.Controls.ControlMap;
 import frc.robot.commands.CharacterizationCommands.FeedForwardCharacterization;
 import frc.robot.commands.CharacterizationCommands.forwardMeter;
 import frc.robot.commands.CharacterizationCommands.FeedForwardCharacterization.FeedForwardCharacterizationData;
-import frc.robot.commands.ClimbCommands.CilmbDown;
-import frc.robot.commands.ClimbCommands.ClimbUp;
+import frc.robot.commands.ClimbCommands.ClimbTeleop;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
@@ -87,11 +86,13 @@ public class RobotContainer {
   private final SpeedUpSpeaker m_speedUpSpeaker = new SpeedUpSpeaker(m_shooter);
   private final SpeedUpAmp m_speedUpAmp = new SpeedUpAmp(m_shooter);
   private final AutoIntake autoIntake = new AutoIntake(m_drivetrain, m_vision, m_intake);
-  private final ClimbUp m_climbUp = new ClimbUp(m_climb);
-  private final CilmbDown m_climbDown = new CilmbDown(m_climb);
+  private final ClimbTeleop m_climbUp = new ClimbTeleop(m_climb);
 
   //Drive subsystems declarations 
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
+
+  private final Command parallelLeaveIntake = new ParallelCommandGroup(m_leaveZone, m_intakeDown);
+  private final Command scoreSpeaker = new SequentialCommandGroup(m_autoShootSpeaker, parallelLeaveIntake);
 
   // Speaker auto command
   // private final Command scoreSpeaker = new SequentialCommandGroup(
@@ -128,7 +129,7 @@ public class RobotContainer {
     m_chooser.addOption("Move to Note", m_moveToNote);
     m_chooser.addOption("Leave Zone", m_leaveZone);
     m_chooser.addOption("forward Meter", m_forwardMeter);
-    //m_chooser.addOption("Score Speaker", scoreSpeaker);
+    m_chooser.addOption("Score Speaker", scoreSpeaker);
     //m_chooser.addOption("Score Amp", scoreAmp);
     //m_chooser.addOption("Auto Intake", autoIntake);
     m_chooser.addOption("auto speaker", m_autoShootSpeaker);
@@ -155,12 +156,10 @@ public class RobotContainer {
     // Gunner button bindings
     ControlMap.m_gunnerController.a().whileTrue(m_intakeDown);
     ControlMap.m_gunnerController.b().whileTrue(m_intakeUp);
-    ControlMap.m_gunnerController.leftBumper().whileTrue(m_moveRollersOut);
-    ControlMap.m_gunnerController.rightBumper().whileTrue(m_moveRollersIn);
+    ControlMap.m_gunnerController.y().whileTrue(m_moveRollersOut);
+    ControlMap.m_gunnerController.x().whileTrue(m_moveRollersIn);
     ControlMap.m_gunnerController.leftTrigger().whileTrue(m_shootAmp);
     ControlMap.m_gunnerController.rightTrigger().toggleOnTrue((m_shootSpeaker));
-    ControlMap.m_gunnerController.y().whileTrue(m_climbDown);
-    ControlMap.m_gunnerController.x().whileTrue(m_climbUp);
 
     // // FOR TESTING, REMOVE FOR COMP
     // ControlMap.m_gunnerController.leftBumper().whileTrue(m_shootLeftMotor);
@@ -175,6 +174,9 @@ public class RobotContainer {
             () -> -ControlMap.m_driverController.getLeftY(),
             () -> -ControlMap.m_driverController.getLeftX(),
             () -> -ControlMap.m_driverController.getRightX()));
+    m_climb.setDefaultCommand(
+      new ClimbTeleop(m_climb)
+    );
   }
   
   public Command getAutonomousCommand() {

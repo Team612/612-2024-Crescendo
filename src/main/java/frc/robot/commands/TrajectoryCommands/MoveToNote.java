@@ -32,7 +32,7 @@ public class MoveToNote extends Command {
     initialAngle = m_drivetrain.getNavxAngle().getDegrees();
     initialPos = m_drivetrain.getEncoderMeters();
     if(m_vision.hasTarget()) {
-      goalAngle = -m_vision.getTargetYaw() + 6;
+      goalAngle = -m_vision.getTargetYaw();
       goalPos = m_vision.getNoteRange() - 0.5; //1 m in front of note
     }
     m_drivetrain.drive(new Translation2d(), 0, true);
