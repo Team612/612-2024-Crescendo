@@ -35,6 +35,7 @@ import frc.robot.commands.TrajectoryCommands.RunOnTheFly;
 import frc.robot.commands.TrajectoryCommands.TrajectoryCreation;
 import frc.robot.Controls.ControlMap;
 import frc.robot.commands.CharacterizationCommands.FeedForwardCharacterization;
+import frc.robot.commands.CharacterizationCommands.forwardMeter;
 import frc.robot.commands.CharacterizationCommands.FeedForwardCharacterization.FeedForwardCharacterizationData;
 import frc.robot.commands.ClimbCommands.CilmbDown;
 import frc.robot.commands.ClimbCommands.ClimbUp;
@@ -64,6 +65,7 @@ public class RobotContainer {
   private final AlignSpeaker m_alignSpeaker = new AlignSpeaker(m_poseEstimator, m_traj, m_vision);
   private final MoveToNote m_justMove = new MoveToNote(m_drivetrain, m_vision);
   private final LeaveZone m_leaveZone = new LeaveZone(m_drivetrain);
+  private final forwardMeter m_forwardMeter = new forwardMeter(m_drivetrain, m_poseEstimator, m_traj, m_vision, 0);
 
   // Drive command
   private final DefaultDrive m_defaultDrive = new DefaultDrive( m_drivetrain,
@@ -125,6 +127,7 @@ public class RobotContainer {
     m_chooser.addOption("Run on Fly", m_runOnTheFly);
     m_chooser.addOption("Move to Note", m_moveToNote);
     m_chooser.addOption("Leave Zone", m_leaveZone);
+    m_chooser.addOption("forward Meter", m_forwardMeter);
     //m_chooser.addOption("Score Speaker", scoreSpeaker);
     //m_chooser.addOption("Score Amp", scoreAmp);
     //m_chooser.addOption("Auto Intake", autoIntake);
@@ -155,7 +158,7 @@ public class RobotContainer {
     ControlMap.m_gunnerController.leftBumper().whileTrue(m_moveRollersOut);
     ControlMap.m_gunnerController.rightBumper().whileTrue(m_moveRollersIn);
     ControlMap.m_gunnerController.leftTrigger().whileTrue(m_shootAmp);
-    ControlMap.m_gunnerController.rightTrigger().whileTrue(m_shootSpeaker);
+    ControlMap.m_gunnerController.rightTrigger().toggleOnTrue((m_shootSpeaker));
     ControlMap.m_gunnerController.y().whileTrue(m_climbDown);
     ControlMap.m_gunnerController.x().whileTrue(m_climbUp);
 

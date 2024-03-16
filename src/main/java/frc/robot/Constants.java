@@ -33,7 +33,7 @@ public final class Constants {
     /* Drivetrain Constants */
     public static final double trackWidth = Units.inchesToMeters(27);
     public static final double wheelBase = Units.inchesToMeters(27);
-    public static final double wheelDiameter = Units.inchesToMeters(4.0);
+    public static final double wheelDiameter = Units.inchesToMeters(3.75);
     public static final double wheelCircumference = wheelDiameter * Math.PI;
 
     public static final double driveGearRatio = (6.75 / 1.0); // 6.75:1
@@ -66,8 +66,8 @@ public final class Constants {
     public static final double driveKFF = 0.0;
 
     /* Drive Motor Characterization Values */
-    public static final double driveKS = 0.22005;
-    public static final double driveKV = 2.74490;
+    public static final double driveKS = 0.58453; //0.22005
+    public static final double driveKV = 2.40269; //2.74490
     public static final double driveKA = 0;
 
      //have to tune manually
@@ -186,12 +186,13 @@ public final class Constants {
   public static class IntakeConstants{
     public static final int pivotID = 9;
     public static final int rollerID = 10;
-    public static final double intakeUpSpeed = 0.7;
-    public static final double intakeDownSpeed = -0.7;
+    public static final double intakeUpSpeed = 0.3;
+    public static final double intakeDownSpeed = -0.3;
     public static final double rollerSpeedIntake = 0.5;
-    public static double rollerSpeedOuttake = 0.4;
+    public static double rollerSpeedOuttake = 0.7;
     public static final int IRport = 0;
   }
+
 
   // Shooter constants
   public static class ShooterConstants{
