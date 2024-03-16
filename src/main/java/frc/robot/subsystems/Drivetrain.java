@@ -178,6 +178,10 @@ public class Drivetrain extends SubsystemBase {
     return Rotation2d.fromDegrees(navx.getPitch());
   }
 
+  public double getRoll(){
+    return navx.getRoll();
+  }
+
   public void resetAlignment() {
     for(SwerveModule mod : mSwerveMods) {
       mod.resetToAbsolute();

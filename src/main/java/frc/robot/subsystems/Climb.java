@@ -32,6 +32,12 @@ public class Climb extends SubsystemBase {
     rightClimb.set(speedRight);
   }
 
+
+  public void freezeMotors() {
+    leftClimb.set(0);
+    rightClimb.set(0);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
