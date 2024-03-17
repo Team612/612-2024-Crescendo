@@ -265,14 +265,14 @@ public class TrajectoryCreation {
         double y = estimatedPose.getY();
         Rotation2d angle = estimatedPose.getRotation();
        
-        PhotonPipelineResult result = vision.getApriltagCamera(2).getLatestResult();
+        PhotonPipelineResult result = vision.getApriltagCamera().getLatestResult();
         int id;
         double tagX = 0;
         double tagY = 0; 
         Rotation2d tagAngle = new Rotation2d();
 
         if(result.hasTargets()){
-            id = vision.getApriltagCamera(2).getLatestResult().getBestTarget().getFiducialId();
+            id = vision.getApriltagCamera().getLatestResult().getBestTarget().getFiducialId();
 
 
             Pose2d tagPose = vision.return_tag_pose(id).toPose2d();

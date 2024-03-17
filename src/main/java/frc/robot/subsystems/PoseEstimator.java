@@ -99,7 +99,7 @@ arrayPublisher = NetworkTableInstance.getDefault()
    */
 
   public void updateEachPoseEstimator(PhotonPoseEstimator poseEstimator, int camID){    
-    if(visionSubsystem.getApriltagCamera(camID).getLatestResult().hasTargets()) {
+    if(visionSubsystem.getApriltagCamera().getLatestResult().hasTargets()) {
      poseEstimator.update().ifPresent(estimatedRobotPose -> {
       var estimatedPose = estimatedRobotPose.estimatedPose;
      
@@ -107,7 +107,7 @@ arrayPublisher = NetworkTableInstance.getDefault()
       // m_DrivePoseEstimator.addVisionMeasurement(estimatedPose.toPose2d(), FIELD_LENGTH_METERS);
      
       // Make sure we have a new measurement, and that it's on the field
-      if (visionSubsystem.getApriltagCamera(camID).getLatestResult().getBestTarget().getFiducialId() >= 0){
+      if (visionSubsystem.getApriltagCamera().getLatestResult().getBestTarget().getFiducialId() >= 0){
        
       if (
         estimatedRobotPose.timestampSeconds != previousPipelineTimestamp && 

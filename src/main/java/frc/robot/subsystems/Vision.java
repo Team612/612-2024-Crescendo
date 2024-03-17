@@ -208,10 +208,7 @@ public class Vision extends SubsystemBase {
     
   }
 
-  public PhotonCamera getApriltagCamera(int camID){
-    if (camID == 1){ //FRONT CAMERA
-      return cameraObject;
-    }
+  public PhotonCamera getApriltagCamera(){
     return cameraApriltagBack; //BACK CAMERA
   }
 
