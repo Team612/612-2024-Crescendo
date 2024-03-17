@@ -24,7 +24,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "B1M Leave Subwoofer"
+                  "pathName": "A1M Leave Subwoofer"
                 }
               },
               {
@@ -55,7 +55,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "B1M To Subwoofer"
+                  "pathName": "A1M To Subwoofer"
                 }
               },
               {
@@ -82,6 +82,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "Blue Alliance Middle Autos",
   "choreoAuto": false
 }

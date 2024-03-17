@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.9045123807922586,
-        "y": 5.55
+        "x": 1.1126849299961952,
+        "y": 5.55076982040085
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2909289603721312,
-        "y": 5.55
+        "x": 2.112684929996195,
+        "y": 5.55076982040085
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.21,
-        "y": 5.52155524239874
+        "x": 2.9,
+        "y": 5.55076982040085
       },
       "prevControl": {
-        "x": 1.4439194150520078,
-        "y": 5.52155524239874
+        "x": 1.9,
+        "y": 5.55076982040085
       },
       "nextControl": null,
       "isLocked": false,
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Blue Alliance Middle Paths",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0
