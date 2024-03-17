@@ -1,0 +1,87 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.1808522786677846,
+      "y": 5.531293435066112
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto shoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "B1M Leave Subwoofer"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake down"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "rollers in"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shooter on"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "B1M To Subwoofer"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shooter on"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake up"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "rollers out"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

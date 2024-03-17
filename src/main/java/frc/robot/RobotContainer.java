@@ -5,6 +5,8 @@
 package frc.robot;
 import javax.swing.SpinnerDateModel;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -122,6 +124,7 @@ public class RobotContainer {
     configureButtonBindings();
     configureShuffleBoardBindings();
     configureDefaultCommands();
+    configureAutoBuilderCommands();
   }
 
   private void configureShuffleBoardBindings(){
@@ -178,6 +181,22 @@ public class RobotContainer {
       new ClimbTeleop(m_climb)
     );
   }
+
+  private void configureAutoBuilderCommands(){
+    //Intake (MANUAL)
+    NamedCommands.registerCommand("intake down", m_intakeDown);
+    NamedCommands.registerCommand("intake up", m_intakeUp);
+    NamedCommands.registerCommand("rollers out", m_moveRollersOut);
+    NamedCommands.registerCommand("rollers in", m_moveRollersIn);
+    
+    //Shooter (MANUAL)
+    NamedCommands.registerCommand("shooter on", m_shootSpeaker);
+
+    //Autonomous Commands
+    NamedCommands.registerCommand("Auto shoot", m_autoShootSpeaker);
+  }
+
+ 
   
   public Command getAutonomousCommand() {
     return m_chooser.getSelected();
