@@ -3,9 +3,14 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
+import java.util.List;
+
 import javax.swing.SpinnerDateModel;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -35,7 +40,7 @@ import frc.robot.commands.TrajectoryCommands.FollowNote;
 import frc.robot.commands.TrajectoryCommands.MoveToNote;
 import frc.robot.commands.TrajectoryCommands.RunOnTheFly;
 import frc.robot.commands.TrajectoryCommands.TrajectoryCreation;
-import frc.robot.Controls.ControlMap;
+import frc.robot.controls.ControlMap;
 import frc.robot.commands.CharacterizationCommands.FeedForwardCharacterization;
 import frc.robot.commands.CharacterizationCommands.forwardMeter;
 import frc.robot.commands.CharacterizationCommands.FeedForwardCharacterization.FeedForwardCharacterizationData;
@@ -47,6 +52,7 @@ import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.TrajectoryConfiguration;
 import frc.robot.subsystems.Vision;
+import frc.robot.util.PathPlannerUtil;
 
 public class RobotContainer {
   //Subsystem declerations
@@ -146,6 +152,14 @@ public class RobotContainer {
               new FeedForwardCharacterizationData("drive"),
               m_drivetrain::runCharacterizationVolts,
               m_drivetrain::getCharacterizationVelocity));
+
+    List<String> autos = PathPlannerUtil.getExistingPaths();
+    for (String auto : autos) {
+      m_chooser.addOption(auto,  AutoBuilder.buildAuto(auto));
+    }
+
+    
+      
     SmartDashboard.putData(m_chooser);
   }
 
