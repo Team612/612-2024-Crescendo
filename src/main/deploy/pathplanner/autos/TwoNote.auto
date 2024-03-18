@@ -2,7 +2,7 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.1,
+      "x": 1.15,
       "y": 5.55
     },
     "rotation": 0
@@ -18,6 +18,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Intake Down"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -25,12 +31,6 @@
                 "type": "path",
                 "data": {
                   "pathName": "ToMiddleNote"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Down"
                 }
               },
               {
@@ -47,15 +47,15 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "MiddleNoteScore"
+                  "name": "Intake Up"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Intake Up"
+                  "name": "Apriltag Align"
                 }
               }
             ]

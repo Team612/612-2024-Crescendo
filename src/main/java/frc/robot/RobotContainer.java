@@ -131,11 +131,12 @@ public class RobotContainer {
   private boolean isFieldOriented = true;
 
   public RobotContainer() {
+    configureAutoBuilderCommands();
     // Configure the trigger bindings
     configureButtonBindings();
     configureShuffleBoardBindings();
     configureDefaultCommands();
-    configureAutoBuilderCommands();
+    
   }
 
   private void configureShuffleBoardBindings(){
@@ -209,6 +210,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Rollers In", m_moveRollersIn);
     NamedCommands.registerCommand("Auto Start", m_autoStart);
     NamedCommands.registerCommand("Feed Note", m_feedNote);
+    NamedCommands.registerCommand("Apriltag Align", m_alignSpeaker);
     
     //Shooter (MANUAL)
     NamedCommands.registerCommand("Shooter On", m_shootSpeaker);

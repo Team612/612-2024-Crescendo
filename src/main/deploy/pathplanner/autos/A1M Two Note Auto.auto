@@ -18,6 +18,18 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Intake Down"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Start"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -30,19 +42,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Intake Down"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
                   "name": "Rollers In"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Shooter On"
                 }
               }
             ]
@@ -56,12 +56,6 @@
                 "type": "path",
                 "data": {
                   "pathName": "A1M To Subwoofer"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Shooter On"
                 }
               },
               {

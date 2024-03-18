@@ -14,7 +14,19 @@
         {
           "type": "named",
           "data": {
-            "name": "Auto shoot"
+            "name": "Auto Speaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Start"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Down"
           }
         },
         {
@@ -31,18 +43,6 @@
                 "type": "named",
                 "data": {
                   "name": "Rollers In"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Down"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Shooter On"
                 }
               }
             ]
@@ -62,12 +62,6 @@
                 "type": "named",
                 "data": {
                   "name": "Intake Up"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Shooter On"
                 }
               }
             ]
@@ -94,20 +88,14 @@
                 "data": {
                   "name": "Rollers In"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Down"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Shooter On"
-                }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Down"
           }
         },
         {
@@ -125,12 +113,6 @@
                 "data": {
                   "name": "Intake Up"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Shooter On"
-                }
               }
             ]
           }
@@ -139,6 +121,12 @@
           "type": "named",
           "data": {
             "name": "Rollers Out"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Down"
           }
         },
         {
@@ -156,18 +144,6 @@
                 "data": {
                   "name": "Rollers In"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Down"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Shooter On"
-                }
               }
             ]
           }
@@ -180,12 +156,6 @@
                 "type": "path",
                 "data": {
                   "pathName": "A2M Left-Subwoofer"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Shooter On"
                 }
               },
               {
