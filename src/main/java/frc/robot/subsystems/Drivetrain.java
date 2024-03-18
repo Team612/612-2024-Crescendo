@@ -157,12 +157,8 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public double getEncoderMeters() {
-    double sum = 0.0;
     SwerveModulePosition[] positions = getPositions();
-    for (SwerveModulePosition pos : positions) {
-      sum += pos.distanceMeters;
-    }
-    return sum / 4.0;
+    return positions[0].distanceMeters;
   }
 
     

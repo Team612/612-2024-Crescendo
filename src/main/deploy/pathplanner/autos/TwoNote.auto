@@ -2,7 +2,7 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.2,
+      "x": 1.1,
       "y": 5.55
     },
     "rotation": 0
@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Auto Speaker"
+            "name": "Auto Start"
           }
         },
         {
@@ -24,7 +24,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "A1M Leave Subwoofer"
+                  "pathName": "ToMiddleNote"
                 }
               },
               {
@@ -38,12 +38,6 @@
                 "data": {
                   "name": "Rollers In"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Shooter On"
-                }
               }
             ]
           }
@@ -55,13 +49,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "A1M To Subwoofer"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Shooter On"
+                  "pathName": "MiddleNoteScore"
                 }
               },
               {
@@ -76,12 +64,12 @@
         {
           "type": "named",
           "data": {
-            "name": "Rollers Out"
+            "name": "Feed Note"
           }
         }
       ]
     }
   },
-  "folder": "Blue Alliance Middle Autos",
+  "folder": null,
   "choreoAuto": false
 }
