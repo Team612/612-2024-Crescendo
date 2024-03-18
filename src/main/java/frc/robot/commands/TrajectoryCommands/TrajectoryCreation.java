@@ -131,7 +131,7 @@ public class TrajectoryCreation {
         double tagX = 0;
         double tagY = 0;
         Rotation2d tagAngle = new Rotation2d();
-        double xChange = Units.inchesToMeters(52);
+        double xChange = Units.inchesToMeters(54);
         double yChange = 0;
         
         tagX = vision.return_tag_pose(7).getX();

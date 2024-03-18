@@ -105,8 +105,7 @@ public class RobotContainer {
   //Drive subsystems declarations 
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
-  private final Command parallelLeaveIntake = new ParallelCommandGroup(m_leaveZone, m_intakeDown);
-  private final Command scoreSpeaker = new SequentialCommandGroup(m_autoShootSpeaker, parallelLeaveIntake);
+
 
   // Speaker auto command
   // private final Command scoreSpeaker = new SequentialCommandGroup(
@@ -144,7 +143,6 @@ public class RobotContainer {
     m_chooser.addOption("Move to Note", m_moveToNote);
     m_chooser.addOption("Leave Zone", m_leaveZone);
     m_chooser.addOption("forward Meter", m_forwardMeter);
-    m_chooser.addOption("Score Speaker", scoreSpeaker);
     //m_chooser.addOption("Score Amp", scoreAmp);
     //m_chooser.addOption("Auto Intake", autoIntake);
     m_chooser.addOption("auto speaker", m_autoShootSpeaker);
