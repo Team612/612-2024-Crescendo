@@ -1,0 +1,211 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.2,
+      "y": 5.55
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto shoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "A2M Leave Subwoofer"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "rollers in"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake down"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shooter on"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "A1M To Subwoofer"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake up"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shooter on"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "rollers out"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "A2M Subwoofer-Right"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "rollers in"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake down"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shooter on"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "A2M Right-Subwoofer"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake up"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shooter on"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "rollers out"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "A2M Subwoofer-Left"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "rollers in"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake down"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shooter on"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "A2M Left-Subwoofer"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shooter on"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake up"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "rollers out"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Blue Alliance Middle Autos",
+  "choreoAuto": false
+}
