@@ -14,12 +14,6 @@
         {
           "type": "named",
           "data": {
-            "name": "Auto Speaker"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Auto Start"
           }
         },
@@ -36,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "A2M Leave Subwoofer"
+                  "pathName": "Leave Subwoofer"
                 }
               },
               {
@@ -53,15 +47,15 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "A1M To Subwoofer"
+                  "name": "Intake Up"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Intake Up"
+                  "name": "Apriltag Align"
                 }
               }
             ]
@@ -80,7 +74,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "A2M Subwoofer-Right"
+                  "pathName": "Subwoofer-Right"
                 }
               },
               {
@@ -103,15 +97,15 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "A2M Right-Subwoofer"
+                  "name": "Intake Up"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Intake Up"
+                  "name": "Apriltag Align"
                 }
               }
             ]
@@ -136,7 +130,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "A2M Subwoofer-Left"
+                  "pathName": "Subwoofer-Left"
                 }
               },
               {
@@ -153,15 +147,15 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "A2M Left-Subwoofer"
+                  "name": "Intake Up"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Intake Up"
+                  "name": "Apriltag Align"
                 }
               }
             ]
@@ -176,6 +170,6 @@
       ]
     }
   },
-  "folder": "Blue Alliance Middle Autos",
+  "folder": "Middle",
   "choreoAuto": false
 }

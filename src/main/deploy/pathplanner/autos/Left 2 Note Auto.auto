@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.2,
-      "y": 5.55
+      "x": 0.6933452953924437,
+      "y": 6.569779302183426
     },
-    "rotation": 0
+    "rotation": 57.0
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Auto Speaker"
+            "name": "Auto Start"
           }
         },
         {
@@ -24,19 +24,13 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Auto Start"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "A1M Leave Subwoofer"
+                  "pathName": "Leave Left"
                 }
               },
               {
@@ -53,9 +47,9 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "A1M To Subwoofer"
+                  "name": "Apriltag Align"
                 }
               },
               {
@@ -76,6 +70,6 @@
       ]
     }
   },
-  "folder": "Blue Alliance Middle Autos",
+  "folder": "Left",
   "choreoAuto": false
 }

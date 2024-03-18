@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 2.9,
-        "y": 5.55076982040085
+        "x": 2.9045123807922586,
+        "y": 4.099779112962734
       },
       "prevControl": {
-        "x": 1.9,
-        "y": 5.55076982040085
+        "x": 0.9666120399856463,
+        "y": 4.021873571623774
       },
       "nextControl": null,
       "isLocked": false,
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Blue Alliance Middle Paths",
+  "folder": "Middle Paths",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0
