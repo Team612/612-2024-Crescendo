@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathHolonomic;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -33,7 +34,7 @@ public class TrajectoryConfiguration extends SubsystemBase {
                         new PIDConstants(5, 0.0, 0.0), // Translation PID constants
                         new PIDConstants(5, 0.0, 0.0), // Rotation PID constants
                         4.5, // Max module speed, in m/s
-                        Units.inchesToMeters(13.02), // Drive base radius in meters. Distance from robot center to furthest module.
+                        Units.inchesToMeters(19.09), // Drive base radius in meters. Distance from robot center to furthest module.
                         new ReplanningConfig() // Default path replanning config. See the API for the options here
                 ),
                 () -> {
@@ -108,6 +109,7 @@ public class TrajectoryConfiguration extends SubsystemBase {
                 m_Drivetrain // Reference to this subsystem to set requirements
         );
     }
+
 
     public static TrajectoryConfiguration getInstance(){
       if (trajectoryConfig == null){

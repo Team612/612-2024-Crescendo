@@ -10,14 +10,14 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
-public class AutoShootSpeaker extends Command {
+public class AutoShootStart extends Command {
   private Shooter m_shooter;
   private Intake m_intake;
   private boolean spikeDone;
   private int count = 0;
   private Timer time = new Timer();
   /** Creates a new AutoShootSpeaker. */
-  public AutoShootSpeaker(Shooter s, Intake i) {
+  public AutoShootStart(Shooter s, Intake i) {
     m_shooter = s;
     m_intake = i;
     addRequirements(s, i);
@@ -60,7 +60,6 @@ public class AutoShootSpeaker extends Command {
   public void end(boolean interrupted) {
     time.stop();
     time.reset();
-    m_shooter.shoot(0, 0);
     m_intake.moveRollers(0);
   }
 

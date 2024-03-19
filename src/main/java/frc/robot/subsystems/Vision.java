@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.proto.Photon;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -14,9 +15,6 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
-
-import javax.xml.crypto.dsig.Transform;
-
 import org.photonvision.EstimatedRobotPose;
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -39,9 +37,9 @@ public class Vision extends SubsystemBase {
   private static Transform3d robotToCamAprilFront;
   private static Transform3d robotToCamAprilBack;
   private static Transform3d robotToCamObject;
-  private Drivetrain m_drivetrain;
-  public PhotonPoseEstimator m_PoseEstimator1;
-  public PhotonPoseEstimator m_PoseEstimator2;
+  private Drivetrain driveSubsystem;
+  public PhotonPoseEstimator poseEstimatorFront;
+  public PhotonPoseEstimator poseEstimatorBack;
 
   static Vision visionInstance = null;
 
@@ -56,7 +54,7 @@ public class Vision extends SubsystemBase {
    * @throws IOException
    **/
 
-  public Vision(PhotonCamera cameraO, PhotonCamera cameraA) {
+  public Vision(PhotonCamera cameraObject, PhotonCamera cameraApriltagBack) {
     // tag 1
     final Translation3d translation1 = new Translation3d(15.079472, 0.245872, 1.355852);
     final Quaternion q1 = new Quaternion(0.5, 0, 0, 0.8660254037844386);
@@ -172,60 +170,81 @@ public class Vision extends SubsystemBase {
     atList.add(tag16);
 
     robotInTagPose = new Pose2d();
-    this.cameraApriltagFront = cameraA;
-    this.cameraApriltagBack = cameraO;
-    this.cameraObject = cameraO;
+    //this.cameraApriltagFront = cameraApriltagFront;
+    this.cameraApriltagBack = cameraApriltagBack;
+    this.cameraObject = cameraApriltagFront;
     resetRobotPose();
 
     aprilTagFieldLayout = new AprilTagFieldLayout(atList, 16.451 , 8.211 );
 
-    robotToCamAprilFront = new Transform3d(new Translation3d(0.0, Units.inchesToMeters(2.5), Units.inchesToMeters(31)), new Rotation3d()); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
+    robotToCamAprilBack = new Transform3d(new Translation3d(0.0,0.07,0.787), new Rotation3d(0,Units.degreesToRadians(35),Math.PI));
 
-    robotToCamAprilBack = new Transform3d(new Translation3d(0.0, Units.inchesToMeters(-1.5), Units.inchesToMeters(31)), new Rotation3d(0,15,180)); 
-
-    robotToCamObject = new Transform3d(new Translation3d(0,-Units.inchesToMeters(1.5), Units.inchesToMeters(31)), new Rotation3d()); //0.20,-0.04
+    robotToCamObject = new Transform3d(new Translation3d(0.0,-0.07,0.77), new Rotation3d(0, Units.degreesToRadians(-12), 0)); //0.20,-0.04
     
-    m_PoseEstimator1 = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, this.cameraApriltagFront, robotToCamAprilFront);
-    m_PoseEstimator2 = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, this.cameraApriltagBack, robotToCamAprilBack);
+    //poseEstimatorFront = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, this.cameraApriltagFront, robotToCamAprilFront);
+    poseEstimatorBack = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, this.cameraApriltagBack, robotToCamAprilBack);
 
-    m_PoseEstimator1.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
-    m_PoseEstimator2.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+    driveSubsystem = Drivetrain.getInstance();
 
-    m_drivetrain = Drivetrain.getInstance();
-
-    //m_PoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+    //m_PoseEstimatorFront.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
     
 
   }
 
   public static Vision getVisionInstance() {
     if (visionInstance == null) {
-      visionInstance = new Vision(new PhotonCamera(Constants.VisionConstants.cameraNameObject), new PhotonCamera(Constants.VisionConstants.cameraNameAprilTag));
+      visionInstance = new Vision(new PhotonCamera(Constants.VisionConstants.cameraNameAprilTagFront),
+       new PhotonCamera(Constants.VisionConstants.cameraNameAprilTagBack));
     }
     return visionInstance;
   }
 
-  public PhotonCamera getApriltagCamera(int id) {
-    if (id == 1 )
-      return cameraApriltagFront;
-    else {
-      return cameraApriltagBack;
-    }
+  //  public PhotonPoseEstimator getVisionPoseFront(){
+  //   return poseEstimatorFront;
+  // }
+
+  public PhotonPoseEstimator getVisionPoseBack(){
+    return poseEstimatorBack;
+    
   }
 
-  public Transform3d getRobotToCam(int id){
-    if (id == 1){
-      return robotToCamAprilFront;
-    }
-    else {
-      return robotToCamAprilBack;
-    }
+  public PhotonCamera getApriltagCamera(){
+    return cameraApriltagBack; //BACK CAMERA
   }
 
+  public Transform3d getRobotToCam(){
+    return robotToCamAprilBack;
+  }
 
+  public boolean hasCalibrationBack(){
+    if (cameraApriltagBack.getDistCoeffs().equals(Optional.empty())){
+      return false;
+    }
+    return true;
+  }
+
+  public boolean hasTag(){
+    if (cameraApriltagBack.getLatestResult().hasTargets()){
+      if (cameraApriltagBack.getLatestResult().getBestTarget().getFiducialId() >= 0){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public int tagID(){
+     if (cameraApriltagBack.getLatestResult().hasTargets()){
+      return cameraApriltagBack.getLatestResult().getBestTarget().getFiducialId();
+    }
+    return -1;
+  }
+
+  
+
+  
   // getting the vision pose from the april tags
   public Pose2d getTagPose() {
-    PhotonPipelineResult result = cameraApriltagFront.getLatestResult();
+    PhotonPipelineResult result = cameraApriltagBack.getLatestResult();
     if (result.hasTargets()) {
       PhotonTrackedTarget bestTarget = result.getBestTarget();
 
@@ -261,18 +280,26 @@ public class Vision extends SubsystemBase {
 
   // photonvision pose estimator
   public Optional<EstimatedRobotPose> return_photon_pose(Pose2d latestPose) {
-    m_PoseEstimator1.setReferencePose(latestPose);
-    return m_PoseEstimator1.update();
+    poseEstimatorFront.setReferencePose(latestPose);
+    return poseEstimatorFront.update();
   }
 
+  //Object detection methods
   public double getTargetPitch(){
+
+    if (cameraObject.getLatestResult().hasTargets()){
     PhotonPipelineResult result = cameraObject.getLatestResult();
     return result.getBestTarget().getPitch();
+    }
+    return -1;
   }
 
   public double getTargetYaw(){
+    if (cameraObject.getLatestResult().hasTargets()){
     PhotonPipelineResult result = cameraObject.getLatestResult();
     return result.getBestTarget().getYaw();
+    }
+    return -1;
   }
 
   public boolean hasTarget(){
@@ -282,6 +309,10 @@ public class Vision extends SubsystemBase {
     return false;
   }
 
+  // public void switchPipeline(int id){
+  //   camera.setPipelineIndex(id);
+  // }
+
   public double getNoteRange() {
     return PhotonUtils.calculateDistanceToTargetMeters(
             robotToCamObject.getZ(),
@@ -290,44 +321,41 @@ public class Vision extends SubsystemBase {
             Units.degreesToRadians(getTargetPitch()));
   }
 
-  
 
-
-  public Transform2d getNoteSpace(){ //
+  public Transform3d getNoteSpace(){ //
     //
-    double range =
-    //note, the algorithm photonvision uses is the exact same as the limelight one, commented out below
-    PhotonUtils.calculateDistanceToTargetMeters(
-            robotToCamObject.getZ(),
-            Units.inchesToMeters(0),
-            0,
-            Units.degreesToRadians(getTargetPitch()));
-      //return new Pose2d(PhotonUtils.estimateCameraToTargetTranslation(range, new Rotation2d(Units.degreesToRadians(getTargetYaw()))), new Rotation2d(Units.degreesToRadians(getTargetYaw())));
-      Translation2d translation = PhotonUtils.estimateCameraToTargetTranslation(range, new Rotation2d(Units.degreesToRadians(-getTargetYaw())));
-      return new Transform2d(translation, new Rotation2d()); //translation.getAngle().plus(m_drivetrain.getNavxAngle()
+    Transform3d camPose = cameraObject.getLatestResult().getBestTarget().getBestCameraToTarget();
+    System.out.println("x " + camPose.getX() + "y " + camPose.getY());
+    return camPose;
+    // double range =
+    // //note, the algorithm photonvision uses is the exact same as the limelight one, commented out below
+    // PhotonUtils.calculateDistanceToTargetMeters(
+    //         robotToCamObject.getZ(),
+    //         Units.inchesToMeters(0),
+    //         0,
+    //         Units.degreesToRadians(getTargetPitch()));
+    //   //return new Pose2d(PhotonUtils.estimateCameraToTargetTranslation(range, new Rotation2d(Units.degreesToRadians(getTargetYaw()))), new Rotation2d(Units.degreesToRadians(getTargetYaw())));
+    //   Translation2d translation = PhotonUtils.estimateCameraToTargetTranslation(range, new Rotation2d(Units.degreesToRadians(getTargetYaw())));
+    //   return new Transform2d(translation, new Rotation2d()); //translation.getAngle().plus(m_drivetrain.getNavxAngle()
   }
 
 
-
-
-  public PhotonPoseEstimator getVisionPose(){
-    return m_PoseEstimator1;
-  }
-
-  public PhotonPoseEstimator getVisionPose2(){
-    return m_PoseEstimator2;
-  }
+ 
 
   @Override
   public void periodic() {
-    if (cameraApriltagFront.getDistCoeffs().equals(Optional.empty())){
-      System.out.println("NO CALIBRATION");
-    }
+    // if (cameraApriltagBack.getDistCoeffs().equals(Optional.empty())){
+    //   System.out.println("NO CALIBRATION");
+    // }
     // if (hasTarget()){
     //   SmartDashboard.putNumber("note x", getNoteSpace().getX());
     //   SmartDashboard.putNumber("note y", getNoteSpace().getY());
     // }
-    SmartDashboard.putBoolean("Sees tag", cameraObject.getLatestResult().hasTargets());
+    // SmartDashboard.putBoolean("Sees tag", cameraObject.getLatestResult().hasTargets());
+
+    // if (cameraObject != null && cameraObject.getLatestResult().hasTargets()){
+    //   SmartDashboard.putBoolean("has Object", cameraObject.getLatestResult().hasTargets());
+    // }
 
   }
 
