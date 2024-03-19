@@ -175,6 +175,7 @@ public class RobotContainer {
     ControlMap.m_driverController.leftBumper().onTrue(new InstantCommand(() -> m_drivetrain.zeroGyro()));
     ControlMap.m_driverController.b().toggleOnTrue(m_defaultDrive);
     ControlMap.m_driverController.a().onTrue(m_alignSpeaker);
+    ControlMap.m_driverController.x().onTrue(m_alignAmp);
 
     // Gunner button bindings
     ControlMap.m_gunnerController.a().whileTrue(m_intakeDown);

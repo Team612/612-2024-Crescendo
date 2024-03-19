@@ -47,9 +47,9 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "Apriltag Align"
+                  "pathName": "Left-Subwoofer"
                 }
               },
               {
