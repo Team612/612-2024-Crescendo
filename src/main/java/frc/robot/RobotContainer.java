@@ -30,6 +30,7 @@ import frc.robot.commands.IntakeCommands.MoveRollersOut;
 import frc.robot.commands.ShooterCommands.AutoShootAmp;
 import frc.robot.commands.ShooterCommands.AutoShootSpeaker;
 import frc.robot.commands.ShooterCommands.AutoShootStart;
+import frc.robot.commands.ShooterCommands.AutoShootStartDouble;
 import frc.robot.commands.ShooterCommands.ShootNoteAmp;
 import frc.robot.commands.ShooterCommands.ShootNoteSpeaker;
 import frc.robot.commands.ShooterCommands.ShooterLeftMotor;
@@ -80,6 +81,7 @@ public class RobotContainer {
   private final LeaveZone m_leaveZone = new LeaveZone(m_drivetrain);
   private final forwardMeter m_forwardMeter = new forwardMeter(m_drivetrain, m_poseEstimator, m_traj, m_vision, 0);
   private final AlignSpeakerManual m_manualAlign = new AlignSpeakerManual(m_drivetrain, m_vision);
+  private final AutoShootStartDouble m_AutoShootStartDouble = new AutoShootStartDouble(m_shooter, m_intake);
 
   // Drive command
   private final DefaultDrive m_defaultDrive = new DefaultDrive( m_drivetrain,
@@ -153,6 +155,7 @@ public class RobotContainer {
     m_chooser.addOption("auto amp", m_autoShootAmp);
     m_chooser.addOption("align speaker", m_alignSpeaker);
     m_chooser.addOption("Align Manual", m_manualAlign);
+    m_chooser.addOption("auto shoot double", m_AutoShootStartDouble);
     // m_chooser.addOption("Leave Starting Zone Subwoofer", m_trajectoryConfig.followPathGui("Leave Zone Subwoofer"));
     // m_chooser.addOption("Score and Leave", scoreAndLeave);
     m_chooser.addOption("Swerve Characterization", new FeedForwardCharacterization(
