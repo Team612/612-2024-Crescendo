@@ -18,12 +18,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Intake Down"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -37,6 +31,12 @@
                 "type": "named",
                 "data": {
                   "name": "Rollers In"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Down"
                 }
               }
             ]

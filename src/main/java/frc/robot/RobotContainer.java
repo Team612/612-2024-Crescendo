@@ -56,6 +56,8 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.TrajectoryConfiguration;
 import frc.robot.subsystems.Vision;
 import frc.robot.util.PathPlannerUtil;
+import frc.robot.subsystems.Pivot;
+
 
 public class RobotContainer {
   //Subsystem declerations
@@ -66,6 +68,7 @@ public class RobotContainer {
   private final Intake m_intake = Intake.getInstance();
   private final Shooter m_shooter = Shooter.getInstance();
   private final Climb m_climb = Climb.getInstance();
+  private final Pivot m_pivot = Pivot.getInstance();
 
   // Autonomous commands
   private final TrajectoryCreation m_traj = new TrajectoryCreation();
@@ -85,8 +88,8 @@ public class RobotContainer {
             () -> -ControlMap.m_driverController.getRightX());
 
   // Gunner commands
-  private final IntakeDown m_intakeDown = new IntakeDown(m_intake);
-  private final IntakeUp m_intakeUp = new IntakeUp(m_intake);
+  private final IntakeDown m_intakeDown = new IntakeDown(m_pivot);
+  private final IntakeUp m_intakeUp = new IntakeUp(m_pivot);
   private final MoveRollersOut m_moveRollersOut = new MoveRollersOut(m_intake);
   private final MoveRollersIn m_moveRollersIn = new MoveRollersIn(m_intake);
   private final ShootNoteSpeaker m_shootSpeaker = new ShootNoteSpeaker(m_shooter);

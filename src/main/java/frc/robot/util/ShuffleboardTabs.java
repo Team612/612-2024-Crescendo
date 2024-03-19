@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.SwerveLib.SwerveModule;
@@ -75,6 +76,7 @@ public class ShuffleboardTabs {
     private Shooter shooterSubsystem;
     private Vision visionSubsystem;
     private Climb climbSubsystem;
+    private Pivot pivotSubsystem;
     private frc.robot.subsystems.PoseEstimator poseEstimatorSubsystem;
     private SwerveModuleState[] states;
     private SwerveModule[] mods;
@@ -87,6 +89,7 @@ public class ShuffleboardTabs {
         shooterSubsystem = Shooter.getInstance();
         visionSubsystem = Vision.getVisionInstance();
         climbSubsystem = Climb.getInstance();
+        pivotSubsystem = Pivot.getInstance();
         poseEstimatorSubsystem = frc.robot.subsystems.PoseEstimator.getPoseEstimatorInstance();
         states = driveSubsystem.getStates();
         mods = driveSubsystem.getModules();
@@ -139,10 +142,9 @@ public class ShuffleboardTabs {
         limitRightClimbDown = climbTab.add("Climb Right Down", false).getEntry();
 
 
-        // hasCalibrationFront = visionTab.add("Front Camera Calibrated?", false).getEntry();
-        // hasCalibrationBack = visionTab.add("Back Camera Calibrated?", false).getEntry();
-        // hasTag = visionTab.add("Tag in sight?", false).getEntry();
-        // tagInSight = visionTab.add("Tag ID (currently in sight)", -1).getEntry();
+        hasCalibrationBack = visionTab.add("Back Camera Calibrated?", false).getEntry();
+        hasTag = visionTab.add("Tag in sight?", false).getEntry();
+        tagInSight = visionTab.add("Tag ID (currently in sight)", -1).getEntry();
 
         
     }
@@ -165,8 +167,8 @@ public class ShuffleboardTabs {
 
         navxAngle.setDouble(driveSubsystem.getNavxAngle().getDegrees());
 
-        limitForward.setBoolean(intakeSubsystem.getIntakeLimitStateForward());
-        limitBackward.setBoolean(intakeSubsystem.getIntakeLimitStateReverse());
+        limitForward.setBoolean(pivotSubsystem.getIntakeLimitStateForward());
+        limitBackward.setBoolean(pivotSubsystem.getIntakeLimitStateReverse());
         irSensor.setDouble(intakeSubsystem.getIRSensor());
 
         poseEstimatorX.setDouble(poseEstimatorSubsystem.getCurrentPose().getX());
@@ -177,10 +179,9 @@ public class ShuffleboardTabs {
         shooterLeftCurrent.setDouble(shooterSubsystem.getCurrent());
         shooterRightCurrent.setDouble(shooterSubsystem.getCurrent());
 
-        // hasCalibrationFront.setBoolean(visionSubsystem.hasCalibrationFront());
-        // hasCalibrationBack.setBoolean(visionSubsystem.hasCalibrationBack());
-        // hasTag.setBoolean(visionSubsystem.hasTag());
-        // tagInSight.setInteger(visionSubsystem.getTagID());
+        hasCalibrationBack.setBoolean(visionSubsystem.hasCalibrationBack());
+        hasTag.setBoolean(visionSubsystem.hasTag());
+        tagInSight.setInteger(visionSubsystem.tagID());
 
         limitLeftClimbUp.setBoolean(climbSubsystem.getLeftLimitStateUp());
         limitLeftClimbDown.setBoolean(climbSubsystem.getLeftLimitStateDown());

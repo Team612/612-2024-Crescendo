@@ -6,13 +6,5 @@
     "properties": {
       "persistent": true
     }
-  },
-  {
-    "name": "/Preferences/Left Speed",
-    "type": "double",
-    "value": -0.3,
-    "properties": {
-      "persistent": true
-    }
   }
 ]

@@ -44,6 +44,6 @@ public class FeedNote extends Command {
   @Override
   public boolean isFinished() {
     // return count >= 10;
-    return time.get() >= 2;
+    return time.get() >= 0.5;
   }
 }
