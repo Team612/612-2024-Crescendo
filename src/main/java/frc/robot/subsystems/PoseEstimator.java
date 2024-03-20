@@ -77,7 +77,6 @@ StructArrayPublisher<Pose2d> arrayPublisher;
     // photonPoseEstimatorFront = visionSubsystem.getVisionPoseFront();
     photonPoseEstimatorBack = visionSubsystem.getVisionPoseBack();
 
-    fieldLayout = new Field2d();
  publisher = NetworkTableInstance.getDefault()
     .getStructTopic("MyPose", Pose2d.struct).publish();
 arrayPublisher = NetworkTableInstance.getDefault()
@@ -108,7 +107,7 @@ arrayPublisher = NetworkTableInstance.getDefault()
       // m_DrivePoseEstimator.addVisionMeasurement(estimatedPose.toPose2d(), FIELD_LENGTH_METERS);
      
       // Make sure we have a new measurement, and that it's on the field
-      if (visionSubsystem.getApriltagCamera().getLatestResult().hasTargets() && visionSubsystem.getApriltagCamera().getLatestResult().getBestTarget().getFiducialId() >= 0){
+      if (visionSubsystem.getApriltagCamera().getLatestResult().getBestTarget().getFiducialId() >= 0){
        
       if (
         estimatedRobotPose.timestampSeconds != previousPipelineTimestamp && 
@@ -165,7 +164,7 @@ arrayPublisher = NetworkTableInstance.getDefault()
     //arrayPublisher.set(new Pose3d[] {poseA, poseB});
     
     //updates the robot pose in the field simulation
-    fieldLayout.setRobotPose(getCurrentPose());
+    // fieldLayout.setRobotPose(getCurrentPose());
 
     // SmartDashboard.putNumber("PoseEstimator X", getCurrentPose().getX());
     // SmartDashboard.putNumber("PoseEstimator Y", getCurrentPose().getY());
