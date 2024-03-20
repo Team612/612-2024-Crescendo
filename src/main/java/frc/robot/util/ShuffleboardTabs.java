@@ -125,7 +125,7 @@ public class ShuffleboardTabs {
         // driverTab.add(CameraServer.getVideo("Driver Camera").getSource());
         // driverTab.add(CameraServer.getVideo("Gunner Camera").getSource());
         tagCenter = driverTab.add("Centerd to tag?", false).getEntry();
-        fieldLayout = driverTab.add(field);
+        // fieldLayout = driverTab.add(field);
      
 
         /* Init entries */
@@ -175,7 +175,7 @@ public class ShuffleboardTabs {
 
     public void updateButtons(){
         /* Driver entries */
-        field.setRobotPose(poseEstimatorSubsystem.getCurrentPose());
+        // field.setRobotPose(poseEstimatorSubsystem.getCurrentPose());
         // tagCenter.setBoolean(visionSubsystem.centeredToApriltag());
         
         

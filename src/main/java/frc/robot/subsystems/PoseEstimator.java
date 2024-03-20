@@ -77,6 +77,7 @@ StructArrayPublisher<Pose2d> arrayPublisher;
     // photonPoseEstimatorFront = visionSubsystem.getVisionPoseFront();
     photonPoseEstimatorBack = visionSubsystem.getVisionPoseBack();
 
+    fieldLayout = new Field2d();
  publisher = NetworkTableInstance.getDefault()
     .getStructTopic("MyPose", Pose2d.struct).publish();
 arrayPublisher = NetworkTableInstance.getDefault()
@@ -164,7 +165,7 @@ arrayPublisher = NetworkTableInstance.getDefault()
     //arrayPublisher.set(new Pose3d[] {poseA, poseB});
     
     //updates the robot pose in the field simulation
-    // fieldLayout.setRobotPose(getCurrentPose());
+    fieldLayout.setRobotPose(getCurrentPose());
 
     // SmartDashboard.putNumber("PoseEstimator X", getCurrentPose().getX());
     // SmartDashboard.putNumber("PoseEstimator Y", getCurrentPose().getY());
