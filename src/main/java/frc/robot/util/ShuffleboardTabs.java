@@ -4,11 +4,23 @@
 
 package frc.robot.util;
 
+import java.lang.reflect.Field;
+
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.estimator.PoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.NetworkTableListener;
+import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
@@ -28,8 +40,11 @@ public class ShuffleboardTabs {
     private ShuffleboardTab climbTab;
 
     /* Driver Entries */
-
+    private ComplexWidget fieldLayout;
+    private ComplexWidget autonomousSelect;
+    private GenericEntry tagCenter;
     /* Debug Entries */
+
     private GenericEntry mod1_velocity;
     private GenericEntry mod2_velocity;
     private GenericEntry mod3_velocity;
@@ -80,6 +95,7 @@ public class ShuffleboardTabs {
     private frc.robot.subsystems.PoseEstimator poseEstimatorSubsystem;
     private SwerveModuleState[] states;
     private SwerveModule[] mods;
+    private Field2d field;
 
 
     public void initButton(){
@@ -93,6 +109,7 @@ public class ShuffleboardTabs {
         poseEstimatorSubsystem = frc.robot.subsystems.PoseEstimator.getPoseEstimatorInstance();
         states = driveSubsystem.getStates();
         mods = driveSubsystem.getModules();
+        field = new Field2d();
 
         /* Init tabs */
         driverTab = Shuffleboard.getTab("Driver Tab");
@@ -103,6 +120,13 @@ public class ShuffleboardTabs {
         climbTab = Shuffleboard.getTab("Climb Tab");
         
         poseEstimatorTab = Shuffleboard.getTab("Pose Estimator Tab");
+
+        /* Init driver entries */
+        driverTab.add(CameraServer.getVideo("Driver Camera").getSource());
+        driverTab.add(CameraServer.getVideo("Gunner Camera").getSource());
+        tagCenter = driverTab.add("Centerd to tag?", false).getEntry();
+        fieldLayout = driverTab.add(field);
+     
 
         /* Init entries */
 
@@ -150,6 +174,13 @@ public class ShuffleboardTabs {
     }
 
     public void updateButtons(){
+        /* Driver entries */
+        field.setRobotPose(poseEstimatorSubsystem.getCurrentPose());
+        tagCenter.setBoolean(visionSubsystem.centeredToApriltag());
+        
+        
+        
+        /* Debug entries */
         mod1_velocity.setDouble(states[0].speedMetersPerSecond);
         mod2_velocity.setDouble(states[1].speedMetersPerSecond);
         mod3_velocity.setDouble(states[2].speedMetersPerSecond);

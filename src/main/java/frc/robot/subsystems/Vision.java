@@ -239,6 +239,16 @@ public class Vision extends SubsystemBase {
     return -1;
   }
 
+  public boolean centeredToApriltag(){
+    if (cameraApriltagBack.getLatestResult().hasTargets()){
+      if (Math.abs(cameraApriltagBack.getLatestResult().getBestTarget().getBestCameraToTarget().getY()) <= Units.inchesToMeters(6)){
+        return true;
+      }
+        
+    }
+    return false;
+  }
+
   
 
   
@@ -283,6 +293,7 @@ public class Vision extends SubsystemBase {
     poseEstimatorFront.setReferencePose(latestPose);
     return poseEstimatorFront.update();
   }
+
 
   //Object detection methods
   public double getTargetPitch(){

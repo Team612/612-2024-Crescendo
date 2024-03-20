@@ -12,12 +12,14 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.DriveCommands.DefaultDrive;
 import frc.robot.commands.DriveCommands.FieldOrientedDrive;
 import frc.robot.commands.DriveCommands.LeaveZone;
@@ -110,6 +112,9 @@ public class RobotContainer {
   //Drive subsystems declarations 
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
+  
+
+
 
 
   // Speaker auto command
@@ -145,6 +150,7 @@ public class RobotContainer {
   }
 
   private void configureShuffleBoardBindings(){
+    m_chooser.setDefaultOption("Do Nothing", new WaitCommand(15));
     m_chooser.addOption("Run on Fly", m_runOnTheFly);
     m_chooser.addOption("Move to Note", m_moveToNote);
     m_chooser.addOption("Leave Zone", m_leaveZone);
@@ -172,7 +178,8 @@ public class RobotContainer {
 
     
       
-    SmartDashboard.putData(m_chooser);
+    //I would do this in shuffleboard, but i dont want to mess anything up;
+    Shuffleboard.getTab("Driver Tab").add(m_chooser).withPosition(6, 0);
   }
 
   private void configureButtonBindings() {
@@ -208,6 +215,7 @@ public class RobotContainer {
       new ClimbTeleop(m_climb)
     );
   }
+
 
   private void configureAutoBuilderCommands(){
     //Intake (MANUAL)

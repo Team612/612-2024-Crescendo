@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -24,6 +26,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   private ShuffleboardTabs shuffleboard_tabs;
+  private UsbCamera driverCamera;
+  private UsbCamera gunnerCamera;
 
   public static Alliance initAllianceColor = Alliance.Blue;
 
@@ -44,6 +48,13 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     checkDSUpdate();
     ctreConfigs = new CTREConfigs();
+
+
+    driverCamera = CameraServer.startAutomaticCapture("Driver Camera", 0);
+    // driverCamera.setFPS(10);
+    gunnerCamera = CameraServer.startAutomaticCapture("Gunner Camera",1);
+    // gunnerCamera.setFPS(10);
+
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
