@@ -224,6 +224,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Rollers Out", m_moveRollersOut);
     NamedCommands.registerCommand("Rollers In", m_moveRollersIn);
     NamedCommands.registerCommand("Auto Start", m_autoStart);
+    NamedCommands.registerCommand("Auto Start Double", m_AutoShootStartDouble);
     NamedCommands.registerCommand("Feed Note", m_feedNote);
     NamedCommands.registerCommand("Apriltag Align", m_alignSpeaker);
     

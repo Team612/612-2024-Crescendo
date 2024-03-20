@@ -233,21 +233,21 @@ public class Vision extends SubsystemBase {
   }
 
   public int tagID(){
-     if (cameraApriltagBack.getLatestResult().hasTargets()){
+     if (cameraApriltagBack.getLatestResult().hasTargets() && cameraApriltagBack.getLatestResult().getBestTarget().getFiducialId() >= 0){
       return cameraApriltagBack.getLatestResult().getBestTarget().getFiducialId();
     }
     return -1;
   }
 
-  public boolean centeredToApriltag(){
-    if (cameraApriltagBack.getLatestResult().hasTargets()){
-      if (Math.abs(cameraApriltagBack.getLatestResult().getBestTarget().getBestCameraToTarget().getY()) <= Units.inchesToMeters(6)){
-        return true;
-      }
+  // public boolean centeredToApriltag(){
+  //   if (cameraApriltagBack.getLatestResult().hasTargets() && cameraApriltagBack.getLatestResult().getBestTarget().getFiducialId() >= 0){
+  //     if (Math.abs(cameraApriltagBack.getLatestResult().getBestTarget().getBestCameraToTarget().getY()) <= Units.inchesToMeters(6)){
+  //       return true;
+  //     }
         
-    }
-    return false;
-  }
+  //   }
+  //   return false;
+  // }
 
   
 

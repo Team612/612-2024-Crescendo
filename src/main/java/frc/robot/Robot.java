@@ -50,9 +50,9 @@ public class Robot extends TimedRobot {
     ctreConfigs = new CTREConfigs();
 
 
-    driverCamera = CameraServer.startAutomaticCapture("Driver Camera", 0);
-    // driverCamera.setFPS(10);
-    gunnerCamera = CameraServer.startAutomaticCapture("Gunner Camera",1);
+    // driverCamera = CameraServer.startAutomaticCapture("Driver Camera", 0);
+    // // driverCamera.setFPS(10);
+    // gunnerCamera = CameraServer.startAutomaticCapture("Gunner Camera",1);
     // gunnerCamera.setFPS(10);
 
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our

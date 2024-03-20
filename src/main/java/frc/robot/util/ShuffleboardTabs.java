@@ -122,8 +122,8 @@ public class ShuffleboardTabs {
         poseEstimatorTab = Shuffleboard.getTab("Pose Estimator Tab");
 
         /* Init driver entries */
-        driverTab.add(CameraServer.getVideo("Driver Camera").getSource());
-        driverTab.add(CameraServer.getVideo("Gunner Camera").getSource());
+        // driverTab.add(CameraServer.getVideo("Driver Camera").getSource());
+        // driverTab.add(CameraServer.getVideo("Gunner Camera").getSource());
         tagCenter = driverTab.add("Centerd to tag?", false).getEntry();
         fieldLayout = driverTab.add(field);
      
@@ -132,7 +132,7 @@ public class ShuffleboardTabs {
 
         mod1_velocity = drivetrainTab.add("Mod 1 Velocity", 0.0).getEntry();
         mod2_velocity = drivetrainTab.add("Mod 2 Velocity", 0.0).getEntry();
-        mod3_velocity = drivetrainTab.add("Mod 3 Velocity", 0.0).getEntry();
+        mod3_velocity = drivetrainTab.add("Mod 3 Velocit'y", 0.0).getEntry();
         mod4_velocity = drivetrainTab.add("Mod 4 Velocity", 0.0).getEntry();
 
         mod1_angle = drivetrainTab.add("Mod 1 Angle", 0.0).getEntry();
@@ -176,7 +176,7 @@ public class ShuffleboardTabs {
     public void updateButtons(){
         /* Driver entries */
         field.setRobotPose(poseEstimatorSubsystem.getCurrentPose());
-        tagCenter.setBoolean(visionSubsystem.centeredToApriltag());
+        // tagCenter.setBoolean(visionSubsystem.centeredToApriltag());
         
         
         
