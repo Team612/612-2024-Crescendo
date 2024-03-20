@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 
@@ -100,6 +101,7 @@ arrayPublisher = NetworkTableInstance.getDefault()
 
   public void updateEachPoseEstimator(PhotonPoseEstimator poseEstimator, int camID){    
     if(visionSubsystem.getApriltagCamera().getLatestResult().hasTargets()) {
+    PhotonPipelineResult result = visionSubsystem.getApriltagCamera().getLatestResult(); //prevent crashing
      poseEstimator.update().ifPresent(estimatedRobotPose -> {
       var estimatedPose = estimatedRobotPose.estimatedPose;
      
@@ -107,7 +109,7 @@ arrayPublisher = NetworkTableInstance.getDefault()
       // m_DrivePoseEstimator.addVisionMeasurement(estimatedPose.toPose2d(), FIELD_LENGTH_METERS);
      
       // Make sure we have a new measurement, and that it's on the field
-      if (visionSubsystem.getApriltagCamera().getLatestResult().getBestTarget().getFiducialId() >= 0){
+      if (result.getBestTarget().getFiducialId() >= 0){
        
       if (
         estimatedRobotPose.timestampSeconds != previousPipelineTimestamp && 
