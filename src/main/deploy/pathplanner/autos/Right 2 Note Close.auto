@@ -18,6 +18,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Intake Down"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -25,12 +31,6 @@
                 "type": "path",
                 "data": {
                   "pathName": "Leave Right-Close"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Rollers In"
                 }
               },
               {

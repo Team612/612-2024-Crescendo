@@ -14,7 +14,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Auto Start Double"
+            "name": "Auto Start"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Down"
           }
         },
         {
@@ -31,12 +37,6 @@
                 "type": "named",
                 "data": {
                   "name": "Rollers In"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Down"
                 }
               }
             ]
