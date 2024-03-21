@@ -172,7 +172,7 @@ public class Vision extends SubsystemBase {
     robotInTagPose = new Pose2d();
     //this.cameraApriltagFront = cameraApriltagFront;
     this.cameraApriltagBack = cameraApriltagBack;
-    this.cameraObject = cameraApriltagFront;
+    this.cameraObject = cameraObject;
     resetRobotPose();
 
     aprilTagFieldLayout = new AprilTagFieldLayout(atList, 16.451 , 8.211 );
@@ -224,8 +224,10 @@ public class Vision extends SubsystemBase {
   }
 
   public boolean hasTag(){
-    if (cameraApriltagBack.getLatestResult().hasTargets()){
-      if (cameraApriltagBack.getLatestResult().getBestTarget().getFiducialId() >= 0){
+     PhotonPipelineResult result = cameraApriltagBack.getLatestResult();
+    if (result.hasTargets()){
+     
+      if (result.getBestTarget().getFiducialId() >= 0){
         return true;
       }
     }
@@ -233,8 +235,10 @@ public class Vision extends SubsystemBase {
   }
 
   public int tagID(){
-     if (cameraApriltagBack.getLatestResult().hasTargets() && cameraApriltagBack.getLatestResult().getBestTarget().getFiducialId() >= 0){
-      return cameraApriltagBack.getLatestResult().getBestTarget().getFiducialId();
+    PhotonPipelineResult result = cameraApriltagBack.getLatestResult();
+     if (result.hasTargets() && result.getBestTarget().getFiducialId() >= 0){
+      
+      return result.getBestTarget().getFiducialId();
     }
     return -1;
   }

@@ -1,6 +1,7 @@
 
 package frc.robot.commands.TrajectoryCommands;
 
+import java.sql.Driver;
 import java.util.List;
 
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -16,6 +17,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.PoseEstimator;
@@ -131,12 +133,8 @@ public class TrajectoryCreation {
         double tagX = 0;
         double tagY = 0;
         Rotation2d tagAngle = new Rotation2d();
-        double xChange = Units.inchesToMeters(54);
+        double xChange = 0;
         double yChange = 0;
-        
-        tagX = vision.return_tag_pose(7).getX();
-        tagY = vision.return_tag_pose(7).getY();
-        tagAngle = new Rotation2d(0);
 
         // double offset = Constants.SwerveConstants.trackWidth / 2;
 
@@ -146,7 +144,17 @@ public class TrajectoryCreation {
         //     );
 
         System.out.println(tagX + xChange);
-
+        if(DriverStation.getAlliance().get() == Alliance.Blue){
+            tagX = vision.return_tag_pose(7).getX();
+            tagY = vision.return_tag_pose(7).getY();
+            tagAngle = new Rotation2d(0);
+            xChange = Units.inchesToMeters(54);
+        } else if(DriverStation.getAlliance().get() == Alliance.Red){
+            tagX = vision.return_tag_pose(4).getX();
+            tagY = vision.return_tag_pose(4).getY();
+            tagAngle = new Rotation2d(Units.degreesToRadians(180));
+            xChange = -Units.inchesToMeters(54);
+        }
         List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
             new Pose2d(x, y, angle),
             new Pose2d(tagX + xChange, tagY, tagAngle)

@@ -152,7 +152,7 @@ public class RobotContainer {
   private void configureShuffleBoardBindings(){
     m_chooser.setDefaultOption("Do Nothing", new WaitCommand(15));
     m_chooser.addOption("Run on Fly", m_runOnTheFly);
-    m_chooser.addOption("Move to Note", m_moveToNote);
+    m_chooser.addOption("Move to Note", m_justMove);
     m_chooser.addOption("Leave Zone", m_leaveZone);
     m_chooser.addOption("forward Meter", m_forwardMeter);
     //m_chooser.addOption("Score Amp", scoreAmp);
