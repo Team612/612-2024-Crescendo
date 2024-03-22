@@ -20,6 +20,8 @@ public class Shooter extends SubsystemBase {
   private double realLeftSpeed = Constants.ShooterConstants.shooterLeftSpeedSpeaker;
   private double realRightSpeed = Constants.ShooterConstants.shooterRightSpeedSpeaker;
   static Shooter instance = null;
+
+  private double time = 0.0;
   /** Creates a new Shooter. */
   public Shooter() {
     m_ShooterMotorLeft = new TalonSRX(Constants.ShooterConstants.shooterLeftID);
@@ -56,6 +58,14 @@ public class Shooter extends SubsystemBase {
 
   public double getCurrent() {
     return (m_ShooterMotorLeft.getSupplyCurrent() + m_ShooterMotorRight.getSupplyCurrent()) / 2;
+  }
+
+  public void setTime(double newTime) {
+    time = newTime;
+  }
+
+  public double getTime() {
+    return time;
   }
 
   @Override

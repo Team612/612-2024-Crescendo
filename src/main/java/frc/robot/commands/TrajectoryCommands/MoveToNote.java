@@ -36,7 +36,7 @@ public class MoveToNote extends Command {
     initialPos = m_drivetrain.getEncoderMeters() + 0.2;
     if(m_vision.hasTarget()) {
       goalAngle = -m_vision.getTargetYaw() - 0.5;
-      goalPos = m_vision.getNoteRange(); //1 m in front of note
+      goalPos = m_vision.getNoteRange() + 0.1; //1 m in front of note
     }
     m_drivetrain.drive(new Translation2d(), 0, true);
   }
@@ -65,6 +65,6 @@ public class MoveToNote extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (goalPos - (Math.abs(m_drivetrain.getEncoderMeters() - initialPos)) < 0.2 || timer.get() >= 5);
+    return (goalPos - (Math.abs(m_drivetrain.getEncoderMeters() - initialPos)) < 0.1 || timer.get() >= 5);
   }
 }
