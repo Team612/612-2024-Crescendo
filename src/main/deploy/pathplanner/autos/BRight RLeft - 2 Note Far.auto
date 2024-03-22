@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6933452953924437,
-      "y": 6.569779302183426
+      "x": 0.74,
+      "y": 4.529772488116405
     },
-    "rotation": 57.0
+    "rotation": -59.94615583472468
   },
   "command": {
     "type": "sequential",
@@ -18,25 +18,25 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Intake Down"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "Leave Left-Close"
+                  "name": "Rollers In"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Rollers In"
+                  "name": "Intake Down"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Leave Right-Far"
                 }
               }
             ]
@@ -47,15 +47,15 @@
           "data": {
             "commands": [
               {
-                "type": "path",
-                "data": {
-                  "pathName": "To Subwoofer Close-Left"
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "Intake Up"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "To Subwoofer Right-Far"
                 }
               }
             ]
@@ -70,6 +70,6 @@
       ]
     }
   },
-  "folder": "Left",
+  "folder": "BRight RLeft",
   "choreoAuto": false
 }

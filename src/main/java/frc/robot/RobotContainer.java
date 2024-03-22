@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -151,25 +152,25 @@ public class RobotContainer {
 
   private void configureShuffleBoardBindings(){
     m_chooser.setDefaultOption("Do Nothing", new WaitCommand(15));
-    m_chooser.addOption("Run on Fly", m_runOnTheFly);
-    m_chooser.addOption("Move to Note", m_moveToNote);
-    m_chooser.addOption("Leave Zone", m_leaveZone);
-    m_chooser.addOption("forward Meter", m_forwardMeter);
-    //m_chooser.addOption("Score Amp", scoreAmp);
-    //m_chooser.addOption("Auto Intake", autoIntake);
-    m_chooser.addOption("auto speaker", m_autoShootSpeaker);
-    m_chooser.addOption("auto amp", m_autoShootAmp);
-    m_chooser.addOption("align speaker", m_alignSpeaker);
-    m_chooser.addOption("Align Manual", m_manualAlign);
-    m_chooser.addOption("auto shoot double", m_AutoShootStartDouble);
-    // m_chooser.addOption("Leave Starting Zone Subwoofer", m_trajectoryConfig.followPathGui("Leave Zone Subwoofer"));
-    // m_chooser.addOption("Score and Leave", scoreAndLeave);
-    m_chooser.addOption("Swerve Characterization", new FeedForwardCharacterization(
-              m_drivetrain,
-              true,
-              new FeedForwardCharacterizationData("drive"),
-              m_drivetrain::runCharacterizationVolts,
-              m_drivetrain::getCharacterizationVelocity));
+    // m_chooser.addOption("Run on Fly", m_runOnTheFly);
+    // m_chooser.addOption("Move to Note", m_moveToNote);
+    // m_chooser.addOption("Leave Zone", m_leaveZone);
+    // m_chooser.addOption("forward Meter", m_forwardMeter);
+    // //m_chooser.addOption("Score Amp", scoreAmp);
+    // //m_chooser.addOption("Auto Intake", autoIntake);
+    // m_chooser.addOption("auto speaker", m_autoShootSpeaker);
+    // m_chooser.addOption("auto amp", m_autoShootAmp);
+    // m_chooser.addOption("align speaker", m_alignSpeaker);
+    // m_chooser.addOption("Align Manual", m_manualAlign);
+    // m_chooser.addOption("auto shoot double", m_AutoShootStartDouble);
+    // // m_chooser.addOption("Leave Starting Zone Subwoofer", m_trajectoryConfig.followPathGui("Leave Zone Subwoofer"));
+    // // m_chooser.addOption("Score and Leave", scoreAndLeave);
+    // m_chooser.addOption("Swerve Characterization", new FeedForwardCharacterization(
+    //           m_drivetrain,
+    //           true,
+    //           new FeedForwardCharacterizationData("drive"),
+    //           m_drivetrain::runCharacterizationVolts,
+    //           m_drivetrain::getCharacterizationVelocity));
 
     List<String> autos = PathPlannerUtil.getExistingPaths();
     for (String auto : autos) {
