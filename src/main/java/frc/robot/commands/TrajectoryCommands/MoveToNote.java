@@ -6,6 +6,7 @@ package frc.robot.commands.TrajectoryCommands;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Vision;
@@ -19,6 +20,7 @@ public class MoveToNote extends Command {
   private double initialPos = 0;
   private double goalAngle = 0;
   private double goalPos = 0;
+  private Timer timer = new Timer();
   public MoveToNote(Drivetrain d, Vision v) {
     m_drivetrain = d;
     m_vision = v;
@@ -29,6 +31,7 @@ public class MoveToNote extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    timer.start();
     initialAngle = m_drivetrain.getNavxAngle().getDegrees();
     initialPos = m_drivetrain.getEncoderMeters() + 0.2;
     if(m_vision.hasTarget()) {
@@ -54,12 +57,14 @@ public class MoveToNote extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    timer.stop();
+    timer.reset();
     m_drivetrain.drive(new Translation2d(), 0, true);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return goalPos - (Math.abs(m_drivetrain.getEncoderMeters() - initialPos)) < 0.2;
+    return (goalPos - (Math.abs(m_drivetrain.getEncoderMeters() - initialPos)) < 0.2 || timer.get() >= 5);
   }
 }
