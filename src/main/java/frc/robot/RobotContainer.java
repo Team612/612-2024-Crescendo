@@ -158,13 +158,13 @@ public class RobotContainer {
     // m_chooser.addOption("forward Meter", m_forwardMeter);
     // //m_chooser.addOption("Score Amp", scoreAmp);
     // //m_chooser.addOption("Auto Intake", autoIntake);
-    // m_chooser.addOption("auto speaker", m_autoShootSpeaker);
+    m_chooser.addOption("Only Shooter Speaker", m_autoShootSpeaker);
     // m_chooser.addOption("auto amp", m_autoShootAmp);
     // m_chooser.addOption("align speaker", m_alignSpeaker);
     // m_chooser.addOption("Align Manual", m_manualAlign);
     // m_chooser.addOption("auto shoot double", m_AutoShootStartDouble);
     // // m_chooser.addOption("Leave Starting Zone Subwoofer", m_trajectoryConfig.followPathGui("Leave Zone Subwoofer"));
-    // // m_chooser.addOption("Score and Leave", scoreAndLeave);
+    // m_chooser.addOption("Score and Leave", scoreAndLeave);
     // m_chooser.addOption("Swerve Characterization", new FeedForwardCharacterization(
     //           m_drivetrain,
     //           true,

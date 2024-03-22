@@ -181,13 +181,18 @@ public class TrajectoryCreation {
         double tagX = 0;
         double tagY = 0;
         Rotation2d tagAngle = new Rotation2d();
-        double xChange = Constants.SwerveConstants.trackWidth/2;
-        double yChange = Constants.SwerveConstants.trackWidth/2;
-        
-        tagX = vision.return_tag_pose(6).getX();
-        tagY = vision.return_tag_pose(6).getY();
-        tagAngle = new Rotation2d(3 * Math.PI/2);
+        double xChange = 0;
+        double yChange = -Constants.SwerveConstants.trackWidth/2;
 
+        if(DriverStation.getAlliance().get() == Alliance.Blue){
+            tagX = vision.return_tag_pose(6).getX();
+            tagY = vision.return_tag_pose(6).getY();
+            tagAngle = new Rotation2d(3 * Math.PI/2);
+        } else if(DriverStation.getAlliance().get() == Alliance.Red){
+            tagX = vision.return_tag_pose(5).getX();
+            tagY = vision.return_tag_pose(5).getY();
+            tagAngle = new Rotation2d(3 * Math.PI/2);
+        }
         // double offset = Constants.SwerveConstants.trackWidth / 2;
 
         // List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
@@ -195,11 +200,9 @@ public class TrajectoryCreation {
         //         new Pose2d(tagX + xChange, tagY + yChange, tagAngle)
         //     );
 
-        System.out.println(tagX + xChange);
-
         List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
             new Pose2d(x, y, angle),
-            new Pose2d(tagX + xChange, tagY - yChange, tagAngle)
+            new Pose2d(tagX + xChange, tagY + yChange, tagAngle)
         );
 
         // Create the path using the bezier points created above
