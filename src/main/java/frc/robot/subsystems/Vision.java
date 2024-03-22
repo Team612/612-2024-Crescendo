@@ -179,7 +179,7 @@ public class Vision extends SubsystemBase {
 
     robotToCamAprilBack = new Transform3d(new Translation3d(0.0,0.07,0.787), new Rotation3d(0,Units.degreesToRadians(35),Math.PI));
 
-    robotToCamObject = new Transform3d(new Translation3d(0.0,-0.07,0.77), new Rotation3d(0, Units.degreesToRadians(-12), 0)); //0.20,-0.04
+    robotToCamObject = new Transform3d(new Translation3d(0.0,-0.07,0.77), new Rotation3d(0, Units.degreesToRadians(-34), 0)); //0.20,-0.04
     
     //poseEstimatorFront = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, this.cameraApriltagFront, robotToCamAprilFront);
     poseEstimatorBack = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, this.cameraApriltagBack, robotToCamAprilBack);
@@ -332,7 +332,7 @@ public class Vision extends SubsystemBase {
     return PhotonUtils.calculateDistanceToTargetMeters(
             robotToCamObject.getZ(),
             Units.inchesToMeters(0),
-            0,
+            Units.degreesToRadians(-34),
             Units.degreesToRadians(getTargetPitch()));
   }
 
@@ -340,7 +340,7 @@ public class Vision extends SubsystemBase {
   public Transform3d getNoteSpace(){ //
     //
     Transform3d camPose = cameraObject.getLatestResult().getBestTarget().getBestCameraToTarget();
-    System.out.println("x " + camPose.getX() + "y " + camPose.getY());
+     //System.out.println("x " + camPose.getX() + "y " + camPose.getY());
     return camPose;
     // double range =
     // //note, the algorithm photonvision uses is the exact same as the limelight one, commented out below
@@ -371,7 +371,9 @@ public class Vision extends SubsystemBase {
     // if (cameraObject != null && cameraObject.getLatestResult().hasTargets()){
     //   SmartDashboard.putBoolean("has Object", cameraObject.getLatestResult().hasTargets());
     // }
-
+      if(hasTarget()) {
+        System.out.println(getNoteRange());
+      }
   }
 
   
