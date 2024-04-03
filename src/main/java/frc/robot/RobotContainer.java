@@ -177,6 +177,11 @@ public class RobotContainer {
       m_chooser.addOption(auto,  AutoBuilder.buildAuto(auto));
     }
 
+      List<String> choreoAutos = PathPlannerUtil.getExistingChoreoPaths();
+    for (String auto : choreoAutos) {
+      m_chooser.addOption(auto,  AutoBuilder.buildAuto(auto));
+    }
+
     
       
     //I would do this in shuffleboard, but i dont want to mess anything up;
