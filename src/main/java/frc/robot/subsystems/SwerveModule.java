@@ -144,6 +144,9 @@ public class SwerveModule {
     return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValueAsDouble());
   }
 
+  public double getSteerVolts(){
+    return angleMotor.getMotorVoltage().getValueAsDouble();
+  }
   public SwerveModuleState getState() {
     return new SwerveModuleState(
       Conversions.RPSToMPS(driveMotor.getVelocity().getValueAsDouble(), Constants.Swerve.wheelCircumference), getAngle());

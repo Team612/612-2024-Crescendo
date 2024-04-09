@@ -179,7 +179,7 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     for (SwerveModule mod : mSwerveMods) {
       SmartDashboard.putNumber(
-          "Mod " + mod.moduleNumber + " angle", mod.getCanCoder().getDegrees());
+          "Mod " + mod.moduleNumber + " volts", mod.getSteerVolts());
     }
     SmartDashboard.putNumber("Current Angle", navx.getAngle());
     if (isCharacterizing) {
