@@ -30,6 +30,19 @@ public class PathPlannerUtil {
     }
   }
 
+    public static List<String> getExistingChoreoPaths() {
+    var path = Path.of(Filesystem.getDeployDirectory().getAbsolutePath(), "choreo");
+    try (Stream<Path> stream = Files.walk(path)) {
+      // return Collections.emptyList();
+      return stream.filter(x -> getFileExtension(x.toFile())
+          .equals(".auto"))
+          .map(x -> getFileStem(x.toFile()))
+          .toList();
+    } catch (IOException e) {
+      return Collections.emptyList();
+    }
+  }
+
 
   private static String getFileStem(File file) {
     try {
