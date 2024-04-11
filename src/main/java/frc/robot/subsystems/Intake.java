@@ -19,12 +19,14 @@ import com.revrobotics.SparkLimitSwitch;
 
 public class Intake extends SubsystemBase {
   private static final double DEADZONE = 0.05;
-  private TalonSRX m_IntakeRollerMotor;
+  // private TalonSRX m_IntakeRollerMotor;
+  private CANSparkMax m_IntakeRollerMotor;
   private AnalogInput IRSensor = new AnalogInput(Constants.IntakeConstants.IRport);
   static Intake instance = null;
   /** Creates a new Intake. */
   public Intake() {
-    m_IntakeRollerMotor = new TalonSRX(Constants.IntakeConstants.rollerID);
+    // m_IntakeRollerMotor = new TalonSRX(Constants.IntakeConstants.rollerID);
+    m_IntakeRollerMotor = new CANSparkMax(Constants.IntakeConstants.rollerID, MotorType.kBrushless);
   }
 
   // create instance of intake
@@ -38,7 +40,8 @@ public class Intake extends SubsystemBase {
   // move intake rollers
   public void moveRollers(double rotate){
     if(Math.abs(rotate) < DEADZONE) rotate = 0;
-    m_IntakeRollerMotor.set(TalonSRXControlMode.PercentOutput, rotate);
+    m_IntakeRollerMotor.set(rotate);
+    // m_IntakeRollerMotor.set(TalonSRXControlMode.PercentOutput, rotate);
   }
 
   public double getIRSensor(){
