@@ -56,5 +56,13 @@ public final class CTREConfigs {
     swerveAngleFXConfig.Slot0.kP = Constants.Swerve.angleKP;
     swerveAngleFXConfig.Slot0.kI = Constants.Swerve.angleKI;
     swerveAngleFXConfig.Slot0.kD = Constants.Swerve.angleKD;
+
+    
+      /* Open and Closed Loop Ramping */
+      swerveDriveFXConfig.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = Constants.Swerve.openLoopRamp;
+      swerveDriveFXConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = Constants.Swerve.openLoopRamp;
+
+      swerveDriveFXConfig.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = Constants.Swerve.closedLoopRamp;
+      swerveDriveFXConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = Constants.Swerve.closedLoopRamp;
   }
 }

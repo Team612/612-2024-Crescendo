@@ -31,7 +31,7 @@ public final class Constants {
     public static final double stickDeadband = 0.1;
 
     public static final COTSTalonFXSwerveConstants chosenModule =  
-    COTSTalonFXSwerveConstants.WCP.SwerveXStandard.KrakenX60(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L2);    
+    COTSTalonFXSwerveConstants.SDS.MK4i.KrakenX60(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L2);    
 
     /* Drivetrain Constants */
     public static final double trackWidth = Units.inchesToMeters(18.596);
@@ -54,7 +54,7 @@ public final class Constants {
     public static final double voltageComp = 12.0;
 
     /* Swerve Current Limiting */
-    public static final int angleContinuousCurrentLimit = 20;
+    public static final int angleContinuousCurrentLimit = 25;
     public static final int angleCurrentThreshold = 40;
     public static final double angleCurrentThresholdTime = 0.1;
      public static final boolean angleEnableCurrentLimit = true;
@@ -80,6 +80,10 @@ public final class Constants {
     public static final double driveKS = 0.22005;
     public static final double driveKV = 2.74490;
     public static final double driveKA = 0;
+
+    /* Ramping */
+    public static final double openLoopRamp = 0.25;
+    public static final double closedLoopRamp = 0.0;
 
      //have to tune manually
      public static final double kPXController = 5; // ~ 1cm error
