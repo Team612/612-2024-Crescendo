@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
@@ -22,9 +23,15 @@ public class Intake extends SubsystemBase {
   private TalonSRX m_IntakeRollerMotor;
   private AnalogInput IRSensor = new AnalogInput(Constants.IntakeConstants.IRport);
   static Intake instance = null;
+  
+  private double defOuttake = Constants.IntakeConstants.rollerSpeedOuttake;
+  private double defIr = Constants.IntakeConstants.irThresh;
   /** Creates a new Intake. */
   public Intake() {
     m_IntakeRollerMotor = new TalonSRX(Constants.IntakeConstants.rollerID);
+
+    Preferences.initDouble(Constants.IntakeConstants.outtakeKey, defOuttake);
+    Preferences.initDouble(Constants.IntakeConstants.irKey, defIr);
   }
 
   // create instance of intake
@@ -47,6 +54,8 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
+    Constants.IntakeConstants.rollerSpeedOuttake = Preferences.getDouble(Constants.IntakeConstants.outtakeKey, defOuttake);
+    Constants.IntakeConstants.irThresh = Preferences.getDouble(Constants.IntakeConstants.irKey, defIr);
     // SmartDashboard.putBoolean("limit forward", getIntakeLimitStateForward());
     // SmartDashboard.putBoolean("limit reverse", getIntakeLimitStateReverse());
     // SmartDashboard.putNumber("IR Sensor", getIRSensor());

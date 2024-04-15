@@ -25,7 +25,7 @@ public class MoveRollersIn extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(m_Intake.getIRSensor() > 0.3) {
+    if(m_Intake.getIRSensor() > Constants.IntakeConstants.irThresh) {
       count++;
     } else {
       count = 0;

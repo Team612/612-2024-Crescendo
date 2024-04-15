@@ -66,6 +66,12 @@ public class Robot extends TimedRobot {
       if (!Preferences.containsKey(Constants.ShooterConstants.rightSpeedKey)){
       Preferences.setDouble(Constants.ShooterConstants.rightSpeedKey, Constants.ShooterConstants.shooterRightSpeedSpeaker);
     }
+    if (!Preferences.containsKey(Constants.IntakeConstants.outtakeKey)){
+      Preferences.setDouble(Constants.IntakeConstants.outtakeKey, Constants.IntakeConstants.rollerSpeedOuttake);
+    }
+    if (!Preferences.containsKey(Constants.IntakeConstants.irKey)){
+      Preferences.setDouble(Constants.IntakeConstants.irKey, Constants.ShooterConstants.shooterLeftSpeedSpeaker);
+    }
   }
 
   /**

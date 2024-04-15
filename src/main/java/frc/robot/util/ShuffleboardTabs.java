@@ -66,7 +66,6 @@ public class ShuffleboardTabs {
     private GenericEntry limitForward;
     private GenericEntry limitBackward;
     private GenericEntry irSensor;
-    private GenericEntry noteIn;
 
     private GenericEntry poseEstimatorX;
     private GenericEntry poseEstimatorY;
@@ -75,7 +74,6 @@ public class ShuffleboardTabs {
 
     private GenericEntry shooterLeftCurrent;
     private GenericEntry shooterRightCurrent;
-    private GenericEntry shooterTimer;
 
     private GenericEntry hasCalibrationFront;
     private GenericEntry hasCalibrationBack;
@@ -128,8 +126,6 @@ public class ShuffleboardTabs {
         // driverTab.add(CameraServer.getVideo("Gunner Camera").getSource());
         tagCenter = driverTab.add("Centerd to tag?", false).getEntry();
         fieldLayout = driverTab.add(field);
-        shooterTimer = driverTab.add("Shooter On Time", 0.0).getEntry();
-        noteIn = driverTab.add("Note In?", false).getEntry();
 
         /* Init entries */
 
@@ -203,7 +199,6 @@ public class ShuffleboardTabs {
         limitForward.setBoolean(pivotSubsystem.getIntakeLimitStateForward());
         limitBackward.setBoolean(pivotSubsystem.getIntakeLimitStateReverse());
         irSensor.setDouble(intakeSubsystem.getIRSensor());
-        noteIn.setBoolean(intakeSubsystem.getIRSensor() > 0.3);
 
         poseEstimatorX.setDouble(poseEstimatorSubsystem.getCurrentPose().getX());
         poseEstimatorY.setDouble(poseEstimatorSubsystem.getCurrentPose().getY());
@@ -212,7 +207,6 @@ public class ShuffleboardTabs {
 
         shooterLeftCurrent.setDouble(shooterSubsystem.getCurrent());
         shooterRightCurrent.setDouble(shooterSubsystem.getCurrent());
-        shooterTimer.setDouble(shooterSubsystem.getTime());
 
         hasCalibrationBack.setBoolean(visionSubsystem.hasCalibrationBack());
         hasTag.setBoolean(visionSubsystem.hasTag());

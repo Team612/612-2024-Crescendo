@@ -189,14 +189,14 @@ public class RobotContainer {
     ControlMap.m_driverController.leftBumper().onTrue(new InstantCommand(() -> m_drivetrain.zeroGyro()));
     ControlMap.m_driverController.b().toggleOnTrue(m_defaultDrive);
     ControlMap.m_driverController.a().onTrue(m_alignSpeaker);
-    ControlMap.m_driverController.x().onTrue(m_justMove);
+    // ControlMap.m_driverController.x().onTrue(m_justMove);
 
     // Gunner button bindings
     ControlMap.m_gunnerController.a().whileTrue(m_intakeDown);
     ControlMap.m_gunnerController.b().whileTrue(m_intakeUp);
     ControlMap.m_gunnerController.y().whileTrue(m_moveRollersOut);
     ControlMap.m_gunnerController.x().whileTrue(m_moveRollersIn);
-    ControlMap.m_gunnerController.leftTrigger().whileTrue(m_shootAmp);
+    ControlMap.m_gunnerController.leftTrigger().toggleOnTrue(m_shootAmp);
     ControlMap.m_gunnerController.rightTrigger().toggleOnTrue((m_shootSpeaker));
 
     // // FOR TESTING, REMOVE FOR COMP

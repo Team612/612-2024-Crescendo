@@ -22,18 +22,6 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "Rollers In"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Down"
-                }
-              },
-              {
                 "type": "path",
                 "data": {
                   "pathName": "Leave Right-Align"

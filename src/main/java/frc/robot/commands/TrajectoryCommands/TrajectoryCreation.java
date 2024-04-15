@@ -157,6 +157,7 @@ public class TrajectoryCreation {
         }
         List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
             new Pose2d(x, y, angle),
+            new Pose2d((tagX + xChange + x)/2, (tagY + y)/2, tagAngle),
             new Pose2d(tagX + xChange, tagY, tagAngle)
         );
 
