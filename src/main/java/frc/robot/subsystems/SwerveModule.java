@@ -48,6 +48,7 @@ public class SwerveModule {
     /* Angle Motor Config */
     angleMotor = new TalonFX(moduleConstants.angleMotorID);
     configAngleMotor();
+    resetToAbsolute();
 
     /* Drive Motor Config */
     driveMotor = new TalonFX(moduleConstants.driveMotorID);
@@ -69,14 +70,16 @@ public class SwerveModule {
 
   /* Reset wheel orientation to forward */
   public void resetToAbsolute() {
+    // angleMotor.setPosition(0);
     double absolutePosition = getCanCoder().getRotations() - desiredAngle.getRotations(); 
+    // double absolutePosition = getCanCoder().getRotations(); 
     angleMotor.setPosition(absolutePosition);
-    System.out.println(absolutePosition);
+    // System.out.println(absolutePosition);
   }
 
   /* Settings for Angle Encoder */
   private void configAngleEncoder() {
-    angleEncoder.getConfigurator().apply(Robot.ctreConfigs.swerveCanCoderConfig, 0.1);
+    angleEncoder.getConfigurator().apply(Robot.ctreConfigs.swerveCanCoderConfig);
   }
 
   /* Settings for Angle Motor */
@@ -111,6 +114,8 @@ public class SwerveModule {
       driveMotor.setControl(driveVelocity);
     }
   }
+
+
 
   /* Sets the angle of the swerve module. */
   private void setAngle(SwerveModuleState desiredState) {
