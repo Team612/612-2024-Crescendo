@@ -4,7 +4,15 @@
 
 package frc.robot.commands.TrajectoryCommands;
 
+import com.fasterxml.jackson.annotation.JacksonInject.Value;
+
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Vision;
 
 public class UpdatedMoveToNote extends CommandBase {
   private final Drivetrain m_drivetrain;
@@ -18,11 +26,11 @@ public class UpdatedMoveToNote extends CommandBase {
   private double goalAngle = 0;
   private double goalPos = 0;
   /** Creates a new UpdatedMoveToNote. */
-  public UpdatedMoveToNote() {
+  public UpdatedMoveToNote(Drivetrain d, Vision v) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_drivetrain = drivetrain;
-    m_vision = vision;
-    addRequirements(drivetrain, vision);
+    m_drivetrain = d;
+    m_vision = v;
+    addRequirements(d, v);
   }
 
   // Called when the command is initially scheduled.
@@ -36,7 +44,7 @@ public class UpdatedMoveToNote extends CommandBase {
       goalPos = m_vision.getNoteRange() - 1; //distance to target in meters
     }
     m_drivetrain.driveRobotRelative(new Translation2d(), 0, false);
-    turnController.reset(m_drivetrain.getHeading().getDegrees());
+    turnController.reset(m_drivetrain.getNavxAngle().getDegrees());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -45,10 +53,10 @@ public class UpdatedMoveToNote extends CommandBase {
     if(m_vision.hasTarget()) {
       double distanceToNote = m_vision.getNoteRange() - 1; //1 meter in front of note
       double rotationToNote = -m_vision.getTargetYaw();
-      double rotationError = rotationToNote - m_drivetrain.getHeading().getDegrees() + offset; //calculating error
+      double rotationError = rotationToNote - m_drivetrain.getNavxAngle().getDegrees() + offset; //calculating error
       rotationspeed = turnController.calculate(rotationError, 0); //pid integration
       double translationspeed = 0.5 * distanceToNote;
-      m_drivetrain.drive(new Translation2d(translationspeed, 0).times(Rotation2d.fromDegrees(m_drivetrain.getHeading().getDegrees())), rotationspeed, false);
+      m_drivetrain.drive(new Translation2d(distanceToNote, Rotation2d.fromDegrees(m_drivetrain.getNavxAngle().getDegrees())), rotationspeed, false);
     }
   }
 
