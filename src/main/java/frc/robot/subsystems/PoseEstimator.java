@@ -61,7 +61,7 @@ StructArrayPublisher<Pose2d> arrayPublisher;
   
   public PoseEstimator() {
     driveSubsystem = Drivetrain.getInstance();
-    visionSubsystem = Vision.getVisionInstance();
+    // visionSubsystem = Vision.getVisionInstance();
     fieldLayout = new Field2d();
     SmartDashboard.putData("Field", fieldLayout);
 

@@ -87,10 +87,10 @@ public class ShuffleboardTabs {
         driveSubsystem = Drivetrain.getInstance();
         intakeSubsystem = Intake.getInstance();
         shooterSubsystem = Shooter.getInstance();
-        visionSubsystem = Vision.getVisionInstance();
+        // visionSubsystem = Vision.getVisionInstance();
         climbSubsystem = Climb.getInstance();
         pivotSubsystem = Pivot.getInstance();
-        poseEstimatorSubsystem = frc.robot.subsystems.PoseEstimator.getPoseEstimatorInstance();
+        // poseEstimatorSubsystem = frc.robot.subsystems.PoseEstimator.getPoseEstimatorInstance();
         states = driveSubsystem.getStates();
         mods = driveSubsystem.getModules();
 
@@ -171,17 +171,17 @@ public class ShuffleboardTabs {
         limitBackward.setBoolean(pivotSubsystem.getIntakeLimitStateReverse());
         irSensor.setDouble(intakeSubsystem.getIRSensor());
 
-        poseEstimatorX.setDouble(poseEstimatorSubsystem.getCurrentPose().getX());
-        poseEstimatorY.setDouble(poseEstimatorSubsystem.getCurrentPose().getY());
-        poseEstimatorAngle.setDouble(poseEstimatorSubsystem.getCurrentPose().getRotation().getDegrees());
-        poseEstimatorRadians.setDouble(poseEstimatorSubsystem.getCurrentPose().getRotation().getRadians());
+        // poseEstimatorX.setDouble(poseEstimatorSubsystem.getCurrentPose().getX());
+        // poseEstimatorY.setDouble(poseEstimatorSubsystem.getCurrentPose().getY());
+        // poseEstimatorAngle.setDouble(poseEstimatorSubsystem.getCurrentPose().getRotation().getDegrees());
+        // poseEstimatorRadians.setDouble(poseEstimatorSubsystem.getCurrentPose().getRotation().getRadians());
 
         shooterLeftCurrent.setDouble(shooterSubsystem.getCurrent());
         shooterRightCurrent.setDouble(shooterSubsystem.getCurrent());
 
-        hasCalibrationBack.setBoolean(visionSubsystem.hasCalibrationBack());
-        hasTag.setBoolean(visionSubsystem.hasTag());
-        tagInSight.setInteger(visionSubsystem.tagID());
+        // hasCalibrationBack.setBoolean(visionSubsystem.hasCalibrationBack());
+        // hasTag.setBoolean(visionSubsystem.hasTag());
+        // tagInSight.setInteger(visionSubsystem.tagID());
 
         limitLeftClimbUp.setBoolean(climbSubsystem.getLeftLimitStateUp());
         limitLeftClimbDown.setBoolean(climbSubsystem.getLeftLimitStateDown());

@@ -63,24 +63,24 @@ import frc.robot.subsystems.Pivot;
 public class RobotContainer {
   //Subsystem declerations
   private final Drivetrain m_drivetrain = Drivetrain.getInstance();
-  private final PoseEstimator m_poseEstimator = PoseEstimator.getPoseEstimatorInstance();
-  private final TrajectoryConfiguration m_trajectoryConfig = TrajectoryConfiguration.getInstance();
-  private final Vision m_vision = Vision.getVisionInstance();
+  // private final PoseEstimator m_poseEstimator = PoseEstimator.getPoseEstimatorInstance();
+  // private final TrajectoryConfiguration m_trajectoryConfig = TrajectoryConfiguration.getInstance();
+  // private final Vision m_vision = Vision.getVisionInstance();
   private final Intake m_intake = Intake.getInstance();
   private final Shooter m_shooter = Shooter.getInstance();
   private final Climb m_climb = Climb.getInstance();
   private final Pivot m_pivot = Pivot.getInstance();
 
   // Autonomous commands
-  private final TrajectoryCreation m_traj = new TrajectoryCreation();
-  private final RunOnTheFly m_runOnTheFly = new RunOnTheFly(m_drivetrain, m_poseEstimator, m_traj, m_vision, 0);
-  private final FollowNote m_moveToNote = new FollowNote(m_drivetrain, m_poseEstimator, m_traj, m_vision, 0);
-  private final AlignAmp m_alignAmp = new AlignAmp(m_poseEstimator, m_traj, m_vision);
-  private final AlignSpeaker m_alignSpeaker = new AlignSpeaker(m_poseEstimator, m_traj, m_vision);
-  private final MoveToNote m_justMove = new MoveToNote(m_drivetrain, m_vision);
-  private final LeaveZone m_leaveZone = new LeaveZone(m_drivetrain);
-  private final forwardMeter m_forwardMeter = new forwardMeter(m_drivetrain, m_poseEstimator, m_traj, m_vision, 0);
-  private final AlignSpeakerManual m_manualAlign = new AlignSpeakerManual(m_drivetrain, m_vision);
+  // private final TrajectoryCreation m_traj = new TrajectoryCreation();
+  // private final RunOnTheFly m_runOnTheFly = new RunOnTheFly(m_drivetrain, m_poseEstimator, m_traj, m_vision, 0);
+  // private final FollowNote m_moveToNote = new FollowNote(m_drivetrain, m_poseEstimator, m_traj, m_vision, 0);
+  // private final AlignAmp m_alignAmp = new AlignAmp(m_poseEstimator, m_traj, m_vision);
+  // private final AlignSpeaker m_alignSpeaker = new AlignSpeaker(m_poseEstimator, m_traj, m_vision);
+  // private final MoveToNote m_justMove = new MoveToNote(m_drivetrain, m_vision);
+  // private final LeaveZone m_leaveZone = new LeaveZone(m_drivetrain);
+  // private final forwardMeter m_forwardMeter = new forwardMeter(m_drivetrain, m_poseEstimator, m_traj, m_vision, 0);
+  // private final AlignSpeakerManual m_manualAlign = new AlignSpeakerManual(m_drivetrain, m_vision);
   private final AutoShootStartDouble m_AutoShootStartDouble = new AutoShootStartDouble(m_shooter, m_intake);
 
   // Drive command
@@ -102,7 +102,7 @@ public class RobotContainer {
   private final AutoShootAmp m_autoShootAmp = new AutoShootAmp(m_shooter, m_intake);
   private final SpeedUpSpeaker m_speedUpSpeaker = new SpeedUpSpeaker(m_shooter);
   private final SpeedUpAmp m_speedUpAmp = new SpeedUpAmp(m_shooter);
-  private final AutoIntake autoIntake = new AutoIntake(m_drivetrain, m_vision, m_intake);
+  // private final AutoIntake autoIntake = new AutoIntake(m_drivetrain, m_vision, m_intake);
   private final ClimbTeleop m_climbUp = new ClimbTeleop(m_climb);
   private final AutoShootStart m_autoStart = new AutoShootStart(m_shooter, m_intake);
   private final FeedNote m_feedNote = new FeedNote(m_intake);
@@ -145,16 +145,16 @@ public class RobotContainer {
   }
 
   private void configureShuffleBoardBindings(){
-    m_chooser.addOption("Run on Fly", m_runOnTheFly);
-    m_chooser.addOption("Move to Note", m_moveToNote);
-    m_chooser.addOption("Leave Zone", m_leaveZone);
-    m_chooser.addOption("forward Meter", m_forwardMeter);
+    // m_chooser.addOption("Run on Fly", m_runOnTheFly);
+    // m_chooser.addOption("Move to Note", m_moveToNote);
+    // m_chooser.addOption("Leave Zone", m_leaveZone);
+    // m_chooser.addOption("forward Meter", m_forwardMeter);
     //m_chooser.addOption("Score Amp", scoreAmp);
     //m_chooser.addOption("Auto Intake", autoIntake);
     m_chooser.addOption("auto speaker", m_autoShootSpeaker);
     m_chooser.addOption("auto amp", m_autoShootAmp);
-    m_chooser.addOption("align speaker", m_alignSpeaker);
-    m_chooser.addOption("Align Manual", m_manualAlign);
+    // m_chooser.addOption("align speaker", m_alignSpeaker);
+    // m_chooser.addOption("Align Manual", m_manualAlign);
     m_chooser.addOption("auto shoot double", m_AutoShootStartDouble);
     // m_chooser.addOption("Leave Starting Zone Subwoofer", m_trajectoryConfig.followPathGui("Leave Zone Subwoofer"));
     // m_chooser.addOption("Score and Leave", scoreAndLeave);
@@ -165,10 +165,10 @@ public class RobotContainer {
               m_drivetrain::runCharacterizationVolts,
               m_drivetrain::getCharacterizationVelocity));
 
-    List<String> autos = PathPlannerUtil.getExistingPaths();
-    for (String auto : autos) {
-      m_chooser.addOption(auto,  AutoBuilder.buildAuto(auto));
-    }
+    // List<String> autos = PathPlannerUtil.getExistingPaths();
+    // for (String auto : autos) {
+    //   m_chooser.addOption(auto,  AutoBuilder.buildAuto(auto));
+    // }
 
     
       
@@ -179,7 +179,7 @@ public class RobotContainer {
     // Driver button configs
     ControlMap.m_driverController.y().onTrue(new InstantCommand(() -> m_drivetrain.resetAlignment()));
     ControlMap.m_driverController.leftBumper().onTrue(new InstantCommand(() -> m_drivetrain.zeroGyro()));
-    ControlMap.m_driverController.b().toggleOnTrue(m_defaultDrive);
+    // ControlMap.m_driverController.b().toggleOnTrue(m_defaultDrive); //not neccessary i think
     ControlMap.m_driverController.a().toggleOnTrue(new InstantCommand(() -> m_drivetrain.setSpeedMultiplier(0.5)));
     // ControlMap.m_driverController.a().onTrue(m_alignSpeaker);
     // ControlMap.m_driverController.x().onTrue(m_alignAmp);
@@ -218,7 +218,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Rollers In", m_moveRollersIn);
     NamedCommands.registerCommand("Auto Start", m_autoStart);
     NamedCommands.registerCommand("Feed Note", m_feedNote);
-    NamedCommands.registerCommand("Apriltag Align", m_alignSpeaker);
+    // NamedCommands.registerCommand("Apriltag Align", m_alignSpeaker);
     
     //Shooter (MANUAL)
     NamedCommands.registerCommand("Shooter On", m_shootSpeaker);
