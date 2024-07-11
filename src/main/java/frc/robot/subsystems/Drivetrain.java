@@ -43,6 +43,7 @@ public class Drivetrain extends SubsystemBase {
   private boolean isCharacterizing = false;
   private double characterizationVolts = 0.0;
   private StructArrayPublisher<SwerveModuleState> publisher;
+  private double speedMultiplier = 1.0;
 
   public Drivetrain() {
     mSwerveMods =
@@ -71,6 +72,9 @@ public class Drivetrain extends SubsystemBase {
     }
     return driveSubsystem;
   }
+  public void setSpeedMultiplier(double multiplier) {
+    speedMultiplier = multiplier;
+  }
 
   //Drives field relative
   public void drive(
@@ -78,7 +82,7 @@ public class Drivetrain extends SubsystemBase {
     SwerveModuleState[] swerveModuleStates =
         Constants.SwerveConstants.swerveKinematics.toSwerveModuleStates(
           ChassisSpeeds.fromFieldRelativeSpeeds(
-                    translation.getX(), translation.getY(), rotation, getNavxAngle()));
+                    translation.getX() * speedMultiplier, translation.getY() * speedMultiplier, rotation * speedMultiplier, getNavxAngle()));
     
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.SwerveConstants.maxSpeed);
 
