@@ -180,7 +180,7 @@ public class RobotContainer {
     ControlMap.m_driverController.y().onTrue(new InstantCommand(() -> m_drivetrain.resetAlignment()));
     ControlMap.m_driverController.leftBumper().onTrue(new InstantCommand(() -> m_drivetrain.zeroGyro()));
     ControlMap.m_driverController.b().toggleOnTrue(m_defaultDrive);
-    ControlMap.m_driverController.a().onTrue(new InstantCommand(() -> m_drivetrain.setSpeedMultiplier(0.5)));
+    ControlMap.m_driverController.a().toggleOnTrue(new InstantCommand(() -> m_drivetrain.setSpeedMultiplier(0.5)));
     // ControlMap.m_driverController.a().onTrue(m_alignSpeaker);
     // ControlMap.m_driverController.x().onTrue(m_alignAmp);
 
