@@ -31,8 +31,6 @@ public class RunOnTheFly extends Command {
     m_traj = traj;
     visionSubsystem = v;
     translation = y;
-
-
     addRequirements(d, v, p);
   }
 

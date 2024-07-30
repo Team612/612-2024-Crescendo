@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import java.util.function.Consumer;
 
+import com.ctre.phoenix6.configs.Pigeon2Configuration;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathHolonomic;
@@ -43,8 +45,13 @@ public class Drivetrain extends SubsystemBase {
   private boolean isCharacterizing = false;
   private double characterizationVolts = 0.0;
   private StructArrayPublisher<SwerveModuleState> publisher;
-
+  public Pigeon2 gyro;
+  public SwerveDriveOdometry swerveOdometry;
+  
   public Drivetrain() {
+    gyro = new Pigeon2(Constants.Swerve.pigeonID);
+    gyro.getConfigurator().apply(new Pigeon2Configuration());
+    gyro.setYaw(0);
     mSwerveMods =
         new SwerveModule[] {
           new SwerveModule(0, Constants.Swerve.Mod0.constants),
@@ -62,7 +69,7 @@ public class Drivetrain extends SubsystemBase {
 
     fieldLayout = new Field2d();
     SmartDashboard.putData("Field", fieldLayout);
-
+    swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getGyroYaw(), getPositions());
   }
 
   public static Drivetrain getInstance(){
@@ -164,6 +171,31 @@ public class Drivetrain extends SubsystemBase {
     return Rotation2d.fromDegrees(navx.getPitch());
   }
 
+  public Rotation2d getGyroYaw() {
+    return Rotation2d.fromDegrees(gyro.getYaw().getValue());
+}
+
+public void setPose(Pose2d pose) {
+  swerveOdometry.resetPosition(getGyroYaw(), getPositions(), pose);
+}
+
+public Rotation2d getHeading(){
+  return getPose().getRotation();
+}
+
+public Pose2d getPose() {
+  return swerveOdometry.getPoseMeters();
+}
+
+public void setHeading(Rotation2d heading){
+  swerveOdometry.resetPosition(getGyroYaw(), getPositions(), new Pose2d(getPose().getTranslation(), heading));
+}
+
+public void zeroHeading(){
+  swerveOdometry.resetPosition(getGyroYaw(), getPositions(), new Pose2d(getPose().getTranslation(), new Rotation2d()));
+}
+
+
   public void resetAlignment() {
     for(SwerveModule mod : mSwerveMods) {
       mod.resetToAbsolute();
@@ -187,6 +219,7 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
     publisher.set(getStates());
+    swerveOdometry.update(getGyroYaw(), getPositions());
     // for (SwerveModule mod : mSwerveMods) {
     //   SmartDashboard.putNumber(
     //       "Mod " + mod.moduleNumber + " velocity", mod.getCharacterizationVelocity());

@@ -26,7 +26,7 @@ import frc.robot.subsystems.SwerveLib.SwerveModuleConstants;
 public final class Constants {
   public static final class Swerve {
     public static final double stickDeadband = 0.1;
-
+    public static final double conversionFactorAngle = 16384/180; // conversion factor for rotations to degrees in talonfx. if trying to get in degrees divide by this
     /* Drivetrain Constants */
     public static final double trackWidth = Units.inchesToMeters(18.596);
     public static final double wheelBase = Units.inchesToMeters(18.234);
@@ -112,6 +112,7 @@ public final class Constants {
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, desiredAngle);
     }
+    public static int pigeonID = 2;
 
     /* Front Right Module - Module 1 */
     public static final class Mod1 {
