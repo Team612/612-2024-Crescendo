@@ -173,7 +173,7 @@ public class Drivetrain extends SubsystemBase {
 
   public Rotation2d getGyroYaw() {
     return Rotation2d.fromDegrees(gyro.getYaw().getValue());
-}
+  }
 
 public void setPose(Pose2d pose) {
   swerveOdometry.resetPosition(getGyroYaw(), getPositions(), pose);

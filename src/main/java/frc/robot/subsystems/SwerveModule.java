@@ -35,7 +35,7 @@ public class SwerveModule {
   private CANcoder angleEncoder;
 
   private final SparkPIDController driveController;
-  private final SparkPIDController angleController;
+  private final TalonFX angleController;
 
   private final PIDController regController = 
     new PIDController(Constants.Swerve.angleKP, Constants.Swerve.angleKI, Constants.Swerve.angleKD);
@@ -112,7 +112,7 @@ public class SwerveModule {
   private void configAngleMotor() {
     angleMotor.restoreFactoryDefaults();
     angleMotor.setCANTimeout(5000);
-    CANSparkMaxUtil.setCANSparkMaxBusUsage(angleMotor, Usage.kPositionOnly);
+    CANSparkMaxUtil.setCANSparkMaxBusSUsage(angleMotor, Usage.kPositionOnly);
     angleMotor.setSmartCurrentLimit(Constants.Swerve.angleContinuousCurrentLimit);
     angleMotor.setInverted(Constants.Swerve.angleInvert);
     angleMotor.setIdleMode(Constants.Swerve.angleNeutralMode);
@@ -124,7 +124,7 @@ public class SwerveModule {
     angleMotor.burnFlash();
     resetToAbsolute();
   }
-
+  
   /* Settings for Drive Motor */
   private void configDriveMotor() {
     driveMotor.restoreFactoryDefaults();
