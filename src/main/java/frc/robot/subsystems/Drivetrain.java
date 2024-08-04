@@ -49,7 +49,7 @@ public class Drivetrain extends SubsystemBase {
   public SwerveDriveOdometry swerveOdometry;
   
   public Drivetrain() {
-    gyro = new Pigeon2(Constants.Swerve.pigeonID);
+    gyro = new Pigeon2(Constants.Swerve.pigeonID, "612Test");
     gyro.getConfigurator().apply(new Pigeon2Configuration());
     gyro.setYaw(0);
     mSwerveMods =

@@ -1,14 +1,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.*;
-import com.revrobotics.CANSparkBase;
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
-import com.revrobotics.CANSparkBase.ControlType;
-import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -28,8 +23,8 @@ public class SwerveModule {
   private Rotation2d lastAngle;
   private Rotation2d desiredAngle;
 
-  private TalonFX angleMotor;
-  private TalonFX driveMotor;
+  private TalonFX angleMotor = new TalonFX(0, "612Test"); // Both of these construct a TalonFX on the CANivore bus named "612Test"
+  private TalonFX driveMotor = new TalonFX(0, "612Test"); 
   
   private RelativeEncoder driveEncoder;
   private CANcoder angleEncoder;
