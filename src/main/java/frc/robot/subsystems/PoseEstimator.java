@@ -70,7 +70,7 @@ StructArrayPublisher<Pose2d> arrayPublisher;
 
     drivePoseEstimator = new SwerveDrivePoseEstimator(
       Constants.Swerve.swerveKinematics, 
-      driveSubsystem.getNavxAngle(), 
+      driveSubsystem.getGyroAngle(), 
       driveSubsystem.getPositions(), 
       new Pose2d(),
       stateStdDevs,
@@ -150,7 +150,7 @@ arrayPublisher = NetworkTableInstance.getDefault()
   public void periodic() {
     
     //updates the drivePoseEstimator with with Navx angle and current wheel positions
-    drivePoseEstimator.update(driveSubsystem.getNavxAngle(), driveSubsystem.getPositions());
+    drivePoseEstimator.update(driveSubsystem.getGyroAngle(), driveSubsystem.getPositions());
 
 
     //update each individual pose estimator
@@ -179,7 +179,7 @@ arrayPublisher = NetworkTableInstance.getDefault()
   }
 
   public void setCurrentPose(Pose2d newPose) {
-    drivePoseEstimator.resetPosition(driveSubsystem.getNavxAngle(), driveSubsystem.getPositions(), newPose);
+    drivePoseEstimator.resetPosition(driveSubsystem.getGyroAngle(), driveSubsystem.getPositions(), newPose);
   }
 
 }

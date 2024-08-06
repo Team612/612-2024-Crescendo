@@ -4,7 +4,6 @@ import java.util.function.Consumer;
 
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
-import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathHolonomic;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -37,9 +36,6 @@ public class Drivetrain extends SubsystemBase {
 
   private SwerveModule[] mSwerveMods;
 
-  private static AHRS navx;
-  private Rotation2d navxAngleOffset;
-
   private Field2d fieldLayout;
 
   private boolean isCharacterizing = false;
@@ -52,6 +48,8 @@ public class Drivetrain extends SubsystemBase {
     gyro = new Pigeon2(Constants.Swerve.pigeonID, "612Test");
     gyro.getConfigurator().apply(new Pigeon2Configuration());
     gyro.setYaw(0);
+    gyro.reset();
+
     mSwerveMods =
         new SwerveModule[] {
           new SwerveModule(0, Constants.Swerve.Mod0.constants),
@@ -63,9 +61,6 @@ public class Drivetrain extends SubsystemBase {
     publisher = NetworkTableInstance.getDefault()
     .getStructArrayTopic("MyStates", SwerveModuleState.struct).publish();
     
-    navx = new AHRS(I2C.Port.kMXP); 
-    navxAngleOffset = new Rotation2d();
-    navx.reset();
 
     fieldLayout = new Field2d();
     SmartDashboard.putData("Field", fieldLayout);
@@ -85,7 +80,7 @@ public class Drivetrain extends SubsystemBase {
     SwerveModuleState[] swerveModuleStates =
         Constants.Swerve.swerveKinematics.toSwerveModuleStates(
           ChassisSpeeds.fromFieldRelativeSpeeds(
-                    translation.getX(), translation.getY(), rotation, getNavxAngle()));
+                    translation.getX(), translation.getY(), rotation, getGyroAngle()));
     
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
 
@@ -152,23 +147,23 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void zeroGyro() {
-    navx.zeroYaw();
+    gyro.setYaw(0);
   }
 
-  public Rotation2d getNavxAngle(){
-    return Rotation2d.fromDegrees(-navx.getAngle());
+  public Rotation2d getGyroAngle(){
+    return Rotation2d.fromDegrees(-gyro.getAngle());
   }
     
-  // setter for setting the navxAngleOffset
-  public void setNavxAngleOffset(Rotation2d angle){
-    navxAngleOffset = angle;
-  }
+  // // setter for setting the navxAngleOffset
+  // public void setNavxAngleOffset(Rotation2d angle){
+  //   navxAngleOffset = angle;
+  // }
 
-  public Rotation2d getYaw(){
-    return Rotation2d.fromDegrees(navx.getYaw());
-  }
+  // public Rotation2d getYaw(){
+  //   return Rotation2d.fromDegrees(gyro.getGyroYaw());
+  // }
   public Rotation2d getPitch(){
-    return Rotation2d.fromDegrees(navx.getPitch());
+    return Rotation2d.fromDegrees(gyro.getPitch().getValue());
   }
 
   public Rotation2d getGyroYaw() {
@@ -224,7 +219,7 @@ public void zeroHeading(){
     //   SmartDashboard.putNumber(
     //       "Mod " + mod.moduleNumber + " velocity", mod.getCharacterizationVelocity());
     // }
-    SmartDashboard.putNumber("Current Angle", navx.getAngle());
+    SmartDashboard.putNumber("Current Angle", gyro.getAngle());
     if (isCharacterizing) {
       // Run in characterization mode
       for (SwerveModule mod : mSwerveMods) {
