@@ -178,7 +178,7 @@ public class SwerveModule {
    // // if robot is not moving, stop the turn motor oscillating
    // if (turnAngleError < Constants.Swerve.stickDeadband
    //     && Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxSpeed * 0.01))
-   //   pidOut = 0;
+   //   pidOut = 0; 
 
    // angleMotor.setVoltage(pidOut * RobotController.getBatteryVoltage());
 
